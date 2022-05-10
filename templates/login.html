@@ -17,10 +17,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
     <!-- Font Awesome CSS -->
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
-    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Dongle:wght@300&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
@@ -30,47 +29,36 @@
 
     <style>
         body {
-            background-color: RGBA(232, 52, 78, 0.2);
+            background-color: #F8F8F8;
             min-height: 100vh;
         }
 
-        .section {
-            padding: 1rem 1.5rem;
-            max-width: 750px;
-            margin: auto;
+        .header {
+            padding: 50px 30px 20px 15px;
+            display: flex;
+            justify-content: space-between;
+
         }
 
         .title {
-            font-weight: 800;
-            font-size: 5rem;
-            font-family: 'Gaegu', cursive;
+            margin: auto;
+            color: navy;
+            font-size: 80px;
+            font-family: 'Righteous', cursive;
+            cursor: pointer;
         }
-
-        .subtitle {
-            font-size: 2rem;
-            font-family: 'Gaegu', cursive;
-        }
-
-        .is-sparta {
-            color: #e8344e !important;
-        }
-
-        .button.is-sparta {
-            background-color: #e8344e;
-            border-color: transparent;
-            color: #fff !important;
-        }
-
-        .button.is-sparta.is-outlined {
-            background-color: transparent;
-            border-color: #e8344e;
-            color: #e8344e !important;
-        }
-
         .help {
             color: gray;
         }
-
+        .button {
+            background-color: #569aff;
+            color: white;
+        }
+        .button.is-outlined {
+            color: #569aff;
+            background-color: white;
+            border-color: #569aff;
+        }
         .role_obj input[type="radio"] {
             display: none;
         }
@@ -87,7 +75,7 @@
         }
 
         .role_obj input[type="radio"]:checked + span {
-            background-color: #e8344e;
+            background-color: #569aff;
             color: #ffffff;
         }
 
@@ -168,12 +156,11 @@
     </script>
 </head>
 <body>
-<section class="hero is-white">
-    <div class="hero-body has-text-centered" style="padding-bottom:1rem;margin:auto;">
-        <h1 class="title is-sparta">CONNECTED</h1>
-        <h3 class="subtitle is-sparta">여행자 & 가이드 연결 플랫폼</h3>
-    </div>
-</section>
+    <header>
+        <section class="header">
+            <h1 class="title">connected</h1>
+        </section>
+    </header>
 <section class="section">
     <div class="container">
         <div class="box" style="max-width: 480px;margin:auto">
@@ -207,14 +194,14 @@
                     </div>
                     <div id="div-sign-in-or-up" class="has-text-centered">
                         <nav class="level is-mobile">
-                            <button class="level-item button is-sparta" onclick="sign_in()">로그인</button>
+                            <button class="level-item button" onclick="sign_in()">로그인</button>
                         </nav>
-                        <a href="javascript:kakaoLogin();"><img src="./static/kakao_login.png" alt="카카오계정 로그인" style="height: 50px;width: auto"/></a>
+                        <a href="javascript:kakaoLogin();"><img src="./static/kakao_login_medium_wide.png" alt="카카오계정 로그인" style="height: 50px;width: auto"/></a>
                         <hr>
                         <h4 class="mb-3">아직 회원이 아니라면</h4>
                         <nav class="level is-mobile">
-                            <button class="level-item button is-sparta is-outlined" onclick="t_sign_up()">여행자로 회원가입하기</button>
-                            <button class="level-item button is-sparta is-outlined" onclick="g_sign_up()">가이드로 회원가입하기</button>
+                            <button class="level-item button is-outlined" onclick="t_sign_up()">여행자로 회원가입하기</button>
+                            <button class="level-item button is-outlined" onclick="g_sign_up()">가이드로 회원가입하기</button>
                         </nav>
                     </div>
                     <div id="sign-up-box" class="is-hidden">
