@@ -104,24 +104,25 @@
     </nav>
 <!--여기 확인 필요-->
     <div class="columns" style="max-width: 1200px; margin:auto;">
+        {% if status %}
         <div class="content" style="width: 800px; margin: 5rem auto;">
             <div class="card" >
-                <h1 style="margin-left: 2rem">{{ products.title }}</h1>
+                <h1 style="margin-left: 2rem">{{ product_info.title }}</h1>
                 <figure class="image is-4by3">
-                    <img src="{{ url_for('static', filename='logo.png') }}">
+                    <img src="{{ product_info.file }}">
                 </figure>
                 <div class="card-content" id="blablabla" style="max-width: 1000px; margin-top: 2rem">
                     <div class="content">
-                        {{ product.comment }}
+                        {{ product_info.content }}
                     </div>
                 </div>
             </div>
             <blockquote> maybe 조건?
             </blockquote>
-            <article class="media">
+            <article class="media" id="new-comment">
                 <figure class="media-left">
                     <p class="image is-64x64">
-                        <img src="{{ product.user_pic }}">
+                        <img src="{{ product_info.file }}">
                     </p>
                 </figure>
                 <div class="media-content">
@@ -164,7 +165,7 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>{{ product.map_api }}</td>
+                        <td>{{ product_info.map_api }}</td>
                     </tr>
                     </tbody>
                     <thead>
@@ -174,7 +175,7 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>{{ product.calender }}</td>
+                        <td>{{ product_info.calender }}</td>
                     </tr>
                     </tbody>
                     <thead>
@@ -184,7 +185,7 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>{{ product.cost }}</td>
+                        <td>{{ product_info.cost }}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -201,6 +202,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
     </div>
     </body>
 </html>

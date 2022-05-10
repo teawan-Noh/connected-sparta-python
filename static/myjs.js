@@ -1,56 +1,23 @@
-// like 부분 숫자 계산
-function toggle_like(post_id, type) {
-    console.log(post_id, type)
-    let $a_like = $(`#${post_id} a[aria-label='${type}']`)
-    let $i_like = $a_like.find("i")
-    let like = {"heart":"fa-heart", "thumbs":"fa-thumbs-up", "thumbs_down":"fa-thumbs-down"}
-    let no_like = {"heart":"fa-heart-o", "thumbs":"fa-thumbs-o-up", "thumbs_down":"fa-thumbs-o-down"}
-    if ($i_like.hasClass(like[type])) {
-        $.ajax({
-            type: "POST",
-            url: "/update_like",
-            data: {
-                post_id_give: post_id,
-                type_give: type,
-                action_give: "unlike"
-            },
-            success: function (response) {
-                console.log("unlike")
-                $i_like.addClass(no_like[type]).removeClass(like[type])
-                $a_like.find("span.like-num").text(num2str(response["count"]))
-            }
-        })
-    } else {
-        $.ajax({
-            type: "POST",
-            url: "/update_like",
-            data: {
-                post_id_give: post_id,
-                type_give: type,
-                action_give: "like"
-            },
-            success: function (response) {
-                console.log("like")
-                $i_like.addClass(like[type]).removeClass(no_like[type])
-                $a_like.find("span.like-num").text(response["count"])
-            }
-        })
-    }
+function go_posting() {
+    window.location.href = '/go_posting'
 }
 
 // post 작성
-function post() {
-    let name = $('#input-name-pic').val()
+function posting() {
+    let title = $('#input-title').val()
     let file = $('#input-picture')[0].files[0]
-    let comment = $("#textarea-comment").val()
+    let content = $("#input-content").val()
+    let calender = $("#input-calender").val()
+    let price = $("#input-price").val()
     let today = new Date().toISOString()
     // form_data 초기화
     let form_data = new FormData()
+    form_data.append("title_give", title)
     form_data.append("file_give", file)
-    form_data.append("name_give", name)
-    form_data.append("comment_give", comment)
+    form_data.append("content_give", content)
+    form_data.append("calender_give", calender)
+    form_data.append("price_give", price)
     form_data.append("date_give", today)
-    console.log(name, file, comment, today, form_data)
 
     $.ajax({
         type: "POST",
@@ -62,14 +29,14 @@ function post() {
         success: function (response) {
             if (response["result"] == "success") {
                 alert(response["msg"])
-                window.location.reload()
+                window.location.href = `/product`
             }
         }
     });
 }
 
-function detail(title) {
-    window.location.href = `/product/${title}`
+function detail(date) {
+    window.location.href = `/product/${date}`
 }
 
 // 몇 시간 전 계산
@@ -113,40 +80,41 @@ function get_products(username) {
     $("#product-box").empty()
     $.ajax({
         type: "GET",
-        url: `/get_products?username_give=${username}`,
+        url: `/product/get`,
         data: {},
         success: function (response) {
             if (response["result"] == "success") {
-                let products = response["products"]
+                let product = response["products"]
+                let products = JSON.parse(product)
                 for (let i = 0; i < products.length; i++) {
                     let product = products[i]
-                    let time_product = new Date(post["date"])
+                    let time_product = new Date(product["date"])
                     let time_before = time2str(time_product)
-                    let mean = post['mean']
-                    let html_temp = `<div class="card" id="${product["_id"]}" onclick="detail(${product['title']}})" style="max-width: 300px; margin-top: 2rem">
+                    // let mean = product['mean']
+                    let html_temp = `<div class="card" onclick="detail('${product.date}')" style="max-width: 300px; margin-top: 2rem">
                                          <div class="card-image">
                                              <figure class="image is-4by3">
-                                                 <img src="../static/post_pics/${product.file}" class="card-img-top" alt="Placeholder image">
+                                                 <img src="../static/${product.file}" class="card-img-top" alt="Placeholder image">
                                              </figure>
                                          </div>
                                          <div class="card-content">
                                              <div class="media">
                                                  <div class="media-content">
                                                      <p class="title is-4">${product['title']}</p>
-                                                     <p class="subtitle is-6">${product['date']}</p>
+                                                     <p class="subtitle is-6">${product['content']}</p>
                                                      <small style="float:right;">${time_before}</small>
                                                  </div>
                                              </div>
                                              <nav class="level is-mobile">
                                                  <div class="level-left">
                                                      <a class="level-item is-sparta" aria-label="grade">
-                                                         <span class="icon is-small"><i class="fa-solid fa-star"></i></span>&nbsp;<span class="like-num">${mean}</span>
+                                                         <span class="icon is-small"><i class="fa-solid fa-star"></i></span>&nbsp;<span class="like-num"></span>
                                                      </a>
                                                  </div>
                                              </nav>
                                          </div>
                                      </div>`
-                    $("#post-box").append(html_temp)
+                    $("#product-box").append(html_temp)
                 }
             }
         }
@@ -164,15 +132,15 @@ function get_comment() {
             for (let i = 0; i < comments.length; i++) {
                 let comment = comments[i]["comment"];
                 let html_temp = `<figure class="media-left">
-                                         <p class="image is-64x64">
-                                             <img src="{{ product.user_pic }}">
-                                         </p>
-                                     </figure>
-                                     <div class="media-content">
-                                         <div class="field">
-                                             <p class="control">${comment}</p>
-                                         </div>
-                                     </div>`
+                                     <p class="image is-64x64">
+                                         <img src="{{ product.user_pic }}">
+                                     </p>
+                                 </figure>
+                                 <div class="media-content">
+                                     <div class="field">
+                                         <p class="control">${comment}</p>
+                                     </div>
+                                 </div>`
                 $("#media-comment").append(html_temp)
             }
         }
@@ -189,7 +157,7 @@ function add_comment() {
     let new_comment = $('#new-comment').val();
     $.ajax({
         type: "POST",
-        url: `/api/add_comment`,
+        url: `/product/add_comments`,
         data: {
             comment_give: new_comment
         },
@@ -213,15 +181,7 @@ function add_comment() {
 // }
 
 function go_bucket() {
-    $.ajax({
-        type: "POST",
-        url: `/api/delete_word`,
-        data: {},
-        success: function (response) {
-            alert(response["msg"])
-            window.location.href = "/"
-        }
-    });
+    window.location.href = "/mypage/bucket"
 }
 
 
