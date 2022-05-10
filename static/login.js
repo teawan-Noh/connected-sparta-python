@@ -13,7 +13,9 @@ function kakaoLogin() {
                     let kakao_account = res.kakao_account; // 계정 정보 가져옴
                     // console.log(kakao_account)
                     let email = kakao_account.email;
+                    console.log(email)
                     let nick_name = kakao_account.profile.nickname;
+                    $.cookie('kakao', email, {path: '/'});
                     $.ajax({
                         type: "POST",
                         url: "/kakaologin",
