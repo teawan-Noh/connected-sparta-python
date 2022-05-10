@@ -20,13 +20,13 @@ db = client.cnt_project2
 
 @app.route('/')
 def home():
-    user_info = getUserInfoByToken()
-    # print(user_info)
-    return render_template('index.html', user_info=user_info)
+
+    return render_template('index.html')
 
 @app.route('/login')
 def login():
     msg = request.args.get("msg")
+    # user_info = getUserInfoByToken()
     return render_template('login.html', msg=msg)
 
 @app.route('/t_signup')
