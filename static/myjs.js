@@ -125,7 +125,7 @@ function get_comment() {
     $("#media-comment").empty()
     $.ajax({
         type: "GET",
-        url: `/product?title_give=${title}`,
+        url: `/product/get_comments`,
         data: {},
         success: function (response) {
             let comments = response["comments"];
@@ -148,9 +148,9 @@ function get_comment() {
 }
 
 function toggle_guide() {
-    $("#media_guide").toggleClass("is-hidden")
-    $("#button_guide").toggleClass("is-hidden")
-    $("#button_user").toggleClass("is-hidden")
+    $("#media-guide").toggleClass("is-hidden")
+    $("#button-guide").toggleClass("is-hidden")
+    $("#button-user").toggleClass("is-hidden")
 }
 
 function add_comment() {

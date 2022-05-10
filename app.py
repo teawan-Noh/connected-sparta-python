@@ -276,8 +276,8 @@ def edit_comments():
 @app.route('/product/get_comments', methods=['GET'])
 def get_comments():
     comment_receive = request.args.get("comment_give")
-    comment = list(db.comments.find({"comment":comment_receive}, {"_id": False}))
-    return jsonify({'result': 'success', 'comment': comment})
+    comments = list(db.comments.find({"comment":comment_receive}, {"_id": False}))
+    return jsonify({'result': 'success', 'comments': comments})
 
 # grade 업데이트
 @app.route('/product/update_like', methods=['POST'])

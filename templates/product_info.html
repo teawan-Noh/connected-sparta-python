@@ -28,12 +28,8 @@
     <script src="{{ url_for('static', filename='myjs.js') }}"></script>
 
     <script>
-    // let title = "{{ title }}"
     $(document).ready(function () {
         get_comment()
-        if (db.users.find_one({'users':'guide'})) {
-            toggle_guide()
-        }
     })
     </script>
     </head>
@@ -146,10 +142,10 @@
         </div>
         <div class="content" style="width: 300px; margin: 5rem auto;">
             <div class="card">
-                <div id="media_guide" class="is-hidden">
+                <div id="media-guide" class="is-hidden">
                     <div class="media-left">
                         <figure class="image is-48x48">
-                            <img src="/static/${post['profile_pic_real']}" class="card-img-guide">
+                            <img src="" class="card-img-guide">
                         </figure>
                     </div>
                     <div class="media-content">
@@ -189,13 +185,13 @@
                     </tr>
                     </tbody>
                 </table>
-                <div id="button_guide" class="is-hidden">
+                <div id="button-guide" class="is-hidden">
                     <div class="buttons is-centered">
                         <button class="button is-fullwidth" onclick="edit_product()" style="max-width: 280px; height: 30px;">상품 수정하기</button>
                         <button class="button is-fullwidth" onclick="delete_product()" style="max-width: 280px; height: 30px; margin-bottom: 15px;">상품 삭제하기</button>
                     </div>
                 </div>
-                <div id="button_user">
+                <div id="button-user" class="">
                     <div class="buttons is-centered">
                         <button class="button is-fullwidth" onclick="go_bucket()" style="max-width: 280px; height: 80px; margin-bottom: 15px;">장바구니</button>
                     </div>
