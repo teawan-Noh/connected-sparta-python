@@ -7,16 +7,20 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta property="og:title" content="CONNECTED - 여행자 & 가이드 연결 플랫폼"/>
 
     <!-- Bulma CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
     <!-- Font Awesome CSS -->
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
 
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
     <!-- kakao login/logout -->
     <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
     <script src="{{ url_for('static', filename='login.js') }}"></script>
@@ -50,47 +54,214 @@
         }
     </script>
     <style>
-        .navbar {
-            background-color: black;
+        body {
+            background-color: #F8F8F8;
+            min-height: 100vh;
+        }
+        .header{
+            background-color: white;
+            padding: 30px 50px 15px;
+            display: flex;
+            justify-content: space-between;
         }
         .title {
-            font-family: 'Permanent Marker', cursive;
+            width: 200px;
+            color: navy;
+            font-size: 40px;
+            font-family: 'Righteous', cursive;
+            cursor: pointer;
+        }
+        .input {
+            width: 520px;
+            height: 64px;
+            padding-left: 24px;
+            color: #202020;
+            font-size: 18px;
+            border: 0;
+            border-radius: 16px;
+            box-shadow: 0 8px 16px 0 rgb(32 32 32 / 8%);
+        }
+        .is-info {
+            position: relative;
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: #569aff;
+            -webkit-box-shadow: 0 8px 16px 0 rgb(35 0 104 / 16%);
+            box-shadow: 0 8px 16px 0 rgb(35 0 104 / 16%);
+        }
+        .navList {
+            font-family: 'Jua', sans-serif;
+            margin-top: 10px;
+            width: 250px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 25px;
+            cursor: pointer;
+        }
+        .toputil {
+            font-family: 'Noto Sans KR', sans-serif;
+            width: 150px;
+            margin-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            flex-direction: row-reverse;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .is-grouped {
+            margin: 30px auto;
+            width: 580px;
+        }
+
+        .product_box{
+            width: 1200px;
+            margin: auto;
+        }
+        .section_title{
+            font-family: 'Jua', sans-serif;
+            width: 15%;
+            margin: 100px auto 30px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 25px;
+            cursor: pointer;
+        }
+        .card-list{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .card {
+            width: 350px;
+            height: 500px;
+            margin-bottom: 40px;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1 class="title">CONNECTED</h1>
-        <nav>
-            <div class=""navList>
-                <h2>
-                    <a href="">GUIDE TOUR</a>
-                </h2>
-                <h2>
-                    <a href="">COMMUNITY</a>
-                </h2>
-            </div>
-        </nav>
-        <div class="toputil">
-            <a aria-label="logout" onclick="sign_in()">
-                <span class="icon is-small">
-                    <i class="fa fa-sign-in" aria-hidden="true"></i>로그인&nbsp;&nbsp;&nbsp;
-                </span>
-            </a>
-            <a aria-label="login" onclick="sign_out()">
-                <span class="icon is-small">
-                    <i class="fa fa-sign-out" aria-hidden="true"></i>로그아웃&nbsp;&nbsp;&nbsp;
-                </span>
-            </a>
-            <a aria-label="mypage" onclick="to_mypage()">
-                <span class="icon is-small">
-                    <i class="fa fa-home" aria-hidden="true"></i>마이페이지&nbsp;&nbsp;&nbsp;
-                </span>
-            </a>
-        </div>
+        <section class="header">
+            <h1 class="title">connected</h1>
+
+            <h2 class="navList">
+                <a>가이드 상품</a>
+                <a>커뮤니티</a>
+            </h2>
+
+            <ul class="toputil">
+                {% if status == 0 %}
+                    <a href="/login">로그인</a>
+                {% else %}
+                    <a onclick="sign_out()">로그아웃</a>
+                    <a href="/mypage">마이페이지</a>
+                {% endif %}
+
+
+
+            </ul>
+        </section>
     </header>
-    <div class="level-item">
-        <a class="button" onclick="post_product()">포스팅하기</a>
+    <div class="field is-grouped">
+        <p class="control is-expanded">
+            <input class="input" type="text" placeholder="키워드를 검색하세요.">
+        </p>
+        <p class="control">
+            <a class="button is-info"><i class="fa fa-search"></i></a>
+        </p>
     </div>
+    <section class="product_box">
+        <p>
+            <a class="section_title" href="/product_info">가이드 상품 더보기</a>
+        </p>
+        <div class="card-list">
+            <div class="card">
+            <div class="card-image">
+                <figure class="image is-4by3">
+                    <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
+                </figure>
+            </div>
+            <div class="card-content">
+                <div class="media">
+                    <div class="media-left">
+                        <figure class="image is-48x48">
+                            <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+                        </figure>
+                    </div>
+                    <div class="media-content">
+                        <p class="title is-4">John Smith</p>
+                        <p class="subtitle is-6">@johnsmith</p>
+                    </div>
+                </div>
+
+                <div class="content">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Phasellus nec iaculis mauris. <a>@bulmaio</a>.
+                    <a href="#">#css</a> <a href="#">#responsive</a>
+                    <br>
+                    <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+                </div>
+            </div>
+        </div>
+            <div class="card">
+            <div class="card-image">
+                <figure class="image is-4by3">
+                    <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
+                </figure>
+            </div>
+            <div class="card-content">
+                <div class="media">
+                    <div class="media-left">
+                        <figure class="image is-48x48">
+                            <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+                        </figure>
+                    </div>
+                    <div class="media-content">
+                        <p class="title is-4">John Smith</p>
+                        <p class="subtitle is-6">@johnsmith</p>
+                    </div>
+                </div>
+
+                <div class="content">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Phasellus nec iaculis mauris. <a>@bulmaio</a>.
+                    <a href="#">#css</a> <a href="#">#responsive</a>
+                    <br>
+                    <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+                </div>
+            </div>
+        </div>
+            <div class="card">
+            <div class="card-image">
+                <figure class="image is-4by3">
+                    <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
+                </figure>
+            </div>
+            <div class="card-content">
+                <div class="media">
+                    <div class="media-left">
+                        <figure class="image is-48x48">
+                            <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+                        </figure>
+                    </div>
+                    <div class="media-content">
+                        <p class="title is-4">John Smith</p>
+                        <p class="subtitle is-6">@johnsmith</p>
+                    </div>
+                </div>
+
+                <div class="content">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Phasellus nec iaculis mauris. <a>@bulmaio</a>.
+                    <a href="#">#css</a> <a href="#">#responsive</a>
+                    <br>
+                    <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+                </div>
+            </div>
+        </div>
+        </div>
+
+
+    </section>
 </body>
 </html>
