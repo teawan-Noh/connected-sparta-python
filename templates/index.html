@@ -1,10 +1,83 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <!-- Webpage Title -->
+    <title>Home | CONNECTED</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <script>
+        function sign_in() {
+            window.location.href = "/login"
+        }
+
+        function sign_out() {
+            $.removeCookie('mytoken', {path: '/'});
+            alert('로그아웃!')
+            window.location.href = "/"
+        }
+        function to_mypage() {
+            window.location.href = " "
+        }
+
+        function post_product() {
+            window.location.replace("/posting")
+        }
+    </script>
+    <style>
+        .navbar {
+            background-color: black;
+        }
+        .title {
+            font-family: 'Permanent Marker', cursive;
+        }
+    </style>
 </head>
 <body>
-dddd
+    <header>
+        <h1 class="title">CONNECTED</h1>
+        <nav>
+            <div class=""navList>
+                <h2>
+                    <a href="">GUIDE TOUR</a>
+                </h2>
+                <h2>
+                    <a href="">COMMUNITY</a>
+                </h2>
+            </div>
+        </nav>
+        <div class="toputil">
+            <a aria-label="logout" onclick="sign_in()">
+                <span class="icon is-small">
+                    <i class="fa fa-sign-in" aria-hidden="true"></i>로그인&nbsp;&nbsp;&nbsp;
+                </span>
+            </a>
+            <a aria-label="login" onclick="sign_out()">
+                <span class="icon is-small">
+                    <i class="fa fa-sign-out" aria-hidden="true"></i>로그아웃&nbsp;&nbsp;&nbsp;
+                </span>
+            </a>
+            <a aria-label="mypage" onclick="to_mypage()">
+                <span class="icon is-small">
+                    <i class="fa fa-home" aria-hidden="true"></i>마이페이지&nbsp;&nbsp;&nbsp;
+                </span>
+            </a>
+        </div>
+    </header>
+    <div class="level-item">
+        <a class="button" onclick="post_product()">포스팅하기</a>
+    </div>
 </body>
 </html>
