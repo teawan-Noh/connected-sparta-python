@@ -25,6 +25,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    <script src="{{ url_for('static', filename='login.js') }}"></script>
+
     <style>
         body {
             background-color: RGBA(232, 52, 78, 0.2);
@@ -309,6 +312,7 @@
                         <nav class="level is-mobile">
                             <button class="level-item button is-sparta" onclick="sign_in()">로그인</button>
                         </nav>
+                        <a href="javascript:kakaoLogin();"><img src="./static/kakao_login.png" alt="카카오계정 로그인" style="height: 50px;width: auto"/></a>
                         <hr>
                         <h4 class="mb-3">아직 회원이 아니라면</h4>
                         <nav class="level is-mobile">

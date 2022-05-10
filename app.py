@@ -18,16 +18,20 @@ db = client.cnt_project2
 
 @app.route('/')
 def home():
-    token_receive = request.cookies.get('mytoken')
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({"username": payload["id"]})
+    token_kakao = request.cookies.get('kakao')
+    if token_kakao is None:
+        token_receive = request.cookies.get('mytoken')
+        try:
+            payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+            user_info = db.users.find_one({"username": payload["id"]})
+            return render_template('index.html', user_info=user_info)
+        # except jwt.ExpiredSignatureError:
+        #     return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+        except jwt.exceptions.DecodeError:
+            return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+    else:
+        user_info = db.users.find_one({"username": token_kakao})
         return render_template('index.html', user_info=user_info)
-    # except jwt.ExpiredSignatureError:
-    #     return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
-    except jwt.exceptions.DecodeError:
-        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
-
 
 @app.route('/login')
 def login():
@@ -88,6 +92,27 @@ def check_dup():
 def posting():
     msg = request.args.get("msg")
     return render_template('posting.html', msg=msg)
+
+@app.route('/kakaologin', methods=['POST'])
+def kakaologin():
+    print('실행')
+    user_nickname = request.form['nick_name']
+    user_email = request.form['email']
+
+    result = db.users.find_one({'role': 'traveler', 'userid': user_email, 'profile_name': user_nickname})
+    print(result)
+    if result is None:
+        doc = {
+            "role": 'traveler',
+            "userid": user_email,
+            "profile_name": user_nickname,
+            "profile_pic": "",
+            "profile_pic_real": "profile_pics/profile_placeholder.png",
+            "profile_info": ""
+        }
+        db.users.insert_one(doc)
+
+    return 'a'
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
