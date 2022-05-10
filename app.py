@@ -15,7 +15,7 @@ app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
 SECRET_KEY = 'SPARTA'
 
-client = MongoClient('13.125.123.145', 27017, username="test", password="test")
+client = MongoClient('15.164.98.36', 27017, username="test", password="test")
 db = client.cnt_project2
 
 @app.route('/')
@@ -134,7 +134,7 @@ def go_posting():
     try:
         # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({"username": payload["id"]})
+        user_info = db.users.find_one({"userid": payload["id"]})
         result = user_info["role"]
         status = (result == 'guide')
         products = db.products.find({})
@@ -148,7 +148,7 @@ def posting():
     try:
         # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({"username": payload["id"]})
+        user_info = db.users.find_one({"userid": payload["id"]})
         # 코멘트에 적힌 글과 현재 날짜를 불러온다.
         today = datetime.now()
         title_receive = request.form["title_give"]
@@ -166,7 +166,7 @@ def posting():
         file.save(save_to)
         # username(id), 닉네임, 프로필 사진, 코멘트, 날짜 doc dictionary에 저장
         doc = {
-            "username": user_info["username"],
+            "userid": user_info["userid"],
             "profile_name": user_info["profile_name"],
             "profile_pic_real": user_info["profile_pic_real"],
             "title": title_receive,
@@ -174,7 +174,8 @@ def posting():
             "content": content_receive,
             "calender":calender_receive,
             "price":price_receive,
-            "date": date_receive
+            "date": date_receive,
+            "product_id":1
         }
         db.products.insert_one(doc)
         # 성공하면 '포스팅 성공!'을 띄우자!
@@ -190,18 +191,117 @@ def get_products():
     return jsonify({"result": "success", "msg": "포스팅을 가져왔습니다.", "products":dumps(products)})
 
 # 상품 상세 페이지로 이동
-@app.route('/product/<date>')
-def product_detail(date):
+@app.route('/product/<product_id>')
+def product_detail(product_id):
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({"username": payload["id"]})
+        user_info = db.users.find_one({"userid": payload["id"]}, {"_id": False})
         result = user_info["role"]
-        status = (result == 'guide')
-        product_info = db.products.find_one({"date": date}, {"_id": False})
-        return render_template('product_info.html', status=status, user_info=user_info, product_info=product_info)
+        print(result)
+        product_info = db.products.find_one({"product_id": int(product_id)}, {"_id": False})
+        return render_template('product_info.html', result=result, user_info=user_info, product_info=product_info)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
+
+# 댓글 작성하기
+@app.route('/product/add_comments', methods=['POST'])
+def add_comments():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"userid": payload["id"]})
+        product_id_receive = request.form["product_id_give"]
+        # grade_receive = request.form['grade_give']
+        content_receive = request.form['content_give']
+        print(content_receive)
+        doc = {
+            "product_id":product_id_receive,
+            "userid":user_info["userid"],
+            "profile_pic_real": user_info["profile_pic_real"],
+            "content": content_receive
+            # "grade": grade_receive
+        }
+        db.comments.insert_one(doc)
+        # 성공하면 '포스팅 성공!'을 띄우자!
+        return jsonify({"result": "success", 'msg': '포스팅 성공'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+
+
+
+# # 댓글 수정하기
+# @app.route('/product/edit_comments', methods=['POST'])
+# def edit_comments():
+#     token_receive = request.cookies.get('mytoken')
+#     try:
+#         # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
+#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+#         user_info = db.users.find_one({"userid": payload["id"]})
+#         grade_receive = request.form['grade_give']
+#         content_receive = request.form['content_give']
+#         doc = {
+#             "userid":user_info["userid"],
+#             "profile_pic_real": user_info["profile_pic_real"],
+#             "content": content_receive,
+#             "grade": grade_receive
+#         }
+#         db.comments.update_one(doc)
+#         # 성공하면 '포스팅 성공!'을 띄우자!
+#         return jsonify({'result': 'success', 'msg': 'comment edited'})
+#     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+#         return redirect(url_for("home"))
+
+# 댓글 불러오기
+@app.route('/product/get_comments', methods=['GET'])
+def get_comments():
+    product_id_receive = request.args.get("product_id_give")
+    # data form box / get args
+    # comments = list(db.comments.find({"comment":comment_receive}, {"_id": False}))
+    # return jsonify({'result': 'success', 'comments': comments})
+    comments = list(db.comments.find({"product_id":product_id_receive}, {'_id': False}))
+    print(comments)
+    # count_grade = db.comments.count_documents({})
+    # add_grade = 0
+    # for comment in comments:
+    #     grades = comment['grade']
+    #     add_grade += grades
+    # mean = add_grade / count_grade
+    return jsonify({'result': 'success', 'comments': comments})
+
+@app.route('/kakaologin', methods=['POST'])
+def kakaologin():
+    user_nickname = request.form['nick_name']
+    user_email = request.form['email']
+
+    result = db.users.find_one({'role': 'traveler', 'userid': user_email, 'profile_name': user_nickname})
+    if result is None:
+        doc = {
+            "role": 'traveler',
+            "userid": user_email,
+            "profile_name": user_nickname,
+            "profile_pic": "",
+            "profile_pic_real": "profile_pics/profile_placeholder.png",
+            "profile_info": ""
+        }
+        db.users.insert_one(doc)
+
+    return 'a'
+
+if __name__ == '__main__':
+    app.run('0.0.0.0', port=5000, debug=True)
+
+########################################################################################################################
+
+# @app.route('/payment')
+# def payment():
+#     token_receive = request.cookies.get('mytoken')
+#     try:
+#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+#         user_info = db.users.find_one({"username": payload["id"]})
+#     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+#         return redirect(url_for("home"))
 
 # # 포스팅 게시 (토큰 필요)
 # @app.route('/posting', methods=['POST'])
@@ -257,86 +357,4 @@ def product_detail(date):
 # def move_community():
 #     return render_template('community.html')
 
-# 댓글 작성하기
-@app.route('/product/add_comments', methods=['POST'])
-def add_comments():
-    grade_receive = request.form['grade_give']
-    content_receive = request.form['content_give']
-    doc = {"grade": grade_receive, "content": content_receive}
-    db.comments.insert_one(doc)
-    return jsonify({'result': 'success', 'msg': 'comment saved'})
-
-# 댓글 수정하기
-@app.route('/product/edit_comments', methods=['POST'])
-def edit_comments():
-    grade_receive = request.form['grade_give']
-    content_receive = request.form['content_give']
-    doc = {"grade": grade_receive, "content": content_receive}
-    db.comments.update_one(doc)
-    return jsonify({'result': 'success', 'msg': 'comment edited'})
-
-# 댓글 불러오기
-@app.route('/product/get_comments', methods=['GET'])
-def get_comments():
-    comment_receive = request.args.get("comment_give")
-    comments = list(db.comments.find({"comment":comment_receive}, {"_id": False}))
-    return jsonify({'result': 'success', 'comments': comments})
-
-# grade 업데이트
-@app.route('/product/update_like', methods=['POST'])
-def update_grade():
-    post_id_receive = request.form["post_id_give"]
-    grade_receive = request.form["grade_give"]
-    action_receive = request.form["action_give"]
-    add_grade = 0
-    doc = {
-        "post_id": post_id_receive,
-        "action": action_receive,
-        "grade": grade_receive
-    }
-    if action_receive == "graded":
-        db.grades.insert_one(doc)
-    else:
-        db.grades.delete_one(doc)
-    count_grade = db.grades.count_documents({"post_id": post_id_receive, "action": action_receive})
-    grades = list(db.grades.find({"post_id": post_id_receive, "grades":grade_receive}))
-    for grade in grades:
-        add_grade += grade
-    mean = add_grade / count_grade
-    db.grades.insert_one(mean)
-    return jsonify({"result": "success", 'msg': 'updated', "mean": mean})
-
 ########################################################################################################################
-
-# @app.route('/payment')
-# def payment():
-#     token_receive = request.cookies.get('mytoken')
-#     try:
-#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-#         user_info = db.users.find_one({"username": payload["id"]})
-#     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-#         return redirect(url_for("home"))
-
-########################################################################################################################
-
-@app.route('/kakaologin', methods=['POST'])
-def kakaologin():
-    user_nickname = request.form['nick_name']
-    user_email = request.form['email']
-
-    result = db.users.find_one({'role': 'traveler', 'userid': user_email, 'profile_name': user_nickname})
-    if result is None:
-        doc = {
-            "role": 'traveler',
-            "userid": user_email,
-            "profile_name": user_nickname,
-            "profile_pic": "",
-            "profile_pic_real": "profile_pics/profile_placeholder.png",
-            "profile_info": ""
-        }
-        db.users.insert_one(doc)
-
-    return 'a'
-
-if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000, debug=True)

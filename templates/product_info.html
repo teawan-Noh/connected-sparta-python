@@ -3,7 +3,7 @@
 <head>
 
     <!-- Webpage Title -->
-    <title>승현이의 소소한 히말라야 볼래?</title>
+    <title>Home | CONNECTED</title>
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -12,7 +12,7 @@
     <!-- og태그 & Favicon -->
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-    <meta property="og:title" content="leverest - 승현이의 소소한 일기"/>
+    <meta property="og:title" content="connected"/>
     <meta property="og:description" content="mini project for Web Plus"/>
     <meta property="og:image" content="{{ url_for('static', filename='ogimg.png') }}"/>
     <!-- Bulma CSS -->
@@ -28,11 +28,18 @@
     <script src="{{ url_for('static', filename='myjs.js') }}"></script>
 
     <script>
+    let value = '{{ result }}'
     $(document).ready(function () {
-        get_comment()
+        get_comment({{ product_info.product_id }})
+        if (value == 'guide') {
+            toggle_guide()
+        }
+
     })
+
     </script>
     </head>
+
     <body>
     <nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
@@ -100,12 +107,11 @@
     </nav>
 <!--여기 확인 필요-->
     <div class="columns" style="max-width: 1200px; margin:auto;">
-        {% if status %}
         <div class="content" style="width: 800px; margin: 5rem auto;">
             <div class="card" >
                 <h1 style="margin-left: 2rem">{{ product_info.title }}</h1>
                 <figure class="image is-4by3">
-                    <img src="{{ product_info.file }}">
+                    <img src='/static/{{ product_info.file }}'>
                 </figure>
                 <div class="card-content" id="blablabla" style="max-width: 1000px; margin-top: 2rem">
                     <div class="content">
@@ -115,30 +121,36 @@
             </div>
             <blockquote> maybe 조건?
             </blockquote>
-            <article class="media" id="new-comment">
-                <figure class="media-left">
-                    <p class="image is-64x64">
-                        <img src="{{ product_info.file }}">
-                    </p>
-                </figure>
-                <div class="media-content">
-                    <div class="field">
-                        <p class="control">
-                            <textarea class="textarea" placeholder="댓글 달기"></textarea>
+            <div id="new-comment" class="container">
+                <article class="media">
+                    <figure class="media-left">
+                        <p id="comment-picture" class="image is-64x64">
+                            <img src="/static/{{ product_info.profile_pic_real }}">
                         </p>
-                    </div>
-                    <nav class="level">
-                        <div class="level-left">
-                            <div class="level-item">
-                                <a class="button is-info" onclick="add_comment()">등록</a>
-                            </div>
+                        <p id="comment-name" class="control">
+                            <strong>{{ user_info.profile_name }}</strong>
+                        </p>
+                    </figure>
+                    <div class="media-content">
+                        <div class="field">
+                            <p class="control">
+                                <textarea id="comment-content" class="textarea" placeholder="댓글"></textarea>
+{#                                id class 식별자 id는 유일값, class 형제#}
+                            </p>
                         </div>
-                    </nav>
-                </div>
-            </article>
-            <article id="media-comment">
+                        <nav class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    <a class="button is-info" onclick="add_comment('{{product_info.product_id}}')">등록</a>
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                </article>
+            </div>
+            <div id="comment">
 
-            </article>
+            </div>
         </div>
         <div class="content" style="width: 300px; margin: 5rem auto;">
             <div class="card">
@@ -149,8 +161,8 @@
                         </figure>
                     </div>
                     <div class="media-content">
-                        <p class="title is-6">${post['guide_name']}</p>
-                        <p class="subtitle is-6">${post['guide_info']}</p>
+                        <p class="title is-6">{{ product_info.profile_name }}</p>
+                        <p class="subtitle is-6">{{ product_info.userid }}</p>
                     </div>
                 </div>
                 <table>
@@ -181,7 +193,7 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>{{ product_info.cost }}</td>
+                        <td>{{ product_info.price }}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -198,7 +210,6 @@
                 </div>
             </div>
         </div>
-        {% endif %}
     </div>
     </body>
 </html>

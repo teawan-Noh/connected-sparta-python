@@ -12,7 +12,7 @@
     <!-- og태그 & Favicon -->
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-    <meta property="og:title" content="leverest - 승현이의 소소한 일기"/>
+    <meta property="og:title" content="connected"/>
     <meta property="og:description" content="mini project for Web Plus"/>
     <meta property="og:image" content="{{ url_for('static', filename='ogimg.png') }}"/>
     <!-- Bulma CSS -->
@@ -105,14 +105,14 @@
         <article class="media">
             <div class="media-content">
                 <div class="field">
-                    <label class="label" for="input-title">title</label>
+                    <label class="label" for="input-title">제목</label>
                     <p class="control">
                         <input id="input-title" class="input"
                                placeholder="제목" value="{{ products.title }}">
                     </p>
                 </div>
                 <div class="field">
-                    <label class="label" for="input-picture">picture</label>
+                    <label class="label" for="input-picture">사진</label>
                     <div class="control is-expanded">
                         <div class="file has-name">
                             <label class="file-label" style="width:100%">
@@ -129,10 +129,24 @@
                     </div>
                 </div>
                 <div class="field">
-                    <label class="label" for="input-content">나는 누구?</label>
+                    <label class="label" for="input-content">내용</label>
                     <p class="control">
                         <textarea id="input-content" class="textarea"
                                   placeholder="내용">{{ products.content }}</textarea>
+                    </p>
+                </div>
+                <div class="field">
+                    <label class="label" for="input-calender">달력</label>
+                    <p class="control">
+                        <input id="input-calender" class="input"
+                               placeholder="달력" value="{{ products.calender }}">
+                    </p>
+                </div>
+                <div class="field">
+                    <label class="label" for="input-price">가격</label>
+                    <p class="control">
+                        <input id="input-price" class="input"
+                               placeholder="가격" value="{{ products.price }}">
                     </p>
                 </div>
                 <div class="level-right">

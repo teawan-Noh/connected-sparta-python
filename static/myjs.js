@@ -35,8 +35,15 @@ function posting() {
     });
 }
 
-function detail(date) {
-    window.location.href = `/product/${date}`
+function detail(product_id) {
+    window.location.href = `/product/${product_id}`
+}
+
+function toggle_guide() {
+    $("#media-guide").toggleClass("is-hidden")
+    $("#button-guide").toggleClass("is-hidden")
+    $("#button-user").toggleClass("is-hidden")
+    console.log('실행!')
 }
 
 // 몇 시간 전 계산
@@ -91,7 +98,7 @@ function get_products(username) {
                     let time_product = new Date(product["date"])
                     let time_before = time2str(time_product)
                     // let mean = product['mean']
-                    let html_temp = `<div class="card" onclick="detail('${product.date}')" style="max-width: 300px; margin-top: 2rem">
+                    let html_temp = `<div class="card" onclick="detail('${product.product_id}')" style="max-width: 300px; margin-top: 2rem">
                                          <div class="card-image">
                                              <figure class="image is-4by3">
                                                  <img src="../static/${product.file}" class="card-img-top" alt="Placeholder image">
@@ -121,52 +128,62 @@ function get_products(username) {
     })
 }
 
-function get_comment() {
-    $("#media-comment").empty()
+function add_comment(product_id) {
+    let comment_content = $('#comment-content').val();
+    let form_data = new FormData()
+    form_data.append("content_give", comment_content)
+    form_data.append("product_id_give", product_id)
     $.ajax({
-        type: "GET",
-        url: `/product/get_comments`,
-        data: {},
+        type: "POST",
+        url: `/product/add_comments`,
+        data: form_data,
+        cache: false,
+        contentType: false,
+        processData: false,
         success: function (response) {
-            let comments = response["comments"];
-            for (let i = 0; i < comments.length; i++) {
-                let comment = comments[i]["comment"];
-                let html_temp = `<figure class="media-left">
-                                     <p class="image is-64x64">
-                                         <img src="{{ product.user_pic }}">
-                                     </p>
-                                 </figure>
-                                 <div class="media-content">
-                                     <div class="field">
-                                         <p class="control">${comment}</p>
-                                     </div>
-                                 </div>`
-                $("#media-comment").append(html_temp)
+            if (response["result"] == "success") {
+                alert(response["msg"])
+                window.location.reload()
             }
         }
     });
 }
 
-function toggle_guide() {
-    $("#media-guide").toggleClass("is-hidden")
-    $("#button-guide").toggleClass("is-hidden")
-    $("#button-user").toggleClass("is-hidden")
-}
-
-function add_comment() {
-    let new_comment = $('#new-comment').val();
+function get_comment(product_id) {
+    $("#comment").empty()
     $.ajax({
-        type: "POST",
-        url: `/product/add_comments`,
-        data: {
-            comment_give: new_comment
-        },
+        type: "GET",
+        url: `/product/get_comments?product_id_give=${product_id}`,
+        data: {},
         success: function (response) {
-            get_comment();
-            $('#new-comment').val("");
+            let comments = response["comments"];
+            console.log(comments.length)
+            for (let i = 0; i < comments.length; i++) {
+                let comment = comments[i];
+                let html_temp = `<div class="box">
+                                     <article class="media">
+                                         <div class="media-left">
+                                             <figure class="image is-64x64">
+                                                 <img src="/static/${comment.user_pic_real}" alt="Image">
+                                             </figure>
+                                         </div>
+                                         <div class="media-content">
+                                             <div class="content">
+                                             <p>
+                                                 <strong>${comment['userid']}</strong>
+                                                 <br>
+                                                  ${comment['content']}
+                                             </p>
+                                             </div>
+                                         </div>
+                                     </article>
+                                 </div>`
+                $("#comment").append(html_temp)
+            }
         }
     });
 }
+
 
 // function get_map() {
 //     $.ajax({
