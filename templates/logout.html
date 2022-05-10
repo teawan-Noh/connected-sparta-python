@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    <script src="{{ url_for('static', filename='login.js') }}"></script>
+</head>
+<body>
+<a href="javascript:kakaoLogin();"><img src="./static/kakao_login.png" alt="카카오계정 로그인" style="height: 50px;width: auto"/></a>
+<a href="javascript:kakaoLogout();">로그아웃</a>
+
+
+</body>
+</html>
