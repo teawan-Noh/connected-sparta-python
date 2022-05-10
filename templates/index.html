@@ -26,10 +26,6 @@
     <script src="{{ url_for('static', filename='login.js') }}"></script>
 
     <script>
-        function sign_in() {
-            window.location.href = "/login"
-        }
-
         function sign_out() {
             if (!Kakao.Auth.getAccessToken()) {
                 $.removeCookie('mytoken', {path: '/'});
@@ -47,10 +43,6 @@
         }
         function to_mypage() {
             window.location.href = " "
-        }
-
-        function post_product() {
-            window.location.replace("/posting")
         }
     </script>
     <style>
@@ -145,7 +137,7 @@
             <h1 class="title">connected</h1>
 
             <h2 class="navList">
-                <a>가이드 상품</a>
+                <a href="">가이드 상품</a>
                 <a>커뮤니티</a>
             </h2>
 
@@ -156,9 +148,6 @@
                     <a onclick="sign_out()">로그아웃</a>
                     <a href="/mypage">마이페이지</a>
                 {% endif %}
-
-
-
             </ul>
         </section>
     </header>
