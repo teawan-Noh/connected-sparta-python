@@ -25,9 +25,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
-    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
-    <script src="{{ url_for('static', filename='login.js') }}"></script>
-
     <style>
         body {
             background-color: RGBA(232, 52, 78, 0.2);
@@ -98,59 +95,57 @@
         //     alert("{{ msg }}")
         // {% endif %}
 
-        function t_sign_up() {
-            window.location.href = "/t_signup"
-        }
-        function g_sign_up() {
-            window.location.href = "/g_signup"
+        function login() {
+            window.location.href = "/login"
         }
 
-        function sign_in() {
+        function sign_up() {
             let userid = $("#input-userid").val()
             let password = $("#input-password").val()
+            let password2 = $("#input-password2").val()
+            console.log(userid, password, password2)
 
-            var listVar = $('input:radio[name=role]').is(":checked");
-            var role = $('input[name=role]:checked').val();
-
-            if (listVar == true) {
-                console.log(role)
-                $("#help-role-login").text("")
-            } else {
-                console.log("false")
-                alert("여행자와 가이드 중 선택해주세요!")
+            if ($("#help-id").hasClass("is-danger")) {
+                alert("아이디를 다시 확인해주세요.")
                 return;
-            }
-
-            if (userid == "") {
-                $("#help-id-login").text("아이디를 입력해주세요.")
-                $("#input-userid").focus()
+            } else if (!$("#help-id").hasClass("is-success")) {
+                alert("아이디 중복확인을 해주세요.")
                 return;
-            } else {
-                $("#help-id-login").text("")
             }
 
             if (password == "") {
-                $("#help-password-login").text("비밀번호를 입력해주세요.")
+                $("#help-password").text("비밀번호를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
                 $("#input-password").focus()
                 return;
+            } else if (!is_password(password)) {
+                $("#help-password").text("비밀번호의 형식을 확인해주세요. 영문과 숫자 필수 포함, 특수문자(!@#$%^&*) 사용가능 8-20자").removeClass("is-safe").addClass("is-danger")
+                $("#input-password").focus()
+                return
             } else {
-                $("#help-password-login").text("")
+                $("#help-password").text("사용할 수 있는 비밀번호입니다.").removeClass("is-danger").addClass("is-success")
+            }
+            if (password2 == "") {
+                $("#help-password2").text("비밀번호를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
+                $("#input-password2").focus()
+                return;
+            } else if (password2 != password) {
+                $("#help-password2").text("비밀번호가 일치하지 않습니다.").removeClass("is-safe").addClass("is-danger")
+                $("#input-password2").focus()
+                return;
+            } else {
+                $("#help-password2").text("비밀번호가 일치합니다.").removeClass("is-danger").addClass("is-success")
             }
             $.ajax({
                 type: "POST",
-                url: "/sign_in",
+                url: "/g_sign_up/save",
                 data: {
-                    role_give: role,
+                    role_give: "guide",
                     userid_give: userid,
                     password_give: password
                 },
                 success: function (response) {
-                    if (response['result'] == 'success') {
-                        $.cookie('mytoken', response['token'], {path: '/'});
-                        window.location.replace("/")
-                    } else {
-                        alert(response['msg'])
-                    }
+                    alert("회원가입을 축하드립니다!")
+                    window.location.replace("/login")
                 }
             });
         }
@@ -165,6 +160,38 @@
             return regExp.test(asValue);
         }
 
+        function check_dup() {
+            let userid = $("#input-userid").val()
+            console.log(userid)
+            if (userid == "") {
+                $("#help-id").text("아이디를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
+                $("#input-userid").focus()
+                return;
+            }
+            if (!is_nickname(userid)) {
+                $("#help-id").text("아이디의 형식을 확인해주세요. 영문과 숫자, 일부 특수문자(._-) 사용 가능. 2-10자 길이").removeClass("is-safe").addClass("is-danger")
+                $("#input-userid").focus()
+                return;
+            }
+            $("#help-id").addClass("is-loading")
+            $.ajax({
+                type: "POST",
+                url: "/sign_up/check_dup",
+                data: {
+                    userid_give: userid
+                },
+                success: function (response) {
+
+                    if (response["exists"]) {
+                        $("#help-id").text("이미 존재하는 아이디입니다.").removeClass("is-safe").addClass("is-danger")
+                        $("#input-userid").focus()
+                    } else {
+                        $("#help-id").text("사용할 수 있는 아이디입니다.").removeClass("is-danger").addClass("is-success")
+                    }
+                    $("#help-id").removeClass("is-loading")
+                }
+            });
+        }
     </script>
 </head>
 <body>
@@ -180,12 +207,6 @@
             <article class="media">
                 <div class="media-content">
                     <div class="content">
-                        <div id="div-sign-in-or-up" class="has-text-centered">
-                            <nav class="level is-mobile">
-                                <label class="role_obj"><input type="radio" id="traveler" name="role" value="traveler"><span>여행자</span></label>
-                                <label class="role_obj"><input type="radio" id="guide" name="role" value="guide"><span>가이드</span></label>
-                            </nav>
-                        </div>
                         <div class="field has-addons">
                             <div class="control has-icons-left" style="width:100%">
                                 <input id="input-userid" class="input" type="text" placeholder="아이디">
@@ -193,7 +214,11 @@
                                     <i class="fa fa-user"></i>
                                 </span>
                             </div>
+                            <div id="btn-check-dup" class="control">
+                                <button class="button is-sparta" onclick="check_dup()">중복확인</button>
+                            </div>
                         </div>
+                        <p id="help-id" class="help">아이디는 2-10자의 영문과 숫자와 일부 특수문자(._-)만 입력 가능합니다.</p>
                         <p id="help-id-login" class="help is-danger"></p>
                         <div class="field">
                             <div class="control has-icons-left">
@@ -202,23 +227,39 @@
                                     <i class="fa fa-lock"></i>
                                 </span>
                             </div>
-                            <p id="help-password" class="help is-hidden">영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. 특수문자(!@#$%^&*)도 사용 가능합니다.</p>
+                            <p id="help-password" class="help">영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. 특수문자(!@#$%^&*)도 사용 가능합니다.</p>
                         </div>
                     </div>
-                    <div id="div-sign-in-or-up" class="has-text-centered">
-                        <nav class="level is-mobile">
-                            <button class="level-item button is-sparta" onclick="sign_in()">로그인</button>
-                        </nav>
-                        <a href="javascript:kakaoLogin();"><img src="./static/kakao_login.png" alt="카카오계정 로그인" style="height: 50px;width: auto"/></a>
-                        <hr>
-                        <h4 class="mb-3">아직 회원이 아니라면</h4>
-                        <nav class="level is-mobile">
-                            <button class="level-item button is-sparta is-outlined" onclick="t_sign_up()">여행자로 회원가입하기</button>
-                            <button class="level-item button is-sparta is-outlined" onclick="g_sign_up()">가이드로 회원가입하기</button>
-                        </nav>
-                    </div>
-                    <div id="sign-up-box" class="is-hidden">
+                    <div id="sign-up-box">
+                        <div class="mb-5">
+                            <div class="field">
+                                <div class="control has-icons-left" style="width:100%">
+                                    <input id="input-password2" class="input" type="password" placeholder="비밀번호 재입력">
+                                    <span class="icon is-small is-left">
+                                        <i class="fa fa-lock"></i>
+                                    </span>
+                                </div>
+                                <p id="help-password2" class="help">비밀번호를 다시 한 번 입력해주세요.</p>
+                            </div>
+                        </div>
 
+{#                        <div class="mb-5">#}
+{#                            <div class="field">#}
+{#                                <div class="control has-icons-left" style="width:100%">#}
+{#                                    <input id="input-password2" class="input" type="password" placeholder="이메일">#}
+{#                                   <span class="icon is-small is-left">#}
+{#                                        <i class="fa fa-at"></i>#}
+{#                                    </span>#}
+{#                                </div>#}
+{#                                <p id="help-password2" class="help">이메일을 입력해주세요</p>#}
+{#                            </div>#}
+{#                        </div>#}
+
+
+                        <nav class="level is-mobile">
+                            <button class="level-item button is-sparta" onclick="sign_up()">회원가입</button>
+                            <button class="level-item button is-sparta is-outlined" onclick="login()">취소</button>
+                        </nav>
                     </div>
                 </div>
             </article>
