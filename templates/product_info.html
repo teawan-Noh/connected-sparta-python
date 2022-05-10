@@ -30,8 +30,8 @@
     <script>
     // let title = "{{ title }}"
     $(document).ready(function () {
-        get_comment('{{ products.title }}')
-        if (뭐였지) {
+        get_comment()
+        if (db.users.find_one({'users':'guide'})) {
             toggle_guide()
         }
     })
