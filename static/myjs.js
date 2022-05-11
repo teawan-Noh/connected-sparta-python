@@ -3,7 +3,7 @@ function go_posting() {
 }
 
 // post 작성
-function posting() {
+function posting(x,y) {
     let title = $('#input-title').val()
     let file = $('#input-picture')[0].files[0]
     let content = $("#input-content").val()
@@ -18,6 +18,9 @@ function posting() {
     form_data.append("calender_give", calender)
     form_data.append("price_give", price)
     form_data.append("date_give", today)
+    form_data.append("x_give",x)
+    form_data.append("y_give",y)
+    alert(x,y)
 
     $.ajax({
         type: "POST",
@@ -35,11 +38,13 @@ function posting() {
     });
 }
 
-function toggle_guide() {
-    $("#media-guide").toggleClass("is-hidden")
+function toggle_guide_product() {
+    $("#button-guide").toggleClass("is-hidden")
+}
+
+function toggle_guide_detail() {
     $("#button-guide").toggleClass("is-hidden")
     $("#button-user").toggleClass("is-hidden")
-    console.log('실행!')
 }
 
 // 몇 시간 전 계산

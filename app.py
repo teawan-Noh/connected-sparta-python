@@ -110,9 +110,8 @@ def check_dup():
 
 @app.route('/product')
 def product():
-    status = user.get_status()
     msg = request.args.get("msg")
-    return render_template('product.html', msg=msg, statusbox=status)
+    return render_template('product.html', msg=msg)
 
 ########################################################################################################################
 
@@ -313,6 +312,7 @@ def kakaologin():
         db.users.insert_one(doc)
 
     return 'a'
+
 
 @app.route('/mypage')
 def test():
