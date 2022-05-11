@@ -390,7 +390,6 @@ def myInfo():
 def userInfoUpdate():
     email = request.form['email1']
     profile_name = request.form['nickname']
-    print(profile_name)
     userid = request.args.get('user')
 
     db.users.update_one({'userid': userid}, {'$set': {'profile_name': profile_name}})
