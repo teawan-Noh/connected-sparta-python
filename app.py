@@ -21,6 +21,7 @@ db = client.cnt_project2
 @app.route('/')
 def home():
     statusbox = user.get_status()
+
     return render_template('index.html', statusbox=statusbox)
 
 
@@ -329,14 +330,14 @@ def kakaologin():
 
 
 @app.route('/mypage')
-def test():
+def mypage():
     user_info = user.getUserInfoByToken()
 
     return render_template('myPage.html', user_info=user_info)
 
 # 가이드 내상품 불러오기
-@app.route('/test2')
-def test2():
+@app.route('/myProduct')
+def myProduct():
     # 가이드 카카오 로그인 구현시 사용
     token_kakao = request.cookies.get('kakao')
     # print(token_kakao) # 화면단에서 토큰 값 세팅시 '@' 가 %40으로 변환되므로 서버단에서 사용시 replace를 사용하여 변환
@@ -357,9 +358,22 @@ def test2():
     return render_template('myProducts.html', myProducts=myProducts)
 
 
+# 개인정보 페이지 호출
+@app.route('/myInfo')
+def myInfo():
+    user_info = user.getUserInfoByToken()
+
+    return render_template('myInfo.html', user_info=user_info)
+
 # 개인정보 수정
-@app.route('/test3')
-def test3():
+@app.route('/userInfoUpdate', methods=['POST'])
+def userInfoUpdate():
+    email = request.form['email1']
+    profile_name = request.form['nickname']
+    print(profile_name)
+    userid = request.args.get('user')
+
+    db.users.update_one({'userid': userid}, {'$set': {'profile_name': profile_name}})
     user_info = user.getUserInfoByToken()
 
     return render_template('myInfo.html', user_info=user_info)
