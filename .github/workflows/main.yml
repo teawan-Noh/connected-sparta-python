@@ -1,10 +1,18 @@
-name: connected-sparta-python
+name: Deploy
 on:
   push:
     branches:
       - main
+
+env:
+  PROJECT_NAME: connected-sparta-python
+  BK_NAME: project1-sparta
+  APP_NAME: python-with-githubaction
+  DEPLOY_GROUP: python-with-githubaction-group
+
 jobs:
   build:
+    name: Build, EC2
     runs-on: ubuntu-latest
 
     steps:
@@ -40,11 +48,10 @@ jobs:
             aws-region: ap-northeast-2
 
       - name: Upload to S3
-          run: aws s3 cp --region ap-northeast-2 deploy.zip s3://deploy-test-sparta/connected-parta-python/deploy.zip
+          run: aws s3 cp --region ap-northeast-2 deploy.zip s3://$BK_NAME/$PROJECT_NAME/deploy.zip
 
-      - name: Code Deploy
-          run: aws deploy create-deployment --application-name python-with-githubaction --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name python-with-githubaction-group --s3-location bucket=deploy-test-sparta,bundleType=zip,key=connected-parta-python/deploy.zip
-
+            - name: Code Deploy
+              run: aws deploy create-deployment --application-name $APP_NAME --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name $DEPLOY_GROUP --s3-location bucket=$BK_NAME,bundleType=zip,key=$PROJECT_NAME/deploy.zip
 #      - name: Deploy to EB
 #        uses: einaregilsson/beanstalk-deploy@v16
 #        with:
