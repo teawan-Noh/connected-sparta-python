@@ -19,7 +19,19 @@ db = client.cnt_project2
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    token_kakao = request.cookies.get('kakao')
+    token_receive = request.cookies.get('mytoken')
+
+    print(token_kakao)
+    print(token_receive)
+
+    if token_receive is not None:
+        status = 0
+    else:
+        status = 123
+
+    return render_template('index.html', statusbox=status)
+
 
 @app.route('/login')
 def login():
