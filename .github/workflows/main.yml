@@ -5,10 +5,10 @@ name: CI
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
-#  push:
-#    branches: [ main ]
-  pull_request:
+  push:
     branches: [ main ]
+#  pull_request:
+#    branches: [ main ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -60,4 +60,4 @@ jobs:
         run: aws s3 cp --region ap-northeast-2 deploy.zip s3://$BK_NAME/$PROJECT_NAME/deploy.zip
 
       - name: Code Deploy
-        run: aws deploy create-deployment --application-name $APP_NAME --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name $DEPLOY_GROUP --s3-location bucket=$BK_NAME,bundleType=zip,key=$PROJECT_NAME.zip
+        run: aws deploy create-deployment --application-name $APP_NAME --deployment-group-name $DEPLOY_GROUP --s3-location bucket=$BK_NAME,bundleType=zip,key=$PROJECT_NAME/deploy.zip
