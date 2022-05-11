@@ -136,6 +136,9 @@
 
     <section class="product_box">
         <h3 class="section_subtitle">투어 상품</h3>
+        <div class="level-item">
+            <a class="button" onclick="go_posting()">투어 상품 게시</a>
+        </div>
         <div class="field is-grouped">
             <p class="control is-expanded">
                 <input class="input" type="text" placeholder="키워드를 검색하세요.">
@@ -144,7 +147,7 @@
                 <a class="button is-info"><i class="fa fa-search"></i></a>
             </p>
         </div>
-        <div class="card-list">
+        <div id="product-box" class="card-list">
             <div class="card">
             <div class="card-image">
                 <figure class="image is-4by3">
@@ -163,42 +166,5 @@
         </div>
         </div>
     </section>
-
-<section class="section">
-    <div id="product-box" class="container">
-{#        <div class="box">#}
-{#            <article class="media">#}
-{#                <div class="media-left">#}
-{#                    <a class="image is-64x64" href="#">#}
-{#                        <img class="is-rounded"#}
-{#                             src={{ url_for("static", filename="profile_placeholder.png") }} alt="Image">#}
-{#                    </a>#}
-{#                </div>#}
-{#                <div class="media-content">#}
-{#                    <div class="content">#}
-{#                        <p>#}
-{#                            <strong>홍길동</strong> <small>@username</small> <small>10분 전</small>#}
-{#                            <br>#}
-{#                            글을 적는 칸#}
-{#                        </p>#}
-{#                    </div>#}
-{#                    <nav class="level is-mobile">#}
-{#                        <div class="level-left">#}
-{#                            <a class="level-item is-sparta" aria-label="heart"#}
-{#                               onclick="toggle_like('', 'heart')">#}
-{#                                  <span class="icon is-small"><i class="fa fa-heart"#}
-{#                                                                 aria-hidden="true"></i></span>&nbsp;<span#}
-{#                                    class="like-num">2.7k</span>#}
-{#                            </a>#}
-{#                        </div>#}
-{#                    </nav>#}
-{#                </div>#}
-{#            </article>#}
-{#        </div>#}
-    </div>
-</section>
-<div class="level-item">
-    <a class="button" onclick="go_posting()">투어 상품 게시</a>
-</div>
 </body>
 </html>
