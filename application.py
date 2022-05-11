@@ -19,7 +19,7 @@ application.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
 SECRET_KEY = 'SPARTA'
 
-client = MongoClient('15.164.98.36', 27017, username="test", password="test")
+client = MongoClient('54.180.31.220', 27017, username="test", password="test")
 db = client.cnt_project2
 
 @application.route('/fileupload', methods=['POST'])
