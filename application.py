@@ -19,7 +19,7 @@ application.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
 SECRET_KEY = 'SPARTA'
 
-client = MongoClient('15.164.98.36', 27017, username="test", password="test")
+client = MongoClient('54.180.31.220', 27017, username="test", password="test")
 db = client.cnt_project2
 
 @application.route('/fileupload', methods=['POST'])
@@ -399,12 +399,12 @@ def userInfoUpdate():
     return render_template('myInfo.html', user_info=user_info, statusbox=status)
 
 
-#
-# if __name__ == '__main__':
-#     application.debug = True
-#     application.run()
+
 if __name__ == '__main__':
-    application.run('0.0.0.0', port=5000, debug=True)
+    application.debug = True
+    application.run()
+# if __name__ == '__main__':
+#     application.run('0.0.0.0', port=5000, debug=True)
 
 ########################################################################################################################
 
