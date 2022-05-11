@@ -100,7 +100,7 @@
     </div>
 </nav>
 <div class="columns" style="max-width: 1200px; margin:auto;">
-    {% if status %}
+    {% if result == 'guide' %}
     <div class="box">
         <article class="media">
             <div class="media-content">
@@ -159,70 +159,6 @@
                 </div>
             </div>
         </article>
-    </div>
-    <div class="content" style="width: 300px; margin: 5rem auto;">
-        <div class="card">
-            <div id="media_guide" class="is-hidden">
-                <div class="media-left">
-                    <figure class="image is-48x48">
-                        <img src="" class="card-img-guide">
-                    </figure>
-                </div>
-                <div class="media-content">
-                    <p class="title is-6">${products['guide_name']}</p>
-                    <p class="subtitle is-6">${products['guide_info']}</p>
-                </div>
-            </div>
-            <table>
-                <thead>
-                <tr>
-                    <th>여행 지역</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>products.map_api</td>
-                </tr>
-                </tbody>
-                <thead>
-                <tr>
-                    <th>여행 일정</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>{{ products.calender }}</td>
-                </tr>
-                </tbody>
-                <thead>
-                <tr>
-                    <th>가격</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>{{ products.price }}</td>
-                </tr>
-                </tbody>
-            </table>
-            <div id="button_guide" class="is-hidden">
-                <div class="buttons is-centered">
-                    <button class="button is-fullwidth" onclick="edit_product()"
-                            style="max-width: 280px; height: 30px;">상품 수정하기
-                    </button>
-                    <button class="button is-fullwidth" onclick="delete_product()"
-                            style="max-width: 280px; height: 30px; margin-bottom: 15px;">상품 삭제하기
-                    </button>
-                </div>
-            </div>
-            <div id="button_user">
-                <div class="buttons is-centered">
-                    <button class="button is-fullwidth" onclick="go_bucket()"
-                            style="max-width: 280px; height: 80px; margin-bottom: 15px;">장바구니
-                    </button>
-                </div>
-            </div>
-        </div>
     </div>
     {% endif %}
 </div>

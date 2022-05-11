@@ -5,8 +5,8 @@ import hashlib
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from werkzeug.utils import secure_filename
 from bson.json_util import dumps
-import json
 from datetime import datetime, timedelta
+import user
 
 
 app = Flask(__name__)
@@ -32,6 +32,7 @@ def home():
         status = 123
 
     return render_template('index.html', statusbox=status)
+
 
 @app.route('/login')
 def login():
@@ -132,9 +133,8 @@ def go_posting():
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({"userid": payload["id"]})
         result = user_info["role"]
-        status = (result == 'guide')
         products = db.products.find({})
-        return render_template('product_write.html', status=status, products=products)
+        return render_template('product_write.html', result=result, products=products)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
@@ -160,6 +160,11 @@ def posting():
         # 따온 파일 이름과 형식을 저장해주는 코드
         save_to = f'static/{filename}.{extension}'
         file.save(save_to)
+        product_count = db.products.estimated_document_count()
+        if product_count == 0:
+            max_value = 1
+        else:
+            max_value = product_count + 1
         # username(id), 닉네임, 프로필 사진, 코멘트, 날짜 doc dictionary에 저장
         doc = {
             "userid": user_info["userid"],
@@ -171,13 +176,48 @@ def posting():
             "calender":calender_receive,
             "price":price_receive,
             "date": date_receive,
-            "product_id":1
+            "pid":max_value
         }
         db.products.insert_one(doc)
         # 성공하면 '포스팅 성공!'을 띄우자!
         return jsonify({"result": "success", 'msg': '포스팅 성공'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
+
+# @app.route('/edit_posting', methods=['POST'])
+# def edit_posting():
+#     token_receive = request.cookies.get('mytoken')
+#     try:
+#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+#         user_info = db.users.find_one({"userid": payload["id"]})
+#         today = datetime.now()
+#         title_receive = request.form["title_give"]
+#         file = request.files["file_give"]
+#         content_receive = request.form["content_give"]
+#         date_receive = request.form["date_give"]
+#         calender_receive = request.form["calender_give"]
+#         price_receive = request.form["price_give"]
+#         today_receive = today.strftime('%Y-%m-%d-%H-%M-%S')
+#         filename = f'file-{today_receive}'
+#         extension = file.filename.split('.')[-1]
+#         save_to = f'static/{filename}.{extension}'
+#         file.save(save_to)
+#         doc = {
+#             "userid": user_info["userid"],
+#             "profile_name": user_info["profile_name"],
+#             "profile_pic_real": user_info["profile_pic_real"],
+#             "title": title_receive,
+#             "file": f'{filename}.{extension}',
+#             "content": content_receive,
+#             "calender":calender_receive,
+#             "price":price_receive,
+#             "date": date_receive
+#         }
+#         db.products.update_one(doc)
+#         # 성공하면 '포스팅 성공!'을 띄우자!
+#         return jsonify({"result": "success", 'msg': '포스팅 성공'})
+#     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+#         return redirect(url_for("home"))
 
 
 # 포스팅 불러오기
@@ -187,15 +227,15 @@ def get_products():
     return jsonify({"result": "success", "msg": "포스팅을 가져왔습니다.", "products":dumps(products)})
 
 # 상품 상세 페이지로 이동
-@app.route('/product/<product_id>')
-def product_detail(product_id):
+@app.route('/product/<pid>')
+def product_detail(pid):
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({"userid": payload["id"]}, {"_id": False})
+        # print(user_info)
         result = user_info["role"]
-        print(result)
-        product_info = db.products.find_one({"product_id": int(product_id)}, {"_id": False})
+        product_info = db.products.find_one({"pid": int(pid)}, {"_id": False})
         return render_template('product_info.html', result=result, user_info=user_info, product_info=product_info)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
@@ -208,12 +248,11 @@ def add_comments():
         # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({"userid": payload["id"]})
-        product_id_receive = request.form["product_id_give"]
+        cid_receive = request.form["cid_give"]
         # grade_receive = request.form['grade_give']
         content_receive = request.form['content_give']
-        print(content_receive)
         doc = {
-            "product_id":product_id_receive,
+            "cid":cid_receive,
             "userid":user_info["userid"],
             "profile_pic_real": user_info["profile_pic_real"],
             "content": content_receive
@@ -252,12 +291,11 @@ def add_comments():
 # 댓글 불러오기
 @app.route('/product/get_comments', methods=['GET'])
 def get_comments():
-    product_id_receive = request.args.get("product_id_give")
+    cid_receive = request.args.get("cid_give")
     # data form box / get args
     # comments = list(db.comments.find({"comment":comment_receive}, {"_id": False}))
     # return jsonify({'result': 'success', 'comments': comments})
-    comments = list(db.comments.find({"product_id":product_id_receive}, {'_id': False}))
-    print(comments)
+    comments = list(db.comments.find({"cid":cid_receive}, {'_id': False}))
     # count_grade = db.comments.count_documents({})
     # add_grade = 0
     # for comment in comments:
@@ -286,11 +324,11 @@ def kakaologin():
     return 'a'
 
 
-@app.route('/test')
+@app.route('/mypage')
 def test():
-    user_info = getUserInfoByToken()
+    user_info = user.getUserInfoByToken()
 
-    return render_template('test.html', user_info=user_info)
+    return render_template('myPage.html', user_info=user_info)
 
 # 가이드 내상품 불러오기
 @app.route('/test2')
@@ -312,34 +350,17 @@ def test2():
         myProducts = list(db.products.find({'userid': set_val}, {'_id': False}))
 
     print(myProducts)
-    return render_template('test2.html', myProducts=myProducts)
+    return render_template('myProducts.html', myProducts=myProducts)
 
 
 # 개인정보 수정
 @app.route('/test3')
 def test3():
-    user_info = getUserInfoByToken()
+    user_info = user.getUserInfoByToken()
 
-    return render_template('test3.html', user_info=user_info)
+    return render_template('myInfo.html', user_info=user_info)
 
-def getUserInfoByToken():
-    token_kakao = request.cookies.get('kakao')
-    token_receive = request.cookies.get('mytoken')
 
-    if token_receive is not None:
-        try:
-            payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-            user_info = db.users.find_one({"userid": payload["id"]})
-        except jwt.ExpiredSignatureError:
-            return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
-        except jwt.exceptions.DecodeError:
-            return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
-
-    if token_kakao is not None:
-        set_val = token_kakao.replace('%40', '@')
-        user_info = db.users.find_one({"userid": set_val}, {'_id': False})
-
-    return user_info;
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
