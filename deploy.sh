@@ -1,6 +1,6 @@
 REPO=/home/ubuntu/app/
 cd ${REPO}
 
-sudo npm install
+#sudo npm install
 
 npm run-script dev
