@@ -15,79 +15,33 @@
 
     <!-- Bulma CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
     <!-- Font Awesome CSS -->
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
-    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Dongle:wght@300&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    <script src="{{ url_for('static', filename='login.js') }}"></script>
     <style>
-        body {
-            background-color: RGBA(232, 52, 78, 0.2);
-            min-height: 100vh;
-        }
+        .header {
+            padding: 50px 30px 20px 15px;
+            display: flex;
+            justify-content: space-between;
 
-        .section {
-            padding: 1rem 1.5rem;
-            max-width: 750px;
-            margin: auto;
         }
 
         .title {
-            font-weight: 800;
-            font-size: 5rem;
-            font-family: 'Gaegu', cursive;
-        }
-
-        .subtitle {
-            font-size: 2rem;
-            font-family: 'Gaegu', cursive;
-        }
-
-        .is-sparta {
-            color: #e8344e !important;
-        }
-
-        .button.is-sparta {
-            background-color: #e8344e;
-            border-color: transparent;
-            color: #fff !important;
-        }
-
-        .button.is-sparta.is-outlined {
-            background-color: transparent;
-            border-color: #e8344e;
-            color: #e8344e !important;
-        }
-
-        .help {
-            color: gray;
-        }
-
-        .role_obj input[type="radio"] {
-            display: none;
-        }
-
-        .role_obj input[type="radio"] + span {
-            display: inline-block;
-            padding: 8px 80px;
-            margin-bottom: 15px;
-            border: 1px solid #dfdfdf;
-            border-radius: 5px;
-            background-color: #ffffff;
-            text-align: center;
+            margin: auto;
+            color: navy;
+            font-size: 80px;
+            font-family: 'Righteous', cursive;
             cursor: pointer;
         }
-
-        .role_obj input[type="radio"]:checked + span {
-            background-color: #e8344e;
-            color: #ffffff;
-        }
-
     </style>
 
     <script>
@@ -195,12 +149,11 @@
     </script>
 </head>
 <body>
-<section class="hero is-white">
-    <div class="hero-body has-text-centered" style="padding-bottom:1rem;margin:auto;">
-        <h1 class="title is-sparta">CONNECTED</h1>
-        <h3 class="subtitle is-sparta">여행자 & 가이드 연결 플랫폼</h3>
-    </div>
-</section>
+<header>
+    <section class="header">
+        <a class="title" href="/">connected</a>
+    </section>
+</header>
 <section class="section">
     <div class="container">
         <div class="box" style="max-width: 480px;margin:auto">
@@ -242,19 +195,6 @@
                                 <p id="help-password2" class="help">비밀번호를 다시 한 번 입력해주세요.</p>
                             </div>
                         </div>
-
-{#                        <div class="mb-5">#}
-{#                            <div class="field">#}
-{#                                <div class="control has-icons-left" style="width:100%">#}
-{#                                    <input id="input-password2" class="input" type="password" placeholder="이메일">#}
-{#                                   <span class="icon is-small is-left">#}
-{#                                        <i class="fa fa-at"></i>#}
-{#                                    </span>#}
-{#                                </div>#}
-{#                                <p id="help-password2" class="help">이메일을 입력해주세요</p>#}
-{#                            </div>#}
-{#                        </div>#}
-
 
                         <nav class="level is-mobile">
                             <button class="level-item button is-sparta" onclick="sign_up()">회원가입</button>
