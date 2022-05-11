@@ -30,8 +30,6 @@ def get_status():
     token_kakao = request.cookies.get('kakao')
     token_receive = request.cookies.get('mytoken')
 
-    print(token_kakao)
-    print(token_receive)
 
     if token_receive is not None:
         status = 0

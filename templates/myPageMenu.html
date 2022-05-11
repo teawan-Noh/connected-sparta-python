@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
     <style>
         .body-wrap {
-            width: 1200px;
+            width: 200px;
             margin: 30px auto;
         }
         .menu-wrap {
@@ -18,40 +17,61 @@
             display: flex;
             justify-content: space-between;
             font-size: 25px;
+            color : navy;
         }
         .menu {
-
             margin: auto;
             width: 200px;
         }
         .mylist {
+            font-family: 'Jua', sans-serif;
+            font-size: 20px;
             margin: 5px;
+        }
+        .small_list {
+            font-family: 'Jua', sans-serif;
+            font-size: 15px;
         }
     </style>
 </head>
 <body>
-<div class="body-wrap">
-    <div class="menu-wrap">
-        <h1 class="menu-title">마이페이지</h1>
-        <aside class="menu">
-            <ul class="menu-list">
-                <li><a class="is-active mylist">MY PROFILE</a></li>
-                <li><a class="mylist">결제내역</a></li>
-                <li><a class="mylist">장바구니</a></li>
-                <li><a class="mylist">즐겨찾기</a></li>
-                <li><a class="mylist">나의 여행 상품</a></li>
-                <li><a class="mylist">활동</a>
-                    <ul>
-                        <li><a>나의 커뮤니티</a></li>
-                        <li><a>나의 댓글</a></li>
-                    </ul>
-                </li>
-                <li><a class="mylist">회원정보 관리</a></li>
-            </ul>
-        </aside>
-    </div>
+    <div class="body-wrap">
+        <div class="menu-wrap">
+            <h1 class="menu-title">마이페이지</h1>
 
-</div>
+            {% if user_info.role == 'traveler' %}
+                <aside class="menu">
+                    <ul class="menu-list">
+                        <li><a class="mylist">MY PROFILE</a></li>
+                        <li><a class="mylist" href="">결제내역</a></li>
+                        <li><a class="mylist" href="">장바구니</a></li>
+                        <li><a class="mylist" href="">즐겨찾기</a></li>
+                        <li><a class="mylist" href="">활동</a>
+                            <ul>
+                                <li><a class="small_list">나의 커뮤니티</a></li>
+                                <li><a class="small_list">나의 댓글</a></li>
+                            </ul>
+                        </li>
+                        <li><a class="mylist" href="/myInfo">회원정보 관리</a></li>
+                    </ul>
+                </aside>
+            {% else %}
+                <aside class="menu">
+                    <ul class="menu-list">
+                        <li><a class="mylist">MY PROFILE</a></li>
+                        <li><a class="mylist" href="/myProduct">나의 여행 상품</a></li>
+                        <li><a class="mylist">나의 활동</a>
+                            <ul>
+                                <li><a>나의 커뮤니티</a></li>
+                                <li><a>나의 댓글</a></li>
+                            </ul>
+                        </li>
+                        <li><a class="mylist" href="/myInfo">회원정보 관리</a></li>
+                    </ul>
+                </aside>
+            {% endif %}
+        </div>
+    </div>
 
 </body>
 </html>

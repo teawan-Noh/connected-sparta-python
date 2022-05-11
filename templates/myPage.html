@@ -26,12 +26,45 @@
     <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
     <script src="{{ url_for('static', filename='login.js') }}"></script>
 
-
+    <style>
+        .wrap {
+            width: 1200px;
+            margin: auto;
+            display: flex;
+        }
+        .my_profile {
+            display: flex;
+            width: 800px;
+            height: 150px;
+            margin: 50px auto;
+        }
+        .role_id{
+            margin: 10px 30px;
+            font-family: 'Jua', sans-serif;
+            font-size: 25px;
+        }
+        .role {
+            color: #569aff;
+        }
+    </style>
 </head>
 <body>
 {% include 'mainHeader.html' %}
-{% include 'myPageMenu.html' %}
+<div class="wrap">
+    <div class="myPageMenu">
+        {% include 'myPageMenu.html' %}
+    </div>
+    <div class="my_profile">
+        <figure class="image is-128x128">
+            <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png">
+        </figure>
+        <div class="role_id">
+            <div class="role">{{ user_info.role }}</div>
+            <div class="userid">{{ user_info.userid }}</div>
+        </div>
 
+    </div>
+</div>
 
 {#{{ user_info }}#}
 {#<hr>#}
