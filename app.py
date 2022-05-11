@@ -21,9 +21,7 @@ db = client.cnt_project2
 @app.route('/')
 def home():
     statusbox = user.get_status()
-
     return render_template('index.html', statusbox=statusbox)
-
 
 @app.route('/login')
 def login():
