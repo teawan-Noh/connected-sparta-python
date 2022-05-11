@@ -137,7 +137,8 @@ def go_posting():
         return redirect(url_for("home"))
 
 @app.route('/posting', methods=['POST'])
-def posting2():
+def posting5():
+    print("test")
     token_receive = request.cookies.get('mytoken')
     try:
         # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
