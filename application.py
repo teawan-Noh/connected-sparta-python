@@ -158,8 +158,6 @@ def go_posting():
         return redirect(url_for("home"))
 
 @application.route('/posting', methods=['POST'])
-def posting3():
-@app.route('/posting', methods=['POST'])
 def posting():
     token_receive = request.cookies.get('mytoken')
     try:
