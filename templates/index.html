@@ -11,6 +11,7 @@
 
     <!-- Bulma CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
     <!-- Font Awesome CSS -->
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
@@ -44,10 +45,6 @@
 
     </script>
     <style>
-        body {
-            background-color: #F8F8F8;
-            min-height: 100vh;
-        }
         .header{
             background-color: white;
             padding: 30px 50px 15px;
@@ -60,25 +57,6 @@
             font-size: 40px;
             font-family: 'Righteous', cursive;
             cursor: pointer;
-        }
-        .input {
-            width: 520px;
-            height: 64px;
-            padding-left: 24px;
-            color: #202020;
-            font-size: 18px;
-            border: 0;
-            border-radius: 16px;
-            box-shadow: 0 8px 16px 0 rgb(32 32 32 / 8%);
-        }
-        .is-info {
-            position: relative;
-            width: 64px;
-            height: 64px;
-            border-radius: 16px;
-            background: #569aff;
-            -webkit-box-shadow: 0 8px 16px 0 rgb(35 0 104 / 16%);
-            box-shadow: 0 8px 16px 0 rgb(35 0 104 / 16%);
         }
         .navList {
             font-family: 'Jua', sans-serif;
@@ -103,7 +81,26 @@
             margin: 30px auto;
             width: 580px;
         }
+        .input {
+            width: 520px;
+            height: 64px;
+            padding-left: 24px;
+            color: #202020;
+            font-size: 18px;
+            border: 0;
+            border-radius: 16px;
+            box-shadow: 0 8px 16px 0 rgb(32 32 32 / 8%);
+        }
 
+        .is-info {
+            position: relative;
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: #569aff;
+            -webkit-box-shadow: 0 8px 16px 0 rgb(35 0 104 / 16%);
+            box-shadow: 0 8px 16px 0 rgb(35 0 104 / 16%);
+        }
         .product_box{
             width: 1200px;
             margin: auto;
@@ -132,10 +129,10 @@
 <body>
     <header>
         <section class="header">
-            <h1 class="title">connected</h1>
+            <a class="title" href="/">connected</a>
 
             <h2 class="navList">
-                <a href="">가이드 상품</a>
+                <a href="/product">가이드 상품</a>
                 <a>커뮤니티</a>
             </h2>
 
@@ -191,65 +188,7 @@
                 </div>
             </div>
         </div>
-            <div class="card">
-            <div class="card-image">
-                <figure class="image is-4by3">
-                    <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
-                </figure>
-            </div>
-            <div class="card-content">
-                <div class="media">
-                    <div class="media-left">
-                        <figure class="image is-48x48">
-                            <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
-                        </figure>
-                    </div>
-                    <div class="media-content">
-                        <p class="title is-4">John Smith</p>
-                        <p class="subtitle is-6">@johnsmith</p>
-                    </div>
-                </div>
-
-                <div class="content">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Phasellus nec iaculis mauris. <a>@bulmaio</a>.
-                    <a href="#">#css</a> <a href="#">#responsive</a>
-                    <br>
-                    <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
-                </div>
-            </div>
         </div>
-            <div class="card">
-            <div class="card-image">
-                <figure class="image is-4by3">
-                    <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
-                </figure>
-            </div>
-            <div class="card-content">
-                <div class="media">
-                    <div class="media-left">
-                        <figure class="image is-48x48">
-                            <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
-                        </figure>
-                    </div>
-                    <div class="media-content">
-                        <p class="title is-4">John Smith</p>
-                        <p class="subtitle is-6">@johnsmith</p>
-                    </div>
-                </div>
-
-                <div class="content">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Phasellus nec iaculis mauris. <a>@bulmaio</a>.
-                    <a href="#">#css</a> <a href="#">#responsive</a>
-                    <br>
-                    <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
-                </div>
-            </div>
-        </div>
-        </div>
-
-
     </section>
 </body>
 </html>

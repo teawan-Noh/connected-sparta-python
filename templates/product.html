@@ -3,12 +3,11 @@
 <head>
 
     <!-- Webpage Title -->
-    <title>Home | CONNECTED</title>
+    <title>Tour Product | CONNECTED</title>
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <!-- og태그 & Favicon -->
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
@@ -17,11 +16,12 @@
     <meta property="og:image" content="{{ url_for('static', filename='ogimg.png') }}"/>
     <!-- Bulma CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
     <!-- Font Awesome CSS -->
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <!-- 코드 길이를 줄이기 위해 중복되는 css 파일은 합쳐보자! -->
-    <!-- Bulma에 대한 css이기 때문에 Bulma CSS보다 아래에 위치해야한다. -->
-    <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
@@ -32,78 +32,140 @@
         get_products()
     })
     </script>
+    <style>
+        .header{
+            background-color: white;
+            padding: 30px 50px 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .title {
+            width: 200px;
+            color: navy;
+            font-size: 40px;
+            font-family: 'Righteous', cursive;
+            cursor: pointer;
+        }
+        .navList {
+            font-family: 'Jua', sans-serif;
+            margin-top: 10px;
+            width: 250px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 25px;
+            cursor: pointer;
+        }
+        .toputil {
+            font-family: 'Noto Sans KR', sans-serif;
+            width: 150px;
+            margin-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            flex-direction: row-reverse;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .is-grouped {
+            margin: 30px auto;
+            width: 580px;
+        }
+        .input {
+            width: 520px;
+            height: 64px;
+            padding-left: 24px;
+            color: #202020;
+            font-size: 18px;
+            border: 0;
+            border-radius: 16px;
+            box-shadow: 0 8px 16px 0 rgb(32 32 32 / 8%);
+        }
 
+        .is-info {
+            position: relative;
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: #569aff;
+            -webkit-box-shadow: 0 8px 16px 0 rgb(35 0 104 / 16%);
+            box-shadow: 0 8px 16px 0 rgb(35 0 104 / 16%);
+        }
+        .product_box {
+            width: 1200px;
+            margin: auto;
+        }
+        .section_subtitle {
+            font-family: 'Jua', sans-serif;
+            width:9%;
+            margin: 50px auto 30px;
+            display: flex;
+            font-size: 30px;
+            color: navy;
+        }
+        .card-list {
+            margin-top: 80px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .card {
+            width: 350px;
+            height: 500px;
+            margin-bottom: 40px;
+        }
+    </style>
 </head>
 <body>
-<nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-        <a class="navbar-item" href="/">
-            <img src="{{ url_for('static', filename='logo.png') }}">
-            <strong class="is-sparta"
-                    style="font-family: 'Stylish', sans-serif;font-size: larger;">connected</strong>
-        </a>
 
-        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
-           data-target="navbarBasicExample">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-        </a>
-    </div>
+<header>
+    <section class="header">
+        <a class="title" href="/">connected</a>
+        <h2 class="navList">
+            <a href="/product">가이드 상품</a>
+            <a>커뮤니티</a>
+        </h2>
+        <ul class="toputil">
+            {% if statusbox == 0 %}
+                <a onclick="sign_out()">로그아웃</a>
+                <a href="/mypage">마이페이지</a>
+            {% else %}
+                <a href="/login">로그인</a>
+            {% endif %}
+        </ul>
+    </section>
+</header>
 
-    <div id="navbar-category" class="navbar-menu" style="align-self: center">
-        <div class="navbar-start">
-            <a class="navbar-item" onclick='$("#modal-category").addClass("is-active")'>
-                지역 검색 / 일정 검색
-            </a>
+    <section class="product_box">
+        <h3 class="section_subtitle">투어 상품</h3>
+        <div class="field is-grouped">
+            <p class="control is-expanded">
+                <input class="input" type="text" placeholder="키워드를 검색하세요.">
+            </p>
+            <p class="control">
+                <a class="button is-info"><i class="fa fa-search"></i></a>
+            </p>
         </div>
-    </div>
-    <div class="modal" id="modal-category">
-        <div class="modal-background" onclick='$("#modal-category").removeClass("is-active")'></div>
-        <div class="tabs is-centered">
-            <ul>
-                <li class="is-active"><a>지역</a></li>
-                <li><a>일정</a></li>
-            </ul>
-        </div>
-        <button class="modal-close is-large" aria-label="close"
-                onclick='$("#modal-category").removeClass("is-active")'></button>
-    </div>
-
-    <div id="navbar-content" class="navbar-end">
-        <div class="navbar-start">
-            <a class="navbar-item">여행 상품</a>
-            <a class="navbar-item">커뮤니티</a>
-            <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link" href="">
-                    마이페이지
-                </a>
-                <div class="navbar-dropdown">
-                    <a class="navbar-item" href="">
-                        회원정보
-                    </a>
-                    <a class="navbar-item" href="">
-                        장바구니 내역
-                    </a>
-                    <a class="navbar-item" href="">
-                        즐겨찾기
-                    </a>
-                    <a class="navbar-item" href="">
-                        내가 쓴 댓글
-                    </a>
-                    <a class="navbar-item" href="/logout">
-                        로그아웃
-                    </a>
+        <div class="card-list">
+            <div class="card">
+            <div class="card-image">
+                <figure class="image is-4by3">
+                    <img src={{ url_for("static", filename="profile_placeholder.png") }} alt="Image">
+                </figure>
+            </div>
+            <div class="card-content">
+                <div class="content">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Phasellus nec iaculis mauris. <a>@bulmaio</a>.
+                    <a href="#">#css</a> <a href="#">#responsive</a>
+                    <br>
+                    <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
                 </div>
             </div>
         </div>
-    </div>
-</nav>
+        </div>
+    </section>
+
 <section class="section">
-    <div class="level-item" style="margin-bottom: 4rem;">
-        <a class="button" onclick="go_posting()">포스팅하기</a>
-    </div>
-    <div id="product-box" class="card-list">
+    <div id="product-box" class="container">
 {#        <div class="box">#}
 {#            <article class="media">#}
 {#                <div class="media-left">#}
@@ -135,5 +197,8 @@
 {#        </div>#}
     </div>
 </section>
+<div class="level-item">
+    <a class="button" onclick="go_posting()">투어 상품 게시</a>
+</div>
 </body>
 </html>
