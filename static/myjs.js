@@ -20,7 +20,6 @@ function posting(x,y) {
     form_data.append("date_give", today)
     form_data.append("x_give",x)
     form_data.append("y_give",y)
-    alert(x,y)
 
     $.ajax({
         type: "POST",
@@ -133,37 +132,38 @@ function detail(pid) {
     window.location.href = `/product/${pid}`
 }
 
-// function edit_product() {
-//     let title = $('#input-title').val()
-//     let file = $('#input-picture')[0].files[0]
-//     let content = $("#input-content").val()
-//     let calender = $("#input-calender").val()
-//     let price = $("#input-price").val()
-//     let today = new Date().toISOString()
-//     // form_data 초기화
-//     let form_data = new FormData()
-//     form_data.append("title_give", title)
-//     form_data.append("file_give", file)
-//     form_data.append("content_give", content)
-//     form_data.append("calender_give", calender)
-//     form_data.append("price_give", price)
-//     form_data.append("date_give", today)
-//
-//     $.ajax({
-//         type: "POST",
-//         url: "/edit_posting",
-//         data: form_data,
-//         cache: false,
-//         contentType: false,
-//         processData: false,
-//         success: function (response) {
-//             if (response["result"] == "success") {
-//                 alert(response["msg"])
-//                 window.location.href = `/product`
-//             }
-//         }
-//     });
-// }
+function edit_product(pid) {
+    let title = $('#input-title').val()
+    let file = $('#input-picture')[0].files[0]
+    let content = $("#input-content").val()
+    let calender = $("#input-calender").val()
+    let price = $("#input-price").val()
+    let today = new Date().toISOString()
+    // form_data 초기화
+    let form_data = new FormData()
+    form_data.append("title_give", title)
+    form_data.append("file_give", file)
+    form_data.append("content_give", content)
+    form_data.append("calender_give", calender)
+    form_data.append("price_give", price)
+    form_data.append("date_give", today)
+    form_data.append("pid", pid)
+
+    $.ajax({
+        type: "POST",
+        url: "/edit_posting",
+        data: form_data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            if (response["result"] == "success") {
+                alert(response["msg"])
+                window.location.href = `/product`
+            }
+        }
+    });
+}
 
 function add_comment(pid) {
     let comment_content = $('#comment-content').val();
@@ -220,19 +220,6 @@ function get_comment(cid) {
         }
     });
 }
-
-
-// function get_map() {
-//     $.ajax({
-//         type: "POST",
-//         url: `/product/maps`,
-//         data: {},
-//         success: function (response) {
-//             alert(response["msg"])
-//             window.location.href = "/detail/{{ word }}?status=old"
-//         }
-//     });
-// }
 
 function go_bucket() {
     window.location.href = "/mypage/bucket"
