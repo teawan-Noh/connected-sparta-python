@@ -20,15 +20,9 @@ db = client.cnt_project2
 
 @app.route('/')
 def home():
-    token_kakao = request.cookies.get('kakao')
-    token_receive = request.cookies.get('mytoken')
+    statusbox = user.get_status()
 
-    if token_receive or token_kakao is not None:
-        status = 0
-    else:
-        status = 123
-
-    return render_template('index.html', statusbox=status)
+    return render_template('index.html', statusbox=statusbox)
 
 
 @app.route('/login')
@@ -115,12 +109,21 @@ def check_dup():
     # print(value_receive, type_receive, exists)
     return jsonify({'result': 'success', 'exists': exists})
 
+########################################################################################################################
+
 @app.route('/product')
 def product():
-    msg = request.args.get("msg")
-    return render_template('product.html', msg=msg)
-
-########################################################################################################################
+    token_receive = request.cookies.get('mytoken')
+    try:
+        # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"userid": payload["id"]})
+        result = user_info["role"]
+        msg = request.args.get("msg")
+        statusbox = user.get_status()
+        return render_template('product.html', result=result, msg=msg, statusbox=statusbox)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
 
 @app.route('/go_posting')
 def go_posting():
@@ -150,6 +153,9 @@ def posting():
         date_receive = request.form["date_give"]
         calender_receive = request.form["calender_give"]
         price_receive = request.form["price_give"]
+        x_receive = request.form["x_give"]
+        y_receive = request.form["y_give"]
+        print(x_receive, y_receive)
         today_receive = today.strftime('%Y-%m-%d-%H-%M-%S')
         filename = f'file-{today_receive}'
         # 파일 형식을 따오는 코드
@@ -170,6 +176,8 @@ def posting():
             "title": title_receive,
             "file": f'{filename}.{extension}',
             "content": content_receive,
+            "x":x_receive,
+            "y":y_receive,
             "calender":calender_receive,
             "price":price_receive,
             "date": date_receive,
@@ -369,8 +377,6 @@ def userInfoUpdate():
     user_info = user.getUserInfoByToken()
 
     return render_template('myInfo.html', user_info=user_info)
-
-
 
 
 
