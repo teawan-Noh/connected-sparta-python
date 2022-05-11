@@ -391,6 +391,7 @@ def userInfoUpdate():
     email = request.form['email1']
     profile_name = request.form['nickname']
     userid = request.args.get('user')
+    print(userid)
 
     db.users.update_one({'userid': userid}, {'$set': {'profile_name': profile_name}})
     user_info = user.getUserInfoByToken()
