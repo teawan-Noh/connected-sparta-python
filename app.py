@@ -20,8 +20,8 @@ db = client.cnt_project2
 
 @app.route('/')
 def home():
-    statusbox = user.get_status()
-    return render_template('index.html', statusbox=statusbox)
+    status = user.get_status()
+    return render_template('index.html', statusbox=status)
 
 @app.route('/login')
 def login():
@@ -118,8 +118,8 @@ def product():
         user_info = db.users.find_one({"userid": payload["id"]})
         result = user_info["role"]
         msg = request.args.get("msg")
-        statusbox = user.get_status()
-        return render_template('product.html', result=result, msg=msg, statusbox=statusbox)
+        status = user.get_status()
+        return render_template('product.html', result=result, msg=msg, statusbox=status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
@@ -132,12 +132,13 @@ def go_posting():
         user_info = db.users.find_one({"userid": payload["id"]})
         result = user_info["role"]
         products = db.products.find({})
-        return render_template('product_write.html', result=result, products=products)
+        status = user.get_status()
+        return render_template('product_write.html', result=result, products=products, statusbox=status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
 @app.route('/posting', methods=['POST'])
-def posting3():
+def posting():
     token_receive = request.cookies.get('mytoken')
     try:
         # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
@@ -239,7 +240,8 @@ def product_detail(pid):
         # print(user_info)
         result = user_info["role"]
         product_info = db.products.find_one({"pid": int(pid)}, {"_id": False})
-        return render_template('product_info.html', result=result, user_info=user_info, product_info=product_info)
+        status = user.get_status()
+        return render_template('product_info.html', result=result, user_info=user_info, product_info=product_info, statusbox=status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
@@ -326,12 +328,11 @@ def kakaologin():
 
     return 'a'
 
-
 @app.route('/mypage')
 def mypage():
     user_info = user.getUserInfoByToken()
-
-    return render_template('myPage.html', user_info=user_info)
+    status = user.get_status()
+    return render_template('myPage.html', user_info=user_info, statusbox=status)
 
 # 가이드 내상품 불러오기
 @app.route('/myProduct')
@@ -353,15 +354,16 @@ def myProduct():
         myProducts = list(db.products.find({'userid': set_val}, {'_id': False}))
 
     print(myProducts)
-    return render_template('myProducts.html', myProducts=myProducts)
+    status = user.get_status()
+    return render_template('myProducts.html', myProducts=myProducts, statusbox=status)
 
 
 # 개인정보 페이지 호출
 @app.route('/myInfo')
 def myInfo():
     user_info = user.getUserInfoByToken()
-
-    return render_template('myInfo.html', user_info=user_info)
+    status = user.get_status()
+    return render_template('myInfo.html', user_info=user_info, statusbox=status)
 
 # 개인정보 수정
 @app.route('/userInfoUpdate', methods=['POST'])
@@ -373,8 +375,8 @@ def userInfoUpdate():
 
     db.users.update_one({'userid': userid}, {'$set': {'profile_name': profile_name}})
     user_info = user.getUserInfoByToken()
-
-    return render_template('myInfo.html', user_info=user_info)
+    status = user.get_status()
+    return render_template('myInfo.html', user_info=user_info, statusbox=status)
 
 
 

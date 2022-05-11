@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
 
     <script>
         function sign_out() {
@@ -15,14 +14,9 @@
                 // alert('logout ok\naccess token -> ' + Kakao.Auth.getAccessToken());
             })
             alert('로그아웃!')
-            window.location.reload()
-        }
-
-        function to_mypage() {
-            window.location.href = "/test"
+            window.location.href = "/"
         }
     </script>
-
     <style>
         .header{
             background-color: white;
@@ -62,31 +56,55 @@
                 <a href="/product">가이드 상품</a>
                 <a>커뮤니티</a>
             </h2>
-
             <ul class="topUtil">
                 {% if statusbox == 0 %}
-                    <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link">
-                            MY MENU
-                        </a>
-                        <div class="navbar-dropdown">
+{#                    {% if user_info.role == 'traveler' %}#}
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link">
+                                MY MENU
+                            </a>
+                            <div class="navbar-dropdown">
+                                <a class="navbar-item" href="/mypage">
+                                    마이페이지
+                                </a>
+                                <a class="navbar-item" href="">
+                                    결제내역
+                                </a>
+                                <a class="navbar-item" href="">
+                                    장바구니
+                                </a>
+                                <a class="navbar-item" href="">
+                                    즐겨찾기
+                                </a>
+                                <a class="navbar-item" href="">
+                                    활동
+                                </a>
+                                <a class="navbar-item" onclick="sign_out()">
+                                    로그아웃
+                                </a>
+                            </div>
+                        </div>
+{#                    {% else %}#}
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link">
+                                MY MENU
+                            </a>
+                            <div class="navbar-dropdown">
                             <a class="navbar-item" href="/mypage">
                                 마이페이지
                             </a>
                             <a class="navbar-item" href="">
-                                장바구니 내역
+                                나의 여행 상품
                             </a>
                             <a class="navbar-item" href="">
-                                즐겨찾기
-                            </a>
-                            <a class="navbar-item" href="">
-                                내가 쓴 댓글
+                                활동
                             </a>
                             <a class="navbar-item" onclick="sign_out()">
                                 로그아웃
                             </a>
+                            </div>
                         </div>
-                    </div>
+{#                    {% endif %}#}
                 {% else %}
                     <div class="navbar-item is-hoverable"><a href="/login">로그인</a></div>
                 {% endif %}
