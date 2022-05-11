@@ -399,12 +399,12 @@ def userInfoUpdate():
     return render_template('myInfo.html', user_info=user_info, statusbox=status)
 
 
-
-if __name__ == '__main__':
-    application.debug = True
-    application.run()
+#
 # if __name__ == '__main__':
-#     application.run('0.0.0.0', port=5000, debug=True)
+#     application.debug = True
+#     application.run()
+if __name__ == '__main__':
+    application.run('0.0.0.0', port=5000, debug=True)
 
 ########################################################################################################################
 
