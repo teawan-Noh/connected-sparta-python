@@ -27,60 +27,29 @@
     <script src="{{ url_for('static', filename='login.js') }}"></script>
 
     <script>
-        function sign_out() {
-            $.removeCookie('mytoken', {path: '/'});
-            // 사용자 액세스 토큰과 리프레시 토큰을 모두 만료시킵니다. 사용자가 서비스에서 로그아웃할 때 이 API를 호출하여 더 이상 해당 사용자의 정보로 카카오 API를 호출할 수 없도록 합니다.
-            // 로그아웃 요청 성공 시, 응답 코드와 로그아웃된 사용자의 회원번호를 받습니다. 로그아웃 시에도 웹 브라우저의 카카오계정 세션은 만료되지 않고, 로그아웃을 호출한 앱의 토큰만 만료됩니다.
-            // 따라서 웹 브라우저의 카카오계정 로그인 상태는 로그아웃을 호출해도 유지됩니다. 로그아웃 후에는 서비스 초기 화면으로 리다이렉트하는 등 후속 조치를 취하도록 합니다.
-            $.removeCookie('kakao', {path: '/'});
-            Kakao.Auth.logout(function () {   // 로그아웃 - 쿠키에 저장된 토큰만 제거 (카카오 연동 상태는 유지)
-                // alert('logout ok\naccess token -> ' + Kakao.Auth.getAccessToken());
-            })
-            alert('로그아웃!')
-            window.location.href = "/"
-        }
-        function to_mypage() {
-            window.location.href = "/test"
-        }
+        {#function sign_out() {#}
+        {#    $.removeCookie('mytoken', {path: '/'});#}
+        {#    // 사용자 액세스 토큰과 리프레시 토큰을 모두 만료시킵니다. 사용자가 서비스에서 로그아웃할 때 이 API를 호출하여 더 이상 해당 사용자의 정보로 카카오 API를 호출할 수 없도록 합니다.#}
+        {#    // 로그아웃 요청 성공 시, 응답 코드와 로그아웃된 사용자의 회원번호를 받습니다. 로그아웃 시에도 웹 브라우저의 카카오계정 세션은 만료되지 않고, 로그아웃을 호출한 앱의 토큰만 만료됩니다.#}
+        {#    // 따라서 웹 브라우저의 카카오계정 로그인 상태는 로그아웃을 호출해도 유지됩니다. 로그아웃 후에는 서비스 초기 화면으로 리다이렉트하는 등 후속 조치를 취하도록 합니다.#}
+        {#    $.removeCookie('kakao', {path: '/'});#}
+        {#    Kakao.Auth.logout(function () {   // 로그아웃 - 쿠키에 저장된 토큰만 제거 (카카오 연동 상태는 유지)#}
+        {#        // alert('logout ok\naccess token -> ' + Kakao.Auth.getAccessToken());#}
+        {#    })#}
+        {#    alert('로그아웃!')#}
+        {#    window.location.href = "/"#}
+        {#}#}
+        {#function to_mypage() {#}
+        {#    window.location.href = "/test"#}
+        {#}#}
 
     </script>
-    <style>
-        .header{
-            background-color: white;
-            padding: 30px 50px 15px;
-            display: flex;
-            justify-content: space-between;
-        }
-        .title {
-            width: 200px;
-            color: navy;
-            font-size: 40px;
-            font-family: 'Righteous', cursive;
-            cursor: pointer;
-        }
-        .navList {
-            font-family: 'Jua', sans-serif;
-            margin-top: 10px;
-            width: 250px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 25px;
-            cursor: pointer;
-        }
-        .toputil {
-            font-family: 'Noto Sans KR', sans-serif;
-            width: 150px;
-            margin-top: 12px;
-            display: flex;
-            justify-content: space-between;
-            flex-direction: row-reverse;
-            font-size: 16px;
-            cursor: pointer;
-        }
+        <style>
         .is-grouped {
             margin: 30px auto;
             width: 580px;
         }
+
         .input {
             width: 520px;
             height: 64px;
@@ -101,11 +70,13 @@
             -webkit-box-shadow: 0 8px 16px 0 rgb(35 0 104 / 16%);
             box-shadow: 0 8px 16px 0 rgb(35 0 104 / 16%);
         }
-        .product_box{
+
+        .product_box {
             width: 1200px;
             margin: auto;
         }
-        .section_title{
+
+        .section_title {
             font-family: 'Jua', sans-serif;
             width: 15%;
             margin: 100px auto 30px;
@@ -114,11 +85,13 @@
             font-size: 25px;
             cursor: pointer;
         }
-        .card-list{
+
+        .card-list {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
         }
+
         .card {
             width: 350px;
             height: 500px;
@@ -127,26 +100,7 @@
     </style>
 </head>
 <body>
-    <header>
-        <section class="header">
-            <a class="title" href="/">connected</a>
-
-            <h2 class="navList">
-                <a href="/product">가이드 상품</a>
-                <a>커뮤니티</a>
-            </h2>
-
-            <ul class="toputil">
-
-                {% if statusbox == 0 %}
-                    <a onclick="sign_out()">로그아웃</a>
-                    <a href="/mypage">마이페이지</a>
-                {% else %}
-                    <a href="/login">로그인</a>
-                {% endif %}
-            </ul>
-        </section>
-    </header>
+{% include 'mainHeader.html' %}
     <div class="field is-grouped">
         <p class="control is-expanded">
             <input class="input" type="text" placeholder="키워드를 검색하세요.">

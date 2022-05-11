@@ -1,4 +1,3 @@
-
 window.Kakao.init('54ccebb7b25645894bc9636f54e8617a');
 
 function kakaoLogin() {
@@ -60,3 +59,4 @@ function kakaoLogout() {
 
 
 }
+

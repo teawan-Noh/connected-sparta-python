@@ -20,17 +20,7 @@ db = client.cnt_project2
 
 @app.route('/')
 def home():
-    token_kakao = request.cookies.get('kakao')
-    token_receive = request.cookies.get('mytoken')
-
-    print(token_kakao)
-    print(token_receive)
-
-    if token_receive is not None:
-        status = 0
-    else:
-        status = 123
-
+    status = user.get_status()
     return render_template('index.html', statusbox=status)
 
 
@@ -120,8 +110,9 @@ def check_dup():
 
 @app.route('/product')
 def product():
+    status = user.get_status()
     msg = request.args.get("msg")
-    return render_template('product.html', msg=msg)
+    return render_template('product.html', msg=msg, statusbox=status)
 
 ########################################################################################################################
 
@@ -322,7 +313,6 @@ def kakaologin():
         db.users.insert_one(doc)
 
     return 'a'
-
 
 @app.route('/mypage')
 def test():
