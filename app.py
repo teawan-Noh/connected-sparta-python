@@ -153,7 +153,6 @@ def posting3():
         price_receive = request.form["price_give"]
         x_receive = request.form["x_give"]
         y_receive = request.form["y_give"]
-        print(x_receive, y_receive)
         today_receive = today.strftime('%Y-%m-%d-%H-%M-%S')
         filename = f'file-{today_receive}'
         # 파일 형식을 따오는 코드
@@ -187,40 +186,40 @@ def posting3():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
-# @app.route('/edit_posting', methods=['POST'])
-# def edit_posting():
-#     token_receive = request.cookies.get('mytoken')
-#     try:
-#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-#         user_info = db.users.find_one({"userid": payload["id"]})
-#         today = datetime.now()
-#         title_receive = request.form["title_give"]
-#         file = request.files["file_give"]
-#         content_receive = request.form["content_give"]
-#         date_receive = request.form["date_give"]
-#         calender_receive = request.form["calender_give"]
-#         price_receive = request.form["price_give"]
-#         today_receive = today.strftime('%Y-%m-%d-%H-%M-%S')
-#         filename = f'file-{today_receive}'
-#         extension = file.filename.split('.')[-1]
-#         save_to = f'static/{filename}.{extension}'
-#         file.save(save_to)
-#         doc = {
-#             "userid": user_info["userid"],
-#             "profile_name": user_info["profile_name"],
-#             "profile_pic_real": user_info["profile_pic_real"],
-#             "title": title_receive,
-#             "file": f'{filename}.{extension}',
-#             "content": content_receive,
-#             "calender":calender_receive,
-#             "price":price_receive,
-#             "date": date_receive
-#         }
-#         db.products.update_one(doc)
-#         # 성공하면 '포스팅 성공!'을 띄우자!
-#         return jsonify({"result": "success", 'msg': '포스팅 성공'})
-#     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-#         return redirect(url_for("home"))
+@app.route('/edit_posting', methods=['POST'])
+def edit_posting():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"userid": payload["id"]})
+        today = datetime.now()
+        title_receive = request.form["title_give"]
+        file = request.files["file_give"]
+        content_receive = request.form["content_give"]
+        date_receive = request.form["date_give"]
+        calender_receive = request.form["calender_give"]
+        price_receive = request.form["price_give"]
+        today_receive = today.strftime('%Y-%m-%d-%H-%M-%S')
+        filename = f'file-{today_receive}'
+        extension = file.filename.split('.')[-1]
+        save_to = f'static/{filename}.{extension}'
+        file.save(save_to)
+        doc = {
+            "userid": user_info["userid"],
+            "profile_name": user_info["profile_name"],
+            "profile_pic_real": user_info["profile_pic_real"],
+            "title": title_receive,
+            "file": f'{filename}.{extension}',
+            "content": content_receive,
+            "calender":calender_receive,
+            "price":price_receive,
+            "date": date_receive
+        }
+        db.products.update_one(doc)
+        # 성공하면 '포스팅 성공!'을 띄우자!
+        return jsonify({"result": "success", 'msg': '포스팅 성공'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
 
 
 # 포스팅 불러오기
