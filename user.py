@@ -26,15 +26,9 @@ def getUserInfoByToken():
 
     return user_info;
 
-<<<<<<< HEAD
+
 def get_status() :
-=======
-<<<<<<< HEAD
-def get_status():
-=======
-def get_status() :
->>>>>>> 401e76c (:lipstick: 마이페이지 프론트엔드 수정)
->>>>>>> test
+
     token_kakao = request.cookies.get('kakao')
     token_receive = request.cookies.get('mytoken')
 
@@ -45,13 +39,4 @@ def get_status() :
         status = 0
     else:
         status = 123
-<<<<<<< HEAD
-    return status
-=======
-<<<<<<< HEAD
-
     return status;
-=======
-    return status
->>>>>>> 401e76c (:lipstick: 마이페이지 프론트엔드 수정)
->>>>>>> test
