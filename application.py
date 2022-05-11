@@ -7,39 +7,59 @@ from werkzeug.utils import secure_filename
 from bson.json_util import dumps
 from datetime import datetime, timedelta
 import user
+import boto3
+from flask_cors import CORS
+import os
 
 
-app = Flask(__name__)
-app.config["TEMPLATES_AUTO_RELOAD"] = True
-app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
+application = Flask(__name__)
+cors = CORS(application, resources={r"/*": {"origins": "*"}})
+application.config["TEMPLATES_AUTO_RELOAD"] = True
+application.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
 SECRET_KEY = 'SPARTA'
 
 client = MongoClient('15.164.98.36', 27017, username="test", password="test")
 db = client.cnt_project2
 
-@app.route('/')
+@application.route('/fileupload', methods=['POST'])
+def file_upload():
+    file = request.files['file']
+    s3 = boto3.client('s3',
+                      aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+                      aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
+                      )
+    s3.put_object(
+        ACL="public-read",
+        Bucket=os.environ["BUCKET_NAME"],
+        Body=file,
+        Key=file.filename,
+        ContentType=file.content_type
+    )
+    return jsonify({'result': 'success'})
+
+@application.route('/')
 def home():
     status = user.get_status()
     return render_template('index.html', statusbox=status)
 
-@app.route('/login')
+@application.route('/login')
 def login():
     msg = request.args.get("msg")
     # user_info = getUserInfoByToken()
     return render_template('login.html', msg=msg)
 
-@app.route('/t_signup')
+@application.route('/t_signup')
 def t_signup():
     msg = request.args.get("msg")
     return render_template('t_signup.html', msg=msg)
 
-@app.route('/g_signup')
+@application.route('/g_signup')
 def g_signup():
     msg = request.args.get("msg")
     return render_template('g_signup.html', msg=msg)
 
-@app.route('/sign_in', methods=['POST'])
+@application.route('/sign_in', methods=['POST'])
 def sign_in():
     # 로그인
     role_receive = request.form['role_give']
@@ -63,7 +83,7 @@ def sign_in():
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
 
-@app.route('/t_sign_up/save', methods=['POST'])
+@application.route('/t_sign_up/save', methods=['POST'])
 def t_sign_up():
     userid_receive = request.form['userid_give']
     password_receive = request.form['password_give']
@@ -81,7 +101,7 @@ def t_sign_up():
 
     return jsonify({'result': 'success'})
 
-@app.route('/g_sign_up/save', methods=['POST'])
+@application.route('/g_sign_up/save', methods=['POST'])
 def g_sign_up():
     userid_receive = request.form['userid_give']
     password_receive = request.form['password_give']
@@ -100,7 +120,7 @@ def g_sign_up():
     return jsonify({'result': 'success'})
 
 
-@app.route('/sign_up/check_dup', methods=['POST'])
+@application.route('/sign_up/check_dup', methods=['POST'])
 def check_dup():
     userid_receive = request.form['userid_give']
     exists = bool(db.users.find_one({"userid": userid_receive}))
@@ -109,7 +129,7 @@ def check_dup():
 
 ########################################################################################################################
 
-@app.route('/product')
+@application.route('/product')
 def product():
     token_receive = request.cookies.get('mytoken')
     try:
@@ -123,7 +143,7 @@ def product():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
-@app.route('/go_posting')
+@application.route('/go_posting')
 def go_posting():
     token_receive = request.cookies.get('mytoken')
     try:
@@ -137,6 +157,8 @@ def go_posting():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
+@application.route('/posting', methods=['POST'])
+def posting3():
 @app.route('/posting', methods=['POST'])
 def posting():
     token_receive = request.cookies.get('mytoken')
@@ -187,7 +209,7 @@ def posting():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
-@app.route('/edit_posting', methods=['POST'])
+@application.route('/edit_posting', methods=['POST'])
 def edit_posting():
     token_receive = request.cookies.get('mytoken')
     try:
@@ -224,13 +246,13 @@ def edit_posting():
 
 
 # 포스팅 불러오기
-@app.route("/product/get", methods=['GET'])
+@application.route("/product/get", methods=['GET'])
 def get_products():
     products = list(db.products.find({}).sort("date", -1))
     return jsonify({"result": "success", "msg": "포스팅을 가져왔습니다.", "products":dumps(products)})
 
 # 상품 상세 페이지로 이동
-@app.route('/product/<pid>')
+@application.route('/product/<pid>')
 def product_detail(pid):
     token_receive = request.cookies.get('mytoken')
     try:
@@ -245,7 +267,7 @@ def product_detail(pid):
         return redirect(url_for("home"))
 
 # 댓글 작성하기
-@app.route('/product/add_comments', methods=['POST'])
+@application.route('/product/add_comments', methods=['POST'])
 def add_comments():
     token_receive = request.cookies.get('mytoken')
     try:
@@ -271,7 +293,7 @@ def add_comments():
 
 
 # # 댓글 수정하기
-# @app.route('/product/edit_comments', methods=['POST'])
+# @application.route('/product/edit_comments', methods=['POST'])
 # def edit_comments():
 #     token_receive = request.cookies.get('mytoken')
 #     try:
@@ -293,7 +315,7 @@ def add_comments():
 #         return redirect(url_for("home"))
 
 # 댓글 불러오기
-@app.route('/product/get_comments', methods=['GET'])
+@application.route('/product/get_comments', methods=['GET'])
 def get_comments():
     cid_receive = request.args.get("cid_give")
     # data form box / get args
@@ -308,7 +330,7 @@ def get_comments():
     # mean = add_grade / count_grade
     return jsonify({'result': 'success', 'comments': comments})
 
-@app.route('/kakaologin', methods=['POST'])
+@application.route('/kakaologin', methods=['POST'])
 def kakaologin():
     user_nickname = request.form['nick_name']
     user_email = request.form['email']
@@ -327,14 +349,15 @@ def kakaologin():
 
     return 'a'
 
-@app.route('/mypage')
+
+@application.route('/mypage')
 def mypage():
     user_info = user.getUserInfoByToken()
     status = user.get_status()
     return render_template('myPage.html', user_info=user_info, statusbox=status)
 
 # 가이드 내상품 불러오기
-@app.route('/myProduct')
+@application.route('/myProduct')
 def myProduct():
     # 가이드 카카오 로그인 구현시 사용
     token_kakao = request.cookies.get('kakao')
@@ -358,14 +381,14 @@ def myProduct():
 
 
 # 개인정보 페이지 호출
-@app.route('/myInfo')
+@application.route('/myInfo')
 def myInfo():
     user_info = user.getUserInfoByToken()
     status = user.get_status()
     return render_template('myInfo.html', user_info=user_info, statusbox=status)
 
 # 개인정보 수정
-@app.route('/userInfoUpdate', methods=['POST'])
+@application.route('/userInfoUpdate', methods=['POST'])
 def userInfoUpdate():
     email = request.form['email1']
     profile_name = request.form['nickname']
@@ -380,11 +403,14 @@ def userInfoUpdate():
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000, debug=True)
+    application.debug = True
+    application.run()
+# if __name__ == '__main__':
+#     application.run('0.0.0.0', port=5000, debug=True)
 
 ########################################################################################################################
 
-# @app.route('/payment')
+# @application.route('/payment')
 # def payment():
 #     token_receive = request.cookies.get('mytoken')
 #     try:
@@ -394,7 +420,7 @@ if __name__ == '__main__':
 #         return redirect(url_for("home"))
 
 # # 포스팅 게시 (토큰 필요)
-# @app.route('/posting', methods=['POST'])
+# @application.route('/posting', methods=['POST'])
 # def posting():
 #     token_receive = request.cookies.get('mytoken')                               # 가이드 토큰
 #     try:
@@ -433,7 +459,7 @@ if __name__ == '__main__':
 #         return redirect(url_for("home"))
 
 # # 후기 불러오기
-# @app.route("/product/get_articles", methods=['GET'])
+# @application.route("/product/get_articles", methods=['GET'])
 # def get_articles():
 #     articles = list(db.articles.find({}).sort("date", -1).limit(4))
 #     for article in articles:
@@ -443,7 +469,7 @@ if __name__ == '__main__':
 #     return jsonify({"result": "success", "msg": "포스팅을 가져왔습니다.", "articles":articles})
 
 # # 커뮤니티로 이동
-# @app.route('/move_community')
+# @application.route('/move_community')
 # def move_community():
 #     return render_template('community.html')
 
