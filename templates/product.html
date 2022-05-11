@@ -28,8 +28,12 @@
     <script src="{{ url_for('static', filename='myjs.js') }}"></script>
 
     <script>
+    let value = '{{ result }}'
     $(document).ready(function () {
         get_products()
+        if (value == 'guide') {
+            toggle_guide_product()
+        }
     })
     </script>
     <style>
@@ -136,7 +140,7 @@
 
     <section class="product_box">
         <h3 class="section_subtitle">투어 상품</h3>
-        <div class="level-item">
+        <div id="button-guide" class="level-item is-hidden">
             <a class="button" onclick="go_posting()">투어 상품 게시</a>
         </div>
         <div class="field is-grouped">

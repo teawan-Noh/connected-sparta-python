@@ -35,11 +35,13 @@ function posting() {
     });
 }
 
-function toggle_guide() {
-    $("#media-guide").toggleClass("is-hidden")
+function toggle_guide_product() {
+    $("#button-guide").toggleClass("is-hidden")
+}
+
+function toggle_guide_detail() {
     $("#button-guide").toggleClass("is-hidden")
     $("#button-user").toggleClass("is-hidden")
-    console.log('실행!')
 }
 
 // 몇 시간 전 계산

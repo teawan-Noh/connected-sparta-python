@@ -33,7 +33,7 @@
     $(document).ready(function () {
         get_comment('{{ product_info.pid }}')
         if (value == 'guide') {
-            toggle_guide()
+            toggle_guide_detail()
         }
     })
 
@@ -153,15 +153,15 @@
         </div>
         <div class="content" style="width: 300px; margin: 5rem auto;">
             <div class="card">
-                <div id="media-guide" class="is-hidden">
+                <div id="media-guide">
                     <div class="media-left">
                         <figure class="image is-48x48">
-                            <img src="" class="card-img-guide">
+                            <img src="{{ user_info.profile_pic_real }}" class="card-img-guide">
                         </figure>
                     </div>
                     <div class="media-content">
-                        <p class="title is-6">{{ product_info.profile_name }}</p>
-                        <p class="subtitle is-6">{{ product_info.userid }}</p>
+                        <p class="title is-6">{{ user_info.profile_name }}</p>
+                        <p class="subtitle is-6">{{ user_info.userid }}</p>
                     </div>
                 </div>
                 <table>

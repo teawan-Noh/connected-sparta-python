@@ -118,12 +118,20 @@ def check_dup():
     # print(value_receive, type_receive, exists)
     return jsonify({'result': 'success', 'exists': exists})
 
+########################################################################################################################
+
 @app.route('/product')
 def product():
-    msg = request.args.get("msg")
-    return render_template('product.html', msg=msg)
-
-########################################################################################################################
+    token_receive = request.cookies.get('mytoken')
+    try:
+        # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"userid": payload["id"]})
+        result = user_info["role"]
+        msg = request.args.get("msg")
+        return render_template('product.html', result=result, msg=msg)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
 
 @app.route('/go_posting')
 def go_posting():
