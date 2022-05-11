@@ -6,6 +6,7 @@ from flask import Flask, render_template, jsonify, request, redirect, url_for
 from werkzeug.utils import secure_filename
 from bson.json_util import dumps
 from datetime import datetime, timedelta
+import user
 
 
 app = Flask(__name__)
@@ -323,11 +324,11 @@ def kakaologin():
     return 'a'
 
 
-@app.route('/test')
+@app.route('/mypage')
 def test():
-    user_info = getUserInfoByToken()
+    user_info = user.getUserInfoByToken()
 
-    return render_template('test.html', user_info=user_info)
+    return render_template('myPage.html', user_info=user_info)
 
 # 가이드 내상품 불러오기
 @app.route('/test2')
@@ -349,34 +350,17 @@ def test2():
         myProducts = list(db.products.find({'userid': set_val}, {'_id': False}))
 
     print(myProducts)
-    return render_template('test2.html', myProducts=myProducts)
+    return render_template('myProducts.html', myProducts=myProducts)
 
 
 # 개인정보 수정
 @app.route('/test3')
 def test3():
-    user_info = getUserInfoByToken()
+    user_info = user.getUserInfoByToken()
 
-    return render_template('test3.html', user_info=user_info)
+    return render_template('myInfo.html', user_info=user_info)
 
-def getUserInfoByToken():
-    token_kakao = request.cookies.get('kakao')
-    token_receive = request.cookies.get('mytoken')
 
-    if token_receive is not None:
-        try:
-            payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-            user_info = db.users.find_one({"userid": payload["id"]})
-        except jwt.ExpiredSignatureError:
-            return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
-        except jwt.exceptions.DecodeError:
-            return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
-
-    if token_kakao is not None:
-        set_val = token_kakao.replace('%40', '@')
-        user_info = db.users.find_one({"userid": set_val}, {'_id': False})
-
-    return user_info;
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
