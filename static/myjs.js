@@ -35,10 +35,6 @@ function posting() {
     });
 }
 
-function detail(product_id) {
-    window.location.href = `/product/${product_id}`
-}
-
 function toggle_guide() {
     $("#media-guide").toggleClass("is-hidden")
     $("#button-guide").toggleClass("is-hidden")
@@ -98,7 +94,7 @@ function get_products(username) {
                     let time_product = new Date(product["date"])
                     let time_before = time2str(time_product)
                     // let mean = product['mean']
-                    let html_temp = `<div class="card" onclick="detail('${product.product_id}')" style="max-width: 300px; margin-top: 2rem">
+                    let html_temp = `<div class="card" onclick="detail('${product['pid']}')" style="width: 350px; height: 500px; margin-bottom: 40px;">
                                          <div class="card-image">
                                              <figure class="image is-4by3">
                                                  <img src="../static/${product.file}" class="card-img-top" alt="Placeholder image">
@@ -128,11 +124,47 @@ function get_products(username) {
     })
 }
 
-function add_comment(product_id) {
+function detail(pid) {
+    window.location.href = `/product/${pid}`
+}
+
+// function edit_product() {
+//     let title = $('#input-title').val()
+//     let file = $('#input-picture')[0].files[0]
+//     let content = $("#input-content").val()
+//     let calender = $("#input-calender").val()
+//     let price = $("#input-price").val()
+//     let today = new Date().toISOString()
+//     // form_data 초기화
+//     let form_data = new FormData()
+//     form_data.append("title_give", title)
+//     form_data.append("file_give", file)
+//     form_data.append("content_give", content)
+//     form_data.append("calender_give", calender)
+//     form_data.append("price_give", price)
+//     form_data.append("date_give", today)
+//
+//     $.ajax({
+//         type: "POST",
+//         url: "/edit_posting",
+//         data: form_data,
+//         cache: false,
+//         contentType: false,
+//         processData: false,
+//         success: function (response) {
+//             if (response["result"] == "success") {
+//                 alert(response["msg"])
+//                 window.location.href = `/product`
+//             }
+//         }
+//     });
+// }
+
+function add_comment(pid) {
     let comment_content = $('#comment-content').val();
     let form_data = new FormData()
     form_data.append("content_give", comment_content)
-    form_data.append("product_id_give", product_id)
+    form_data.append("cid_give", pid)
     $.ajax({
         type: "POST",
         url: `/product/add_comments`,
@@ -149,18 +181,18 @@ function add_comment(product_id) {
     });
 }
 
-function get_comment(product_id) {
+function get_comment(cid) {
     $("#comment").empty()
     $.ajax({
         type: "GET",
-        url: `/product/get_comments?product_id_give=${product_id}`,
+        url: `/product/get_comments?cid_give=${cid}`,
         data: {},
         success: function (response) {
             let comments = response["comments"];
             console.log(comments.length)
             for (let i = 0; i < comments.length; i++) {
                 let comment = comments[i];
-                let html_temp = `<div class="box">
+                let html_temp = `<div id="box-outline" class="box">
                                      <article class="media">
                                          <div class="media-left">
                                              <figure class="image is-64x64">
@@ -199,28 +231,6 @@ function get_comment(product_id) {
 
 function go_bucket() {
     window.location.href = "/mypage/bucket"
-}
-
-
-function edit_product() {
-    let new_ex = $('#new-example').val();
-    if (!new_ex.toLowerCase().includes(word.toLowerCase())) {
-        alert(`the word '${word}' is not included.`);
-        return;
-    }
-    console.log(new_ex)
-    $.ajax({
-        type: "POST",
-        url: `/api/save_ex`,
-        data: {
-            word_give: word,
-            example_give: new_ex
-        },
-        success: function (response) {
-            get_examples();
-            $('#new-example').val("");
-        }
-    });
 }
 
 function delete_product(i) {
