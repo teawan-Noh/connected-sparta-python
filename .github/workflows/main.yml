@@ -1,0 +1,57 @@
+name: connected-sparta-python
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code.
+        uses: actions/checkout@master
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: "3.8"
+        #패키징 deploy.zip으로
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
+
+      - name: Get timestamp
+        uses: gerred/actions/current-time@master
+        id: current-time
+
+      - name: Run string replace
+        uses: frabert/replace-string-action@master
+        id: format-time
+        with:
+          pattern: '[:\.]+'
+          string: "${{ steps.current-time.outputs.time }}"
+          replace-with: '-'
+          flags: 'g'
+
+      - name: Transfer to EC2
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: ap-northeast-2
+
+      - name: Upload to S3
+          run: aws s3 cp --region ap-northeast-2 deploy.zip s3://deploy-test-sparta/connected-parta-python/deploy.zip
+
+      - name: Code Deploy
+          run: aws deploy create-deployment --application-name python-with-githubaction --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name python-with-githubaction-group --s3-location bucket=deploy-test-sparta,bundleType=zip,key=connected-parta-python/deploy.zip
+
+#      - name: Deploy to EB
+#        uses: einaregilsson/beanstalk-deploy@v16
+#        with:
+#          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          application_name: python-app
+#          environment_name: Pythonapp-env
+#          version_label: "python-${{ steps.format-time.outputs.replaced }}"
+#          region: ap-northeast-2
+#          deployment_package: deploy.zip
