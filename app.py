@@ -20,8 +20,19 @@ db = client.cnt_project2
 
 @app.route('/')
 def home():
+<<<<<<< HEAD
     status = user.get_status()
     return render_template('index.html', statusbox=status)
+=======
+<<<<<<< HEAD
+    statusbox = user.get_status()
+
+    return render_template('index.html', statusbox=statusbox)
+=======
+    status = user.get_status()
+    return render_template('index.html', statusbox=status)
+>>>>>>> 401e76c (:lipstick: 마이페이지 프론트엔드 수정)
+>>>>>>> test
 
 
 @app.route('/login')
@@ -110,10 +121,32 @@ def check_dup():
 
 @app.route('/product')
 def product():
+<<<<<<< HEAD
     msg = request.args.get("msg")
     return render_template('product.html', msg=msg)
 
 ########################################################################################################################
+=======
+<<<<<<< HEAD
+    token_receive = request.cookies.get('mytoken')
+    try:
+        # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"userid": payload["id"]})
+        result = user_info["role"]
+        msg = request.args.get("msg")
+        statusbox = user.get_status()
+        return render_template('product.html', result=result, msg=msg, statusbox=statusbox)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+=======
+    status = user.get_status()
+    msg = request.args.get("msg")
+    return render_template('product.html', msg=msg, statusbox=status)
+
+########################################################################################################################
+>>>>>>> 401e76c (:lipstick: 마이페이지 프론트엔드 수정)
+>>>>>>> test
 
 @app.route('/go_posting')
 def go_posting():
@@ -312,7 +345,6 @@ def kakaologin():
         db.users.insert_one(doc)
 
     return 'a'
-
 
 @app.route('/mypage')
 def test():
