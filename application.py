@@ -1,3 +1,4 @@
+import sys
 from pymongo import MongoClient
 import jwt
 import datetime
@@ -52,9 +53,9 @@ def file_upload():
 
 @application.route('/')
 def home():
+    user_info = user.getUserInfoByToken()
     status = user.get_status()
-    # user_info = user.getUserInfoByToken()
-    return render_template('index.html', statusbox=status)
+    return render_template('index.html', user_info=user_info, statusbox=status)
 
 @application.route('/login')
 def login():
@@ -88,7 +89,7 @@ def sign_in():
          'id': userid_receive,
          'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)  # 로그인 24시간 유지
         }
-        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf-8')
 
         return jsonify({'result': 'success', 'token': token})
     # 찾지 못하면
@@ -147,13 +148,14 @@ def product():
     token_receive = request.cookies.get('mytoken')
     try:
         # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256']).decode('utf-8')
         user_info = db.users.find_one({"userid": payload["id"]})
         products = list(db.products.find({}))
         result = user_info["role"]
         msg = request.args.get("msg")
+        user_info = user.getUserInfoByToken()
         status = user.get_status()
-        return render_template('product.html', result=result, msg=msg, statusbox=status, products=products)
+        return render_template('product.html', result=result, msg=msg,  user_info=user_info, statusbox=status, products=products)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
@@ -166,8 +168,9 @@ def go_posting():
         user_info = db.users.find_one({"userid": payload["id"]})
         result = user_info["role"]
         products = db.products.find({})
+        user_info = user.getUserInfoByToken()
         status = user.get_status()
-        return render_template('product_write.html', result=result, products=products, statusbox=status)
+        return render_template('product_write.html', result=result, products=products, user_info=user_info,statusbox=status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
@@ -222,33 +225,21 @@ def posting():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
-# # 개인정보 수정
-# @application.route('/userInfoUpdate', methods=['POST'])
-# def userInfoUpdate():
-#     email = request.form['email1']
-#     profile_name = request.form['nickname']
-#     userid = request.args.get('user')
-#     print(userid)
-# 
-#     db.users.update_one({'userid': userid}, {'$set': {'profile_name': profile_name}})
-#     user_info = user.getUserInfoByToken()
-#     status = user.get_status()
-#     return render_template('myInfo.html', user_info=user_info, statusbox=status)
 
-@application.route('/go_editing')
-def go_editing():
-    pid_receive = request.form["pid_give"]
-    token_receive = request.cookies.get('mytoken')
-    try:
-        # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({"userid": payload["id"]})
-        result = user_info["role"]
-        product = db.products.find_one({"pid":pid_receive})
-        status = user.get_status()
-        return render_template('product_write.html', result=result, product=product, statusbox=status)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
+# @application.route('/go_editing')
+# def go_editing():
+#     pid_receive = request.form["pid_give"]
+#     token_receive = request.cookies.get('mytoken')
+#     try:
+#         # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
+#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+#         user_info = db.users.find_one({"userid": payload["id"]})
+#         result = user_info["role"]
+#         product = db.products.find_one({"pid":pid_receive})
+#         status = user.get_status()
+#         return render_template('product_write.html', result=result, product=product, statusbox=status)
+#     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+#         return redirect(url_for("home"))
 
 # # 수정하기 추가 예정
 # @application.route('/edit_posting', methods=['POST'])
@@ -498,6 +489,24 @@ def myProduct():
     status = user.get_status()
     return render_template('myProducts.html', myProducts=myProducts, statusbox=status, user_info=user_info)
 
+@application.route('/mybookmark')
+def myBookmark():
+    # 가이드 카카오 로그인 구현시 사용
+    token_kakao = request.cookies.get('kakao')
+    # print(token_kakao) # 화면단에서 토큰 값 세팅시 '@' 가 %40으로 변환되므로 서버단에서 사용시 replace를 사용하여 변환
+    if token_kakao is None:
+        token_receive = request.cookies.get('mytoken')
+        try:
+            payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+            user_info = db.users.find_one({"userid": payload["id"]})
+        except jwt.ExpiredSignatureError:
+            return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+        except jwt.exceptions.DecodeError:
+            return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+    else:
+        set_val = token_kakao.replace('%40', '@')
+        user_info = db.users.find_one({"userid": set_val})
+    return render_template('myBookmark.html', user_info=user_info)
 
 # 내 댓글 불러오기
 @application.route('/myComment')

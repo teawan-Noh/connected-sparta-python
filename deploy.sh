@@ -3,4 +3,4 @@ cd ${REPO}
 
 #sudo npm install
 
-python application.py
+nohup python application.py &

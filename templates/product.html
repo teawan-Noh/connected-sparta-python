@@ -40,46 +40,29 @@
        product_list.push(value[i])
     }
 
+
     </script>
     <style>
-        .is-grouped {
-            margin: 30px auto;
-            width: 580px;
-        }
-        .searchInput {
-            width: 520px;
-            height: 64px;
-            padding-left: 24px;
-            color: #202020;
-            font-size: 18px;
-            border: 0;
-            border-radius: 16px;
-            box-shadow: 0 8px 16px 0 rgb(32 32 32 / 8%);
-        }
-
-        .is-info {
-            position: relative;
-            width: 64px;
-            height: 64px;
-            border-radius: 16px;
-            background: #569aff;
-            -webkit-box-shadow: 0 8px 16px 0 rgb(35 0 104 / 16%);
-            box-shadow: 0 8px 16px 0 rgb(35 0 104 / 16%);
-        }
         .product_box {
             width: 1200px;
             margin: auto;
         }
         .section_subtitle {
+            width: 170px;
             font-family: 'Jua', sans-serif;
-            width:9%;
-            margin: 50px auto 30px;
+            margin: 50px auto 60px;
             display: flex;
             font-size: 30px;
             color: navy;
         }
+        .btn-posting {
+            margin: 60px 30px 0px;
+            width: 1200px;
+            display: flex;
+            flex-direction: row-reverse;
+        }
         .card-list {
-            margin-top: 60px;
+            margin-top: 10px;
             width: 1200px;
             display: flex;
             flex-wrap: wrap;
@@ -94,54 +77,12 @@
 {% include 'mainHeader.html' %}
 
     <section class="product_box">
-        <h3 class="section_subtitle">투어 상품</h3>
+        <h3 class="section_subtitle">🖼️ 투어 상품</h3>
+        {% include 'searchBar.html' %}
         <div id="button-guide" class="level-item is-hidden">
-            <a class="button" onclick="go_posting()">투어 상품 올리기</a>
-        </div>
-        <div class="field is-grouped">
-            <script>
-                function search_product() {
-                    var oldVal = $(".searchInput").val()
-                    /* 검색 내용 변경 감지 */
-                    $(".searchInput").on("propertychange change keyup paste input", function () {
-                        // 변화에 바로바로 반응하면 부하가 걸릴 수 있어서 1초 딜레이를 준다.
-                        setTimeout(function () {
-                            // 변경된 현재 박스 값을 받아온다.
-                            let currentVal = $(".searchInput").val()
-                            if (currentVal == oldVal) {
-                                return;
-                            }
-                            var listArray = $("#search-box").toArray();
-                            // forEach의 첫번째 인자값 = 배열 내 현재 값
-                            // 두번째 값 = index
-                            // 세번째 값 = 현재 배열
-                            listArray.forEach(function (c, i) {
-                                var currentList = c;
-                                // 현재 배열값에서 내용 추출
-                                var currentListText = c.innerText;
-                                // 검색 내용을 포함하지 않을 경우
-                                if (currentListText.includes(currentVal) == false) {
-                                    currentList.style.display = "none";
-                                }
-                                // 검색 내용을 포함할 경우
-                                if (currentListText.includes(currentVal)) {
-                                    currentList.style.display = "block";
-                                }
-                                // 검색 내용이 없을 경우
-                                if (currentVal.trim() == "") {
-                                    currentList.style.display = "block";
-                                }
-                            });
-                        }, 1000);
-                    });
-                }
-            </script>
-            <p class="control is-expanded">
-                <input class="searchInput" type="text" placeholder="키워드를 검색하세요.">
-            </p>
-            <p class="control">
-                <a class="button is-info" onclick="search_product()"><i class="fa fa-search"></i></a>
-            </p>
+            <div class="btn-posting">
+                <a class="button" onclick="go_posting()">투어 상품 올리기</a>
+            </div>
         </div>
         <div id="product-box" class="card-list">
             <div class="card">
