@@ -102,7 +102,7 @@
                                 </a>
                             </div>
                         </div>
-                    {% else %}
+                    {% elif user_info.role == 'guide' %}
                         <div class="navbar-item has-dropdown is-hoverable">
                             <a class="navbar-link">
                                 MY MENU
@@ -110,6 +110,26 @@
                             <div class="navbar-dropdown">
                             <a class="navbar-item" href="/mypage">
                                 마이페이지
+                            </a>
+                            <a class="navbar-item" href="/myProduct">
+                                나의 여행 상품
+                            </a>
+                            <a class="navbar-item" href="">
+                                활동
+                            </a>
+                            <a class="navbar-item" onclick="sign_out()">
+                                로그아웃
+                            </a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link">
+                                MY MENU
+                            </a>
+                            <div class="navbar-dropdown">
+                            <a class="navbar-item" href="/mypage">
+                                보이는지확인
                             </a>
                             <a class="navbar-item" href="/myProduct">
                                 나의 여행 상품
