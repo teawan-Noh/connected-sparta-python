@@ -36,7 +36,7 @@ function posting(x,y) {
             $.ajax({
                 type: "POST",
                 url: "/posting",
-                data: form_data_box,
+                data: form_data,
                 cache: false,
                 contentType: false,
                 processData: false,
