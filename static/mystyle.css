@@ -7,10 +7,11 @@ body {
     color: gray;
 }
 .button {
+    font-size: 16px;
     background-color: #569aff;
     color: white;
+    border-radius: 8px;
 }
-
 .button.is-outlined {
     color: #569aff;
     background-color: white;

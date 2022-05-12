@@ -361,7 +361,7 @@ def add_comments():
         }
         db.comments.insert_one(doc)
         # 성공하면 '포스팅 성공!'을 띄우자!
-        return jsonify({"result": "success", 'msg': '포스팅 성공'})
+        return jsonify({"result": "success", 'msg': '댓글 달기 성공.'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
