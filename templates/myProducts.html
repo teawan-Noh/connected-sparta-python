@@ -32,11 +32,16 @@
             margin: auto;
             display: flex;
         }
-        .my_profile {
+        .subtitle {
+            margin: 10px 30px;
+            font-family: 'Jua', sans-serif;
+            font-size: 40px;
+        }
+        .section2 {
             display: flex;
             width: 800px;
             height: 150px;
-            margin: 50px auto;
+            margin: 40px 50px;
         }
         .role_id{
             margin: 10px 30px;
@@ -46,6 +51,18 @@
         .role {
             color: #569aff;
         }
+
+        .card-list {
+            margin-top: 60px;
+            width: 600px;
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            margin: auto;
+        }
+        .card {
+            margin: 24px;
+        }
     </style>
 </head>
 <body>
@@ -54,26 +71,56 @@
     <div class="myPageMenu">
         {% include 'myPageMenu.html' %}
     </div>
-    <div class="my_profile">
-        <figure class="image is-128x128">
-            <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png">
-        </figure>
-        <div class="role_id">
-            <div class="role">{{ user_info.role }}</div>
-            <div class="userid">{{ user_info.userid }}</div>
+    <div class="section">
+        <h3 class="subtitle">✨ MY PROFILE</h3>
+        <div class="section2">
+            <figure class="image is-128x128">
+                <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png">
+            </figure>
+            <div class="role_id">
+                <div class="role">{{ user_info.role }}</div>
+                <div class="userid">{{ user_info.userid }}</div>
+            </div>
         </div>
-
     </div>
 </div>
 
 
+    {% for row in myProducts %}
+        {% set title = row['title'] %}
+        {% set content = row['content'] %}
+        {% set image = row['file'] %}
+            <div id="product-box" class="card-list">
+            <div class="card">
+            <div class="card-image">
+                <figure class="image is-4by3">
+                    <img src={{ url_for("static", filename="profile_placeholder.png") }} alt="Image">
+                </figure>
+            </div>
+            <div class="card-content">
+                <div class="media">
+                    <div class="media-content">
+                        <p class="title is-5">{{ title }}</p>
+                        <p class="subtitle is-6">{{ content }}</p>
+                        <small style="float:right;">2시간 전</small>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
 
 
 
-{{ user_info }}
+
+
+
+
+{#{{ user_info }}#}
 {#<hr>#}
 {#<a href='/test2'>myProducts</a>#}
 {#<hr>#}
 {#<a href='/test3'>개인정보 수정</a>#}
 
 </body>
+</html>
