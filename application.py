@@ -19,7 +19,6 @@ application.config["TEMPLATES_AUTO_RELOAD"] = True
 application.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
 SECRET_KEY = 'SPARTA'
-
 client = MongoClient('54.180.31.220', 27017, username="test", password="test")
 db = client.cnt_project2
 
@@ -325,11 +324,17 @@ def add_comments():
         cid_receive = request.form["cid_give"]
         # grade_receive = request.form['grade_give']
         content_receive = request.form['content_give']
+        comment_count = db.comments.estimated_document_count({"cid":cid_receive})
+        if comment_count == 0:
+            comment_value = 1
+        else:
+            comment_value = comment_count + 1
         doc = {
             "cid":cid_receive,
             "userid":user_info["userid"],
             "profile_pic_real": user_info["profile_pic_real"],
-            "content": content_receive
+            "content": content_receive,
+            "pcid":comment_value
             # "grade": grade_receive
         }
         db.comments.insert_one(doc)
@@ -422,6 +427,7 @@ def myProduct():
         token_receive = request.cookies.get('mytoken')
         try:
             payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+            user_info = db.users.find_one({"userid": payload["id"]})
             myProducts = list(db.products.find({'userid': payload["id"]}, {'_id': False}))
         except jwt.ExpiredSignatureError:
             return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
@@ -430,10 +436,11 @@ def myProduct():
     else:
         set_val = token_kakao.replace('%40', '@')
         myProducts = list(db.products.find({'userid': set_val}, {'_id': False}))
+        user_info = db.users.find_one({"userid": set_val})
 
     print(myProducts)
     status = user.get_status()
-    return render_template('myProducts.html', myProducts=myProducts, statusbox=status)
+    return render_template('myProducts.html', myProducts=myProducts, statusbox=status, user_info=user_info)
 
 
 # 개인정보 페이지 호출

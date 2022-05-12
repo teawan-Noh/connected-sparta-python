@@ -5,7 +5,7 @@ function go_posting() {
 // post 작성
 function posting(x,y) {
     let title = $('#input-title').val()
-    let file = $('#input-picture')[0].files[0]
+    let file = $('#upload-file')[0]
     let content = $("#input-content").val()
     let calender = $("#input-calender").val()
     let price = $("#input-price").val()
@@ -134,7 +134,7 @@ function detail(pid) {
 
 function edit_product(pid) {
     let title = $('#input-title').val()
-    let file = $('#input-picture')[0].files[0]
+    let file = $('#upload-file')[0].files[0]
     let content = $("#input-content").val()
     let calender = $("#input-calender").val()
     let price = $("#input-price").val()
@@ -213,7 +213,7 @@ function get_comment(cid) {
                                      <article class="media">
                                          <div class="media-left">
                                              <figure class="image is-64x64">
-                                                 <img src="/static/${comment.user_pic_real}" alt="Image">
+                                                 <img src="/static/${comment['user_pic_real']}" alt="Image">
                                              </figure>
                                          </div>
                                          <div class="media-content">
