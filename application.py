@@ -148,10 +148,11 @@ def product():
         # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({"userid": payload["id"]})
+        products = list(db.products.find({}))
         result = user_info["role"]
         msg = request.args.get("msg")
         status = user.get_status()
-        return render_template('product.html', result=result, msg=msg, statusbox=status)
+        return render_template('product.html', result=result, msg=msg, statusbox=status, products=products)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
@@ -338,6 +339,29 @@ def add_comments():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
+
+
+# # 댓글 수정하기
+# @application.route('/product/edit_comments', methods=['POST'])
+# def edit_comments():
+#     token_receive = request.cookies.get('mytoken')
+#     try:
+#         # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
+#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+#         user_info = db.users.find_one({"userid": payload["id"]})
+#         grade_receive = request.form['grade_give']
+#         content_receive = request.form['content_give']
+#         doc = {
+#             "userid":user_info["userid"],
+#             "profile_pic_real": user_info["profile_pic_real"],
+#             "content": content_receive,
+#             "grade": grade_receive
+#         }
+#         db.comments.update_one(doc)
+#         # 성공하면 '포스팅 성공!'을 띄우자!
+#         return jsonify({'result': 'success', 'msg': 'comment edited'})
+#     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+#         return redirect(url_for("home"))
 
 # 댓글 불러오기
 @application.route('/product/get_comments', methods=['GET'])

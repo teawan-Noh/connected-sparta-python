@@ -35,45 +35,55 @@
             toggle_guide_product()
         }
     })
+    let product_list = [];
+    for (let i = 0; i < value.length; i++) {
+       product_list.push(value[i])
+    }
+    function search_product() {
+        let oldVal = $("#searchInput").val()
+        /* 검색 내용 변경 감지 */
+        $("#searchInput").on("propertychange change keyup paste input", function () {
+            // 변화에 바로바로 반응하면 부하가 걸릴 수 있어서 1초 딜레이를 준다.
+            setTimeout(function () {
+            // 변경된 현재 박스 값을 받아온다.
+            let currentVal = $("#searchInput").val()
+            if (currentVal == oldVal) {
+                return;
+            }
+            var listArray = `${products}`.toArray();
+            // forEach의 첫번째 인자값 = 배열 내 현재 값
+            // 두번째 값 = index
+            // 세번째 값 = 현재 배열
+            listArray.forEach(function (c, i) {
+                var currentList = c;
+                // 현재 배열값에서 내용 추출
+                var currentListText = c.innerText;
+                // 검색 내용을 포함하지 않을 경우
+                if (currentListText.includes(currentVal) == false) {
+                    {#currentList.style.display = "none";#}
+                    alert("결과가 없습니다")
+                }
+                // 검색 내용을 포함할 경우
+                if (currentListText.includes(currentVal)) {
+                    {#currentList.style.display = "block";#}
+                    alert("결과")
+                }
+                // 검색 내용이 없을 경우
+                if (currentVal.trim() == "") {
+                    currentList.style.display = "block";
+                }
+            });
+            }, 1000);
+         });
+    }
+
     </script>
     <style>
-        .header{
-            background-color: white;
-            padding: 30px 50px 15px;
-            display: flex;
-            justify-content: space-between;
-        }
-        .title {
-            width: 200px;
-            color: navy;
-            font-size: 40px;
-            font-family: 'Righteous', cursive;
-            cursor: pointer;
-        }
-        .navList {
-            font-family: 'Jua', sans-serif;
-            margin-top: 10px;
-            width: 250px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 25px;
-            cursor: pointer;
-        }
-        .toputil {
-            font-family: 'Noto Sans KR', sans-serif;
-            width: 150px;
-            margin-top: 12px;
-            display: flex;
-            justify-content: space-between;
-            flex-direction: row-reverse;
-            font-size: 16px;
-            cursor: pointer;
-        }
         .is-grouped {
             margin: 30px auto;
             width: 580px;
         }
-        .input {
+        .searchInput {
             width: 520px;
             height: 64px;
             padding-left: 24px;
@@ -106,15 +116,14 @@
             color: navy;
         }
         .card-list {
-            margin-top: 80px;
+            margin-top: 60px;
+            width: 1200px;
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
+            flex-direction: row;
         }
         .card {
-            width: 350px;
-            height: 500px;
-            margin-bottom: 40px;
+            margin: 24px;
         }
     </style>
 </head>
@@ -128,10 +137,10 @@
         </div>
         <div class="field is-grouped">
             <p class="control is-expanded">
-                <input class="input" type="text" placeholder="키워드를 검색하세요.">
+                <input id="searchInput" class="searchInput" type="text" placeholder="키워드를 검색하세요.">
             </p>
             <p class="control">
-                <a class="button is-info"><i class="fa fa-search"></i></a>
+                <a class="button is-info" onclick="search_product()"><i class="fa fa-search"></i></a>
             </p>
         </div>
         <div id="product-box" class="card-list">
