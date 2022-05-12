@@ -220,6 +220,11 @@
             display: flex;
             align-content: center;
         }
+        .chk-btn {
+            padding-top: 15px;
+            display: flex;
+            flex-direction: row-reverse;
+        }
     </style>
 </head>
 <body>
@@ -253,7 +258,7 @@
                     <th class="info_title">비밀번호 확인</th>
                     <td>
                         <input class="my_input" type="password" name="pwdchk" placeholder="비밀번호 확인">
-                        <span class="chkResult" id="pwChkSpan"></span>
+                        <span class="help chkResult" id="pwChkSpan"></span>
                     </td>
                 </tr>
                 {% if user_info.role == 'guide' %}
@@ -285,7 +290,7 @@
                 </tr>
             </table>
 
-            <div>
+            <div class="chk-btn">
                 <button type="submit" id="updatebtn" class="button">수정</button>
                 <button type="button" id="cancel" class="button" onclick="location.href='/mypage'">취소</button>
             </div>
