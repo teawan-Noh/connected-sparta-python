@@ -33,105 +33,71 @@
     <!--    })-->
     <!--    </script>-->
 
+<style>
+    .box {
+        background-color: #569aff;
+        margin-top: 50px;
+        width: 1200px;
+    }
+    .subtitle1 {
+        margin: 20px auto;
+        font-size: 30px;
+        font-family: 'Jua', sans-serif;
+    }
+    .label1 {
+        margin: 50px auto 0px;
+        font-size: 20px;
+        font-family: 'Jua', sans-serif;
+    }
+    .form-group input{
+        width: 1160px;
+    }
+    .field {
+        margin: 30px auto 0px;
+    }
+    .control {
+        display: flex;
+    }
+    .address {
+        margin-right: 10px;
+    }
+</style>
 </head>
 <body>
-<nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-        <a class="navbar-item" href="/">
-            <img src="{{ url_for('static', filename='logo.png') }}">
-            <strong class="is-sparta"
-                    style="font-family: 'Stylish', sans-serif;font-size: larger;">connected</strong>
-        </a>
-
-        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
-           data-target="navbarBasicExample">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-        </a>
-    </div>
-
-    <div id="navbar-category" class="navbar-menu" style="align-self: center">
-        <div class="navbar-start">
-            <a class="navbar-item" onclick='$("#modal-category").addClass("is-active")'>
-                지역 검색 / 일정 검색
-            </a>
-        </div>
-    </div>
-    <div class="modal" id="modal-category">
-        <div class="modal-background" onclick='$("#modal-category").removeClass("is-active")'></div>
-        <div class="tabs is-centered">
-            <ul>
-                <li class="is-active"><a>지역</a></li>
-                <li><a>일정</a></li>
-            </ul>
-        </div>
-        <button class="modal-close is-large" aria-label="close"
-                onclick='$("#modal-category").removeClass("is-active")'></button>
-    </div>
-
-    <div id="navbar-content" class="navbar-end">
-        <div class="navbar-start">
-            <a class="navbar-item">여행 상품</a>
-            <a class="navbar-item">커뮤니티</a>
-            <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link" href="">
-                    마이페이지
-                </a>
-                <div class="navbar-dropdown">
-                    <a class="navbar-item" href="">
-                        회원정보
-                    </a>
-                    <a class="navbar-item" href="">
-                        장바구니 내역
-                    </a>
-                    <a class="navbar-item" href="">
-                        즐겨찾기
-                    </a>
-                    <a class="navbar-item" href="">
-                        내가 쓴 댓글
-                    </a>
-                    <a class="navbar-item" href="/logout">
-                        로그아웃
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</nav>
+{% include 'mainHeader.html' %}
 <div class="columns" style="max-width: 1200px; margin:auto;">
     {% if result == 'guide' %}
         <div class="box">
+        <h3 class="subtitle1">👣 상품 등록하기</h3>
             <article class="media">
                 <div class="media-content">
                     <div class="field">
-                        <label class="label" for="input-title">제목</label>
+                        <label class="label1" for="input-title">제목</label>
                         <p class="control">
                             <input id="input-title" class="input"
                                    placeholder="제목" value="{{ products.title }}">
                         </p>
                     </div>
                     <div class="field">
-                        <label class="label" for="input-picture">사진</label>
+                        <label class="label1" for="input-picture">사진</label>
                         <div class="control is-expanded">
-{#                            <div class="file has-name">#}
-{#                                <label class="file-label" style="width:100%">#}
-{#                                    <input id="input-picture" class="file-input" type="file" name="resume">#}
-{#                                    <span class="file-cta">#}
-{#                                        <span class="file-icon">#}
-{#                                            <i class="fa fa-upload"></i>#}
-{#                                        </span>#}
-{#                                        <span class="file-label">파일 선택</span>#}
-{#                                    </span>#}
-{#                                    <span id="file-name" class="file-name" style="width:100%;max-width:100%">{{ products.file }}</span>#}
-{#                                </label>#}
-{#                            </div>#}
+                            {#                            <div class="file has-name">#}
+                            {#                                <label class="file-label" style="width:100%">#}
+                            {#                                    <input id="input-picture" class="file-input" type="file" name="resume">#}
+                            {#                                    <span class="file-cta">#}
+                            {#                                        <span class="file-icon">#}
+                            {#                                            <i class="fa fa-upload"></i>#}
+                            {#                                        </span>#}
+                            {#                                        <span class="file-label">파일 선택</span>#}
+                            {#                                    </span>#}
+                            {#                                    <span id="file-name" class="file-name" style="width:100%;max-width:100%">{{ products.file }}</span>#}
+                            {#                                </label>#}
+                            {#                            </div>#}
                             <div id="post-box" class="form-post">
                                 <div>
                                     <div class="form-group">
                                         <form id="upload-file">
-                                            <label for="post-url">이미지 파일</label>
-                                            <input type="file" name="file"/>
+                                            <input for="post-url" class="input" type="file" name="file"/>
                                         </form>
                                     </div>
                                 </div>
@@ -139,18 +105,18 @@
                         </div>
                     </div>
                     <div class="field">
-                        <label class="label" for="input-content">내용</label>
+                        <label class="label1" for="input-content">내용</label>
                         <p class="control">
                         <textarea id="input-content" class="textarea"
                                   placeholder="내용">{{ products.content }}</textarea>
                         </p>
                     </div>
                     <div class="field">
-                        <label class="label" for="startpoint_address">출발 위치</label>
+                        <label class="label1" for="startpoint_address">출발 위치</label>
                         <p class="control">
-                            <input type="text" id="sample5_address" placeholder="주소">
-                            <input type="button" onclick="sample5_execDaumPostcode()" value="주소 검색"><br>
-                        <div id="map" style="width:50%;height:650px;margin-top:10px;display:none"></div>
+                            <input class="button address" type="button" onclick="sample5_execDaumPostcode()" value="주소 검색"><br>
+                            <input class="input" type="text" id="sample5_address" placeholder="주소">
+                        <div id="map" style="width:100%;height:500px;margin-top:10px;display:none"></div>
 
                         <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
                         <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=03d0eb34b366026c640028dde39ff7e9&libraries=services"></script>
@@ -209,14 +175,14 @@
                         </p>
                     </div>
                     <div class="field">
-                        <label class="label" for="input-calender">달력</label>
+                        <label class="label1" for="input-calender">일정</label>
                         <p class="control">
                             <input id="input-calender" class="input"
-                                   placeholder="달력" value="{{ products.calender }}">
+                                   placeholder="일정" value="{{ products.calender }}">
                         </p>
                     </div>
                     <div class="field">
-                        <label class="label" for="input-price">가격</label>
+                        <label class="label1" for="input-price">가격</label>
                         <p class="control">
                             <input id="input-price" class="input"
                                    placeholder="가격" value="{{ products.price }}">
