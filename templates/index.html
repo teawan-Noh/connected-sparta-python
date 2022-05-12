@@ -35,28 +35,8 @@
     </script>
 
     <style>
-        .is-grouped {
-            margin: 30px auto;
-            width: 580px;
-        }
-        .input {
-            width: 520px;
-            height: 64px;
-            padding-left: 24px;
-            color: #202020;
-            font-size: 18px;
-            border: 0;
-            border-radius: 16px;
-            box-shadow: 0 8px 16px 0 rgb(32 32 32 / 8%);
-        }
-        .is-info {
-            position: relative;
-            width: 64px;
-            height: 64px;
-            border-radius: 16px;
-            background: #569aff;
-            -webkit-box-shadow: 0 8px 16px 0 rgb(35 0 104 / 16%);
-            box-shadow: 0 8px 16px 0 rgb(35 0 104 / 16%);
+        .searchbar{
+            margin-top: 100px;
         }
         .product_box{
             width: 1200px;
@@ -86,14 +66,9 @@
 </head>
 <body>
 {% include 'mainHeader.html' %}
-    <div class="field is-grouped">
-        <p class="control is-expanded">
-            <input class="input" type="text" placeholder="키워드를 검색하세요.">
-        </p>
-        <p class="control">
-            <a class="button is-info"><i class="fa fa-search"></i></a>
-        </p>
-    </div>
+<div class="searchbar">
+    {% include 'searchBar.html' %}
+</div>
     <section class="product_box">
         <p>
             <a class="section_title" href="/product">가이드 상품 더보기</a>
