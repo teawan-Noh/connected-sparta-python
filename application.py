@@ -36,18 +36,18 @@ def file_upload():
     filename1 = f'{filenamefront}.{extension}'
     # print(str(filename1))
 
-    s3 = boto3.client('s3',
-                      aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
-                      aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
-                      )
-    s3.put_object(
-        ACL="public-read",
-        # Bucket=os.environ["BUCKET_NAME"],
-        Bucket='project1-sparta',
-        Body=file,
-        Key=file.filename,
-        ContentType=file.content_type
-    )
+    # s3 = boto3.client('s3',
+    #                   aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+    #                   aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
+    #                   )
+    # s3.put_object(
+    #     ACL="public-read",
+    #     # Bucket=os.environ["BUCKET_NAME"],
+    #     Bucket='project1-sparta',
+    #     Body=file,
+    #     Key=file.filename,
+    #     ContentType=file.content_type
+    # )
     return jsonify({'result': 'success'})
 
 @application.route('/')
@@ -153,7 +153,6 @@ def product():
     user_info = user.getUserInfoByToken()
     status = user.get_status()
     result = user_info['role']
-
     return render_template('product.html', result=result, user_info=user_info, statusbox=status, products=products)
 
 
@@ -311,7 +310,8 @@ def product_detail(pid):
         product_info = db.products.find_one({"pid": int(pid)}, {"_id": False})
         status = user.get_status()
         bucket_info = db.buckets.find_one({"pid": int(pid)}, {"_id": False})
-        return render_template('product_info.html', result=result, user_info=user_info, product_info=product_info, statusbox=status, bucket_info=bucket_info)
+        comments = list(db.comments.find({"cid": int(pid)}, {"_id": False}))
+        return render_template('product_info.html', result=result, user_info=user_info, product_info=product_info, comments=comments, statusbox=status, bucket_info=bucket_info)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
@@ -407,24 +407,27 @@ def add_comments():
 # # 댓글 수정하기
 # @application.route('/product/edit_comments', methods=['POST'])
 # def edit_comments():
-#     token_receive = request.cookies.get('mytoken')
-#     try:
-#         # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
-#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-#         user_info = db.users.find_one({"userid": payload["id"]})
-#         grade_receive = request.form['grade_give']
-#         content_receive = request.form['content_give']
-#         doc = {
-#             "userid":user_info["userid"],
-#             "profile_pic_real": user_info["profile_pic_real"],
-#             "content": content_receive,
-#             "grade": grade_receive
-#         }
-#         db.comments.update_one(doc)
-#         # 성공하면 '포스팅 성공!'을 띄우자!
-#         return jsonify({'result': 'success', 'msg': 'comment edited'})
-#     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-#         return redirect(url_for("home"))
+#     user_info = user.getUserInfoByToken()
+#     cid_receive = request.form['cid_give']
+#     pcid_receive = request.form['pcid_give']
+#     comment_receive = request.form['comment_give']
+#     doc = {
+#         "cid": cid_receive,
+#         "userid":user_info["userid"],
+#         "profile_pic_real": user_info["profile_pic_real"],
+#         "content": comment_receive,
+#         "pcid": pcid_receive
+#     }
+#     db.comments.update_one(doc)
+
+
+@application.route('/delete_comment', methods=['POST'])
+def delete_comment():
+    pcid_receive = request.form["pcid_give"]
+    comment_cid = db.comments.find_one({"pcid": int(pcid_receive)}, {"_id": False})['pcid']
+    db.comments.delete_one({"pcid":comment_cid})
+    return jsonify({"result": "success", 'msg': '삭제 성공'})
+
 
 # 댓글 불러오기
 @application.route('/product/get_comments', methods=['GET'])

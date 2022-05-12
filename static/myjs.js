@@ -297,6 +297,8 @@ function get_comment(cid) {
             console.log(comments.length)
             for (let i = comments.length - 1; i >= 0; i--) {
                 let comment = comments[i];
+                let x = comment["cid"];
+                let y = comment["pcid"];
                 let html_temp = `<div id="box-outline" class="box">
                                      <article class="media">
                                          <div class="media-left">
@@ -314,9 +316,86 @@ function get_comment(cid) {
                                              </div>
                                          </div>
                                      </article>
+                                     <nav id="btns-me" class="level is-mobile" style="margin-top:2rem">
+                                         <a class="button level-item has-text-centered is-sparta" aria-label="edit" onclick='$("#modal-edit").addClass("is-active")'>
+                                             댓글 수정&nbsp;&nbsp;&nbsp;<span class="icon is-small"><i class="fa fa-pencil" aria-hidden="true"></i></span>
+                                         </a>
+                                         <div class="level-item">
+                                             <a class="button is-sparta" onclick="delete_comment(${x},${y})">삭제</a>
+                                         </div>
+                                     </nav>
+                                     <div class="modal" id="modal-edit">
+                                        <div class="modal-background" onclick='$("#modal-edit").removeClass("is-active")'></div>
+                                        <div class="modal-content">
+                                            <div class="box">
+                                                <article class="media">
+                                                    <div class="media-content">
+                                                        <div class="field">
+                                                            <label class="label" for="textarea-comment">댓글</label>
+                                                            <p class="control">
+                                                                <textarea id="textarea-comment" class="textarea" placeholder="내용">
+                                                                    ${comment['content']}
+                                                                </textarea>
+                                                            </p>
+                                                        </div>
+                                                        <nav class="level is-mobile">
+                                                            <div class="level-left">
+                                                            </div>
+                                                            <div class="level-right">
+                                                                <div class="level-item">
+                                                                    <a class="button is-sparta"
+                                                                       onclick="edit_comment(${x},${y})">업데이트</a>
+                                                                </div>
+                                                                <div class="level-item">
+                                                                    <a class="button is-sparta is-outlined"
+                                                                       onclick='$("#modal-edit").removeClass("is-active")'>취소</a>
+                                                                </div>
+                                                            </div>
+                                                        </nav>
+                                                    </div>
+                                                </article>
+                                            </div>
+                                        </div>
+                                        <button class="modal-close is-large" aria-label="close"
+                                                onclick='$("#modal-edit").removeClass("is-active")'></button>
+                                    </div>
                                  </div>`
                 $("#comment").append(html_temp)
             }
+        }
+    });
+}
+
+// function edit_comment(cid, pcid) {
+//     let comment_edit = $('#textarea-comment').val();
+//     let form_data = new FormData()
+//     form_data.append("cid_give", cid)
+//     form_data.append("pcid_give", pcid)
+//     form_data.append("comment_give", comment_edit)
+//     $.ajax({
+//         type: "POST",
+//         url: "/product/edit_comments",
+//         data: form_data,
+//         cache: false,
+//         contentType: false,
+//         processData: false,
+//         success: function (response) {
+//             alert(response["msg"])
+//             window.location.reload()
+//         }
+//     })
+// }
+
+function delete_comment(cid, pcid) {
+    $.ajax({
+        type: "POST",
+        url: "/delete_comment",
+        data: {
+            "pcid_give":pcid
+        },
+        success: function (response) {
+            alert(response["msg"])
+            window.location.href = `/product/${cid}`
         }
     });
 }
@@ -350,22 +429,23 @@ function off_bucket(pid) {
     })
 }
 
-function getFiles() {
-    $.ajax({
-        type: 'GET',
-        url: '/download',
-        success: function (data) {
-            alert('done')
-        },
-    });
-}
-
-function makeOrder(data) {
-    let order = `<tr>
-                     <td><img width="200px" src="/${data}"></td>
-                 </tr>`;
-    $("#orders-box").append(order);
-}
+// 이미지 불러오기
+// function getFiles() {
+//     $.ajax({
+//         type: 'GET',
+//         url: '/download',
+//         success: function (data) {
+//             alert('done')
+//         },
+//     });
+// }
+//
+// function makeOrder(data) {
+//     let order = `<tr>
+//                      <td><img width="200px" src="/${data}"></td>
+//                  </tr>`;
+//     $("#orders-box").append(order);
+// }
 
 function get_buckets(username) {
     if (username == undefined) {
