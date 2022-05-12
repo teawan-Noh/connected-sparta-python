@@ -56,6 +56,7 @@ def home():
     user_info = user.getUserInfoByToken()
 
     status = user.get_status()
+    print(user_info)
     if user_info is not None:
         return render_template('index.html', user_info=user_info, statusbox=status)
     else:
