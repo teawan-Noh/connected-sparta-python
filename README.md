@@ -1,3 +1,6 @@
+![image](https://user-images.githubusercontent.com/77611002/168172212-5c11c2db-7d96-4787-88a7-2f881facf95a.png)
+
+
 ### 🔗 라이브
 
 
@@ -20,10 +23,12 @@ CONNECTE 는 가이드와 여행자를 연결해주는 서비스입니다.
 - 이승현 - 지도 api, 상품 상세 페이지
 - 최재연 - 상품 상세페이지, 상품 페이지
 
-### 📌 기술 선택 이유!
+### 📌 기술 선택 이유!  
+<a href="https://github.com/teawan-Noh/connected-sparta-python/wiki/%EA%B8%B0%EC%88%A0-%EC%84%A0%ED%83%9D-%EC%9D%B4%EC%9C%A0" >상세보기 - WIKI 이동</a>
 
+### 📌 주요 기능  
+<a href="https://github.com/teawan-Noh/connected-sparta-python/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C" >상세보기 - WIKI 이동</a>
 
-### 📌 주요 기능
 #### 로그인/회원가입
 - 가이드 - JWT 기반 일반 로그인
 - 여행자 - JWT 기반 일반 로그인, 카카오 소셜 로그인

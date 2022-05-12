@@ -154,7 +154,6 @@ def product():
     user_info = user.getUserInfoByToken()
     status = user.get_status()
     result = user_info['role']
-
     return render_template('product.html', result=result, user_info=user_info, statusbox=status, products=products)
 
 
@@ -301,6 +300,12 @@ def delete_product():
     return jsonify({"result": "success", 'msg': '삭제 성공'})
 
 # 포스팅 불러오기
+@application.route("/product/get_index", methods=['GET'])
+def get_products_index():
+    products = list(db.products.find({}).sort("date", -1).limit(3))
+    return jsonify({"result": "success", "msg": "포스팅을 가져왔습니다.", "products":dumps(products)})
+
+# 포스팅 불러오기
 @application.route("/product/get", methods=['GET'])
 def get_products():
     products = list(db.products.find({}).sort("date", -1))
@@ -318,8 +323,8 @@ def product_detail(pid):
         product_info = db.products.find_one({"pid": int(pid)}, {"_id": False})
         status = user.get_status()
         bucket_info = db.buckets.find_one({"pid": int(pid)}, {"_id": False})
-        comment_info = db.comments.find_one({"cid": int(pid)}, {"_id": False})
-        return render_template('product_info.html', result=result, user_info=user_info, product_info=product_info, statusbox=status, bucket_info=bucket_info, comments= comment_info)
+        comments = list(db.comments.find({"cid": int(pid)}, {"_id": False}))
+        return render_template('product_info.html', result=result, user_info=user_info, product_info=product_info, comments=comments, statusbox=status, bucket_info=bucket_info)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
@@ -413,28 +418,30 @@ def add_comments():
         return redirect(url_for("home"))
 
 
-
 # # 댓글 수정하기
 # @application.route('/product/edit_comments', methods=['POST'])
 # def edit_comments():
-#     token_receive = request.cookies.get('mytoken')
-#     try:
-#         # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
-#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-#         user_info = db.users.find_one({"userid": payload["id"]})
-#         grade_receive = request.form['grade_give']
-#         content_receive = request.form['content_give']
-#         doc = {
-#             "userid":user_info["userid"],
-#             "profile_pic_real": user_info["profile_pic_real"],
-#             "content": content_receive,
-#             "grade": grade_receive
-#         }
-#         db.comments.update_one(doc)
-#         # 성공하면 '포스팅 성공!'을 띄우자!
-#         return jsonify({'result': 'success', 'msg': 'comment edited'})
-#     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-#         return redirect(url_for("home"))
+#     user_info = user.getUserInfoByToken()
+#     cid_receive = request.form['cid_give']
+#     pcid_receive = request.form['pcid_give']
+#     comment_receive = request.form['comment_give']
+#     doc = {
+#         "cid": cid_receive,
+#         "userid":user_info["userid"],
+#         "profile_pic_real": user_info["profile_pic_real"],
+#         "content": comment_receive,
+#         "pcid": pcid_receive
+#     }
+#     db.comments.update_one(doc)
+
+
+@application.route('/delete_comment', methods=['POST'])
+def delete_comment():
+    pcid_receive = request.form["pcid_give"]
+    comment_cid = db.comments.find_one({"pcid": int(pcid_receive)}, {"_id": False})['pcid']
+    db.comments.delete_one({"pcid":comment_cid})
+    return jsonify({"result": "success", 'msg': '삭제 성공'})
+
 
 # 댓글 불러오기
 @application.route('/product/get_comments', methods=['GET'])
@@ -597,6 +604,61 @@ if __name__ == '__main__':
     application.run('0.0.0.0', port=5000, debug=True)
 
 ########################################################################################################################
+
+# from flaskext.mysql import MySQL
+# import redis
+# import logging
+# from logstash_async.handler import AsynchronousLogstashHandler
+# import json
+# import botocore
+
+# # cors
+# cors = CORS(application, resources={r"/*": {"origins": "*"}})
+#
+# # mysql
+# mysql = MySQL()
+# application.config['MYSQL_DATABASE_USER'] = os.environ["MYSQL_DATABASE_USER"]
+# application.config['MYSQL_DATABASE_PASSWORD'] = os.environ["MYSQL_DATABASE_PASSWORD"]
+# application.config['MYSQL_DATABASE_DB'] = os.environ["MYSQL_DATABASE_DB"]
+# application.config['MYSQL_DATABASE_HOST'] = os.environ["MYSQL_DATABASE_HOST"]
+# mysql.init_app(application)
+#
+# # redis
+# db = redis.Redis(os.environ["REDIS_HOST"], decode_responses=True)
+#
+# #logstash
+# python_logger = logging.getLogger('python-logstash-logger')
+# python_logger.setLevel(logging.INFO)
+# python_logger.addHandler(AsynchronousLogstashHandler(os.environ["LOGSTASH_HOST"], 5044, database_path=''))
+
+# @application.route('/download', methods=['GET'])
+# def download_img():
+#     bucket_name = 'project1-sparta'
+#     object_path = ''
+#     file_path = '/static'
+#
+#     s3 = boto3.client('s3')
+#     s3.download_file(bucket_name, object_path, file_path)
+#
+#     s3 = boto3.resource('s3')
+#     BUCKET_NAME = 'project1-sparta'
+#     KEY = filename1
+#     try:
+#         s3.Bucket(BUCKET_NAME).download_file(KEY, 'my_local_image.jpg')
+#     except botocore.exceptions.ClientError as e:
+#         if e.response['Error']['Code'] == "404":
+#             print("The object does not exist.")
+#         else:
+#             raise
+
+# @application.route('/files', methods=['GET'])
+# def files():
+#     conn = mysql.connect()
+#     cursor = conn.cursor()
+#     cursor.execute("SELECT file_name from file")
+#     data = cursor.fetchall()
+#     conn.close()
+#     return jsonify({'result': 'success', 'files':data})
 
 # # 댓글 수정하기
 # @application.route('/product/edit_comments', methods=['POST'])
