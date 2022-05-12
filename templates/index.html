@@ -35,6 +35,9 @@
     </script>
 
     <style>
+        .searchbar{
+            margin-top: 100px;
+        }
         .product_box{
             width: 1200px;
             margin: auto;
@@ -63,7 +66,9 @@
 </head>
 <body>
 {% include 'mainHeader.html' %}
-{% include 'searchBar.html' %}
+<div class="searchbar">
+    {% include 'searchBar.html' %}
+</div>
     <section class="product_box">
         <p>
             <a class="section_title" href="/product">가이드 상품 더보기</a>

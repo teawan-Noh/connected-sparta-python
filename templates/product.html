@@ -39,70 +39,10 @@
     for (let i = 0; i < value.length; i++) {
        product_list.push(value[i])
     }
-    function search_product() {
-        let oldVal = $("#searchInput").val()
-        /* 검색 내용 변경 감지 */
-        $("#searchInput").on("propertychange change keyup paste input", function () {
-            // 변화에 바로바로 반응하면 부하가 걸릴 수 있어서 1초 딜레이를 준다.
-            setTimeout(function () {
-            // 변경된 현재 박스 값을 받아온다.
-            let currentVal = $("#searchInput").val()
-            if (currentVal == oldVal) {
-                return;
-            }
-            var listArray = `${products}`.toArray();
-            // forEach의 첫번째 인자값 = 배열 내 현재 값
-            // 두번째 값 = index
-            // 세번째 값 = 현재 배열
-            listArray.forEach(function (c, i) {
-                var currentList = c;
-                // 현재 배열값에서 내용 추출
-                var currentListText = c.innerText;
-                // 검색 내용을 포함하지 않을 경우
-                if (currentListText.includes(currentVal) == false) {
-                    {#currentList.style.display = "none";#}
-                    alert("결과가 없습니다")
-                }
-                // 검색 내용을 포함할 경우
-                if (currentListText.includes(currentVal)) {
-                    {#currentList.style.display = "block";#}
-                    alert("결과")
-                }
-                // 검색 내용이 없을 경우
-                if (currentVal.trim() == "") {
-                    currentList.style.display = "block";
-                }
-            });
-            }, 1000);
-         });
-    }
+
 
     </script>
     <style>
-        .is-grouped {
-            margin: 30px auto;
-            width: 580px;
-        }
-        .searchInput {
-            width: 520px;
-            height: 64px;
-            padding-left: 24px;
-            color: #202020;
-            font-size: 18px;
-            border: 0;
-            border-radius: 16px;
-            box-shadow: 0 8px 16px 0 rgb(32 32 32 / 8%);
-        }
-
-        .is-info {
-            position: relative;
-            width: 64px;
-            height: 64px;
-            border-radius: 16px;
-            background: #569aff;
-            -webkit-box-shadow: 0 8px 16px 0 rgb(35 0 104 / 16%);
-            box-shadow: 0 8px 16px 0 rgb(35 0 104 / 16%);
-        }
         .product_box {
             width: 1200px;
             margin: auto;
@@ -116,7 +56,7 @@
             color: navy;
         }
         .btn-posting {
-            margin-top: 60px;
+            margin: 60px 30px 0px;
             width: 1200px;
             display: flex;
             flex-direction: row-reverse;
