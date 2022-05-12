@@ -91,10 +91,40 @@
                 </div>
             </div>
         </div>
-        </div>
+
     </div>
 </div>
-</div>
+
+
+    {% for row in myProducts %}
+        {% set title = row['title'] %}
+        {% set content = row['content'] %}
+        {% set image = row['file'] %}
+            <div id="product-box" class="card-list">
+            <div class="card">
+            <div class="card-image">
+                <figure class="image is-4by3">
+                    <img src={{ url_for("static", filename="profile_placeholder.png") }} alt="Image">
+                </figure>
+            </div>
+            <div class="card-content">
+                <div class="media">
+                    <div class="media-content">
+                        <p class="title is-5">{{ title }}</p>
+                        <p class="subtitle is-6">{{ content }}</p>
+                        <small style="float:right;">2시간 전</small>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+
+
+
+
+
 
 {#{{ user_info }}#}
 {#<hr>#}
