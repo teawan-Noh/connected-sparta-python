@@ -65,6 +65,7 @@ function toggle_user_bucket() {
     $("#bucket-off").toggleClass("is-hidden")
 }
 
+
 // 몇 시간 전 계산
 function time2str(date) {
     let today = new Date()
@@ -262,6 +263,7 @@ function get_comment(cid) {
                                                  <br>
                                                   ${comment['content']}
                                              </p>
+                                             
                                              </div>
                                          </div>
                                      </article>

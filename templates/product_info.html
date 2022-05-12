@@ -35,11 +35,19 @@
     let action = '{{ bucket_info.action }}'
     $(document).ready(function () {
         get_comment('{{ product_info.pid }}')
-        if (role == 'guide' & user == product) {
-            toggle_guide_detail()
+        if (role == 'guide') {
+            if (user == product) {
+                toggle_guide_detail()
+            } else {
+                toggle_user_bucket()
+                toggle_guide_detail()
+                toggle_guide_product()
+            }
         }
-        else if (action == 'on_bucket') {
-            toggle_user_bucket()
+        else {
+            if (action == 'on_bucket') {
+                toggle_user_bucket()
+            }
         }
     })
     </script>
@@ -56,6 +64,9 @@
             width: 500px;
             margin-right: 10px;
         }
+        .image {
+            margin-top: 40px;
+        }
     </style>
     </head>
 
@@ -65,10 +76,10 @@
     <div class="columns" style="max-width: 1200px; margin:auto;">
         <div class="content" style="width: 800px; margin: 5rem auto;">
             <div class="card">
-                <h1 style="margin-left: 2rem">{{ product_info.title }}</h1>
                 <figure class="image is-4by3">
                     <img src='{{ product_info.file }}'>
                 </figure>
+                <h1 style="margin-left: 2rem">{{ product_info.title }}</h1>
                 <div class="card-content" id="blablabla" style="max-width: 1000px; margin-top: 2rem">
                     <div class="content">
                         {{ product_info.content }}
@@ -96,9 +107,10 @@
                         </div>
                         <nav class="level">
                             <div class="level-left">
-                                <div class="level-item">
-                                    <a class="button is-info" onclick="add_comment('{{product_info.pid}}')">등록</a>
+                                <div id="post_comment">
+                                    <a class="button" onclick="add_comment('{{product_info.pid}}')">등록</a>
                                 </div>
+{#
                             </div>
                         </nav>
                     </div>

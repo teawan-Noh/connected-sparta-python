@@ -311,7 +311,8 @@ def product_detail(pid):
         product_info = db.products.find_one({"pid": int(pid)}, {"_id": False})
         status = user.get_status()
         bucket_info = db.buckets.find_one({"pid": int(pid)}, {"_id": False})
-        return render_template('product_info.html', result=result, user_info=user_info, product_info=product_info, statusbox=status, bucket_info=bucket_info)
+        comments = list(db.comments.find({"cid": cid_receive}, {'_id': False}).sort("date", -1))
+        return render_template('product_info.html', result=result, user_info=user_info, product_info=product_info, statusbox=status, bucket_info=bucket_info, comments= comments)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
