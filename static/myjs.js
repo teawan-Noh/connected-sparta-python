@@ -99,6 +99,55 @@ function num2str(count) {
 }
 
 // 내가 쓴 post 박스 불러오기
+function get_products_index(username) {
+    if (username == undefined) {
+        username=""
+    }
+    $("#product-box").empty()
+    $.ajax({
+        type: "GET",
+        url: `/product/get_index`,
+        data: {},
+        success: function (response) {
+            if (response["result"] == "success") {
+                let product = response["products"]
+                let products = JSON.parse(product)
+                for (let i = 0; i < products.length; i++) {
+                    let product = products[i]
+                    let time_product = new Date(product["date"])
+                    let time_before = time2str(time_product)
+                    // let mean = product['mean']
+                    let html_temp = `<div class="card" onclick="detail('${product['pid']}')" style="width: 350px; height: 500px; margin-bottom: 40px;">
+                                         <div class="card-image">
+                                             <figure class="image is-4by3">
+                                                 <img src="../static/${product['file']}" class="card-img-top" alt="Placeholder image">
+                                             </figure>
+                                         </div>
+                                         <div class="card-content">
+                                             <div class="media">
+                                                 <div class="media-content">
+                                                     <p id="search-box" class="title is-4">${product['title']}</p>
+                                                     <p class="subtitle is-6">${product['content']}</p>
+                                                     <small style="float:right;">${time_before}</small>
+                                                 </div>
+                                             </div>
+                                             <nav class="level is-mobile">
+                                                 <div class="level-left">
+                                                     <a class="level-item is-sparta" aria-label="grade">
+                                                         <span class="icon is-small"><i class="fa-solid fa-star"></i></span>&nbsp;<span class="like-num"></span>
+                                                     </a>
+                                                 </div>
+                                             </nav>
+                                         </div>
+                                     </div>`
+                    $("#product-box").append(html_temp)
+                }
+            }
+        }
+    })
+}
+
+// 내가 쓴 post 박스 불러오기
 function get_products(username) {
     if (username == undefined) {
         username=""

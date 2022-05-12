@@ -9,12 +9,6 @@ from bson.json_util import dumps
 from datetime import datetime, timedelta
 import user
 import boto3
-from flaskext.mysql import MySQL
-import redis
-import logging
-from logstash_async.handler import AsynchronousLogstashHandler
-import json
-import botocore
 from flask_cors import CORS
 import os
 
@@ -27,27 +21,6 @@ application.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 SECRET_KEY = 'SPARTA'
 client = MongoClient('54.180.31.220', 27017, username="test", password="test")
 db = client.cnt_project2
-
-file_name = '/static'
-
-# # cors
-# cors = CORS(application, resources={r"/*": {"origins": "*"}})
-#
-# # mysql
-# mysql = MySQL()
-# application.config['MYSQL_DATABASE_USER'] = os.environ["MYSQL_DATABASE_USER"]
-# application.config['MYSQL_DATABASE_PASSWORD'] = os.environ["MYSQL_DATABASE_PASSWORD"]
-# application.config['MYSQL_DATABASE_DB'] = os.environ["MYSQL_DATABASE_DB"]
-# application.config['MYSQL_DATABASE_HOST'] = os.environ["MYSQL_DATABASE_HOST"]
-# mysql.init_app(application)
-#
-# # redis
-# db = redis.Redis(os.environ["REDIS_HOST"], decode_responses=True)
-#
-# #logstash
-# python_logger = logging.getLogger('python-logstash-logger')
-# python_logger.setLevel(logging.INFO)
-# python_logger.addHandler(AsynchronousLogstashHandler(os.environ["LOGSTASH_HOST"], 5044, database_path=''))
 
 global filename1
 
@@ -173,35 +146,6 @@ def check_dup():
     return jsonify({'result': 'success', 'exists': exists})
 
 ########################################################################################################################
-
-@application.route('/download', methods=['GET'])
-def download_img():
-    bucket_name = 'project1-sparta'
-    object_path = ''
-    file_path = '/static'
-
-    s3 = boto3.client('s3')
-    s3.download_file(bucket_name, object_path, file_path)
-
-    s3 = boto3.resource('s3')
-    BUCKET_NAME = 'project1-sparta'
-    KEY = filename1
-    try:
-        s3.Bucket(BUCKET_NAME).download_file(KEY, 'my_local_image.jpg')
-    except botocore.exceptions.ClientError as e:
-        if e.response['Error']['Code'] == "404":
-            print("The object does not exist.")
-        else:
-            raise
-
-# @application.route('/files', methods=['GET'])
-# def files():
-#     conn = mysql.connect()
-#     cursor = conn.cursor()
-#     cursor.execute("SELECT file_name from file")
-#     data = cursor.fetchall()
-#     conn.close()
-#     return jsonify({'result': 'success', 'files':data})
 
 @application.route('/product')
 def product():
@@ -350,6 +294,12 @@ def delete_product():
     return jsonify({"result": "success", 'msg': '삭제 성공'})
 
 # 포스팅 불러오기
+@application.route("/product/get_index", methods=['GET'])
+def get_products_index():
+    products = list(db.products.find({}).sort("date", -1).limit(3))
+    return jsonify({"result": "success", "msg": "포스팅을 가져왔습니다.", "products":dumps(products)})
+
+# 포스팅 불러오기
 @application.route("/product/get", methods=['GET'])
 def get_products():
     products = list(db.products.find({}).sort("date", -1))
@@ -458,7 +408,6 @@ def add_comments():
         return jsonify({"result": "success", 'msg': '댓글 달기 성공.'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
-
 
 
 # # 댓글 수정하기
@@ -643,6 +592,61 @@ if __name__ == '__main__':
     application.run('0.0.0.0', port=5000, debug=True)
 
 ########################################################################################################################
+
+# from flaskext.mysql import MySQL
+# import redis
+# import logging
+# from logstash_async.handler import AsynchronousLogstashHandler
+# import json
+# import botocore
+
+# # cors
+# cors = CORS(application, resources={r"/*": {"origins": "*"}})
+#
+# # mysql
+# mysql = MySQL()
+# application.config['MYSQL_DATABASE_USER'] = os.environ["MYSQL_DATABASE_USER"]
+# application.config['MYSQL_DATABASE_PASSWORD'] = os.environ["MYSQL_DATABASE_PASSWORD"]
+# application.config['MYSQL_DATABASE_DB'] = os.environ["MYSQL_DATABASE_DB"]
+# application.config['MYSQL_DATABASE_HOST'] = os.environ["MYSQL_DATABASE_HOST"]
+# mysql.init_app(application)
+#
+# # redis
+# db = redis.Redis(os.environ["REDIS_HOST"], decode_responses=True)
+#
+# #logstash
+# python_logger = logging.getLogger('python-logstash-logger')
+# python_logger.setLevel(logging.INFO)
+# python_logger.addHandler(AsynchronousLogstashHandler(os.environ["LOGSTASH_HOST"], 5044, database_path=''))
+
+# @application.route('/download', methods=['GET'])
+# def download_img():
+#     bucket_name = 'project1-sparta'
+#     object_path = ''
+#     file_path = '/static'
+#
+#     s3 = boto3.client('s3')
+#     s3.download_file(bucket_name, object_path, file_path)
+#
+#     s3 = boto3.resource('s3')
+#     BUCKET_NAME = 'project1-sparta'
+#     KEY = filename1
+#     try:
+#         s3.Bucket(BUCKET_NAME).download_file(KEY, 'my_local_image.jpg')
+#     except botocore.exceptions.ClientError as e:
+#         if e.response['Error']['Code'] == "404":
+#             print("The object does not exist.")
+#         else:
+#             raise
+
+# @application.route('/files', methods=['GET'])
+# def files():
+#     conn = mysql.connect()
+#     cursor = conn.cursor()
+#     cursor.execute("SELECT file_name from file")
+#     data = cursor.fetchall()
+#     conn.close()
+#     return jsonify({'result': 'success', 'files':data})
 
 # # 댓글 수정하기
 # @application.route('/product/edit_comments', methods=['POST'])
