@@ -32,8 +32,8 @@
                 var pwdchk_value = $("input[name='pwdchk']").val().replace(/\s/gi, "");
 
                 //비밀번호 유효성 검사
-                var regulPw = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
-                ;
+                var regulPw = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}$/;
+
                 var regResult = regulPw.test(pwd_value);
 
                 if (!regResult) {
@@ -261,33 +261,33 @@
                         <span class="help chkResult" id="pwChkSpan"></span>
                     </td>
                 </tr>
-                {% if user_info.role == 'guide' %}
-                <tr>
-                    <th class="info_title">주소</th>
-                    <td class="post">
-                        <div class="flex_btn">
-                            <input class="my_input2" type="text" id="sample6_postcode" name="postcode"
-                                   value="{{ user_info.address }}" readonly>
-                            <input type="button" id="postbtn" class="button" onclick="sample6_execDaumPostcode()"
-                                   value="우편번호 찾기"><br>
-                        </div>
-                        <input class="my_input" type="text" id="sample6_address" name="address" value="{{ user_info.address }}"><br>
-                        <input class="my_input" type="text" id="sample6_detailAddress" name="address2" value="{{ user_info.address }}"><br>
-                    </td>
-                </tr>
-                {% endif %}
+{#                {% if user_info.role == 'guide' %}#}
+{#                <tr>#}
+{#                    <th class="info_title">주소</th>#}
+{#                    <td class="post">#}
+{#                        <div class="flex_btn">#}
+{#                            <input class="my_input2" type="text" id="sample6_postcode" name="postcode"#}
+{#                                   value="{{ user_info.address }}" readonly>#}
+{#                            <input type="button" id="postbtn" class="button" onclick="sample6_execDaumPostcode()"#}
+{#                                   value="우편번호 찾기"><br>#}
+{#                        </div>#}
+{#                        <input class="my_input" type="text" id="sample6_address" name="address" value="{{ user_info.address }}"><br>#}
+{#                        <input class="my_input" type="text" id="sample6_detailAddress" name="address2" value="{{ user_info.address }}"><br>#}
+{#                    </td>#}
+{#                </tr>#}
+{#                {% endif %}#}
 {#                <tr>#}
 {#                    <th>생년월일</th>#}
 {#                    <td>{{ user_info.birth }}</td>#}
 {#                </tr>#}
-                <tr>
-                    <th class="info_title">휴대폰</th>
-                    <td><input class="my_input" type="tel" name="tel" value="{{ user_info.phone }}"></td>
-                </tr>
-                <tr>
-                    <th class="info_title">이메일</th>
-                    <td><input class="my_input" type="email" name="email1" value="{{ user_info.email }}"></td>
-                </tr>
+{#                <tr>#}
+{#                    <th class="info_title">휴대폰</th>#}
+{#                    <td><input class="my_input" type="tel" name="tel" value="{{ user_info.phone }}"></td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                    <th class="info_title">이메일</th>#}
+{#                    <td><input class="my_input" type="email" name="email1" value="{{ user_info.email }}"></td>#}
+{#                </tr>#}
             </table>
 
             <div class="chk-btn">
