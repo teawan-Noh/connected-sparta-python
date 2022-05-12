@@ -271,28 +271,6 @@ def product_detail(pid):
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
-# 가이드 내상품 불러오기
-@application.route('/myProduct')
-def myProduct():
-    # 가이드 카카오 로그인 구현시 사용
-    token_kakao = request.cookies.get('kakao')
-    # print(token_kakao) # 화면단에서 토큰 값 세팅시 '@' 가 %40으로 변환되므로 서버단에서 사용시 replace를 사용하여 변환
-    if token_kakao is None:
-        token_receive = request.cookies.get('mytoken')
-        try:
-            payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-            myProducts = list(db.products.find({'userid': payload["id"]}, {'_id': False}))
-        except jwt.ExpiredSignatureError:
-            return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
-        except jwt.exceptions.DecodeError:
-            return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
-    else:
-        set_val = token_kakao.replace('%40', '@')
-        myProducts = list(db.products.find({'userid': set_val}, {'_id': False}))
-
-    print(myProducts)
-    return render_template('myProducts.html', myProducts=myProducts)
-
 @application.route('/update_bucket', methods=['POST'])
 def update_bucket():
     token_receive = request.cookies.get('mytoken')
