@@ -85,16 +85,12 @@
     </div>
 </div>
 
-{{ myProducts }}
-<ul id="gu-list">
+
     {% for row in myProducts %}
         {% set title = row['title'] %}
-        {% set content = row['content']|int %}
-            <li>{{ title }}: {{ content }}</li>
-    {% endfor %}
-</ul>
-
-<div id="product-box" class="card-list">
+        {% set content = row['content'] %}
+        {% set image = row['file'] %}
+            <div id="product-box" class="card-list">
             <div class="card">
             <div class="card-image">
                 <figure class="image is-4by3">
@@ -104,15 +100,17 @@
             <div class="card-content">
                 <div class="media">
                     <div class="media-content">
-                        <p class="title is-4">{{ myProducts.title }}</p>
-                        <p class="subtitle is-5">{{ myProducts.content }}</p>
+                        <p class="title is-5">{{ title }}</p>
+                        <p class="subtitle is-6">{{ content }}</p>
                         <small style="float:right;">2시간 전</small>
                     </div>
                 </div>
                 </div>
             </div>
         </div>
-        </div>
+    {% endfor %}
+
+
 
 
 
