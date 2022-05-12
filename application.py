@@ -37,10 +37,8 @@ def file_upload():
     # print(str(filename1))
 
     s3 = boto3.client('s3',
-                      # aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
-                      # aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
-                      aws_access_key_id = 'AKIA473YIRHLPKWSGQFI',
-                      aws_secret_access_key='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'
+                      aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+                      aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
                       )
     s3.put_object(
         ACL="public-read",
@@ -54,7 +52,6 @@ def file_upload():
 
 @application.route('/')
 def home():
-    print(filename1)
     status = user.get_status()
     return render_template('index.html', statusbox=status)
 
@@ -272,6 +269,12 @@ def get_products():
     products = list(db.products.find({}).sort("date", -1))
     return jsonify({"result": "success", "msg": "포스팅을 가져왔습니다.", "products":dumps(products)})
 
+# # 포스팅 불러오기
+# @application.route("/bucket/get", methods=['GET'])
+# def get_bucket():
+#     buckets = list(db.buckets.find({}).sort("date", -1))
+#     return jsonify({"result": "success", "msg": "포스팅을 가져왔습니다.", "buckets":buckets})
+
 # 상품 상세 페이지로 이동
 @application.route('/product/<pid>')
 def product_detail(pid):
@@ -308,27 +311,6 @@ def update_bucket():
         return jsonify({"result": "success", 'msg': 'updated'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
-
-@application.route('/mybucket')
-def myBuckets():
-    # 가이드 카카오 로그인 구현시 사용
-    token_kakao = request.cookies.get('kakao')
-    # print(token_kakao) # 화면단에서 토큰 값 세팅시 '@' 가 %40으로 변환되므로 서버단에서 사용시 replace를 사용하여 변환
-    if token_kakao is None:
-        token_receive = request.cookies.get('mytoken')
-        try:
-            payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-            myBuckets = list(db.buckets.find({'userid': payload["id"]}, {'_id': False}))
-        except jwt.ExpiredSignatureError:
-            return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
-        except jwt.exceptions.DecodeError:
-            return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
-    else:
-        set_val = token_kakao.replace('%40', '@')
-        myBuckets = list(db.buckets.find({'userid': set_val}, {'_id': False}))
-
-    print(myBuckets)
-    return render_template('myBuckets.html', myBuckets=myBuckets)
 
 # 댓글 작성하기
 @application.route('/product/add_comments', methods=['POST'])
