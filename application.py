@@ -93,7 +93,7 @@ def sign_in():
          'id': userid_receive,
          'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)  # 로그인 24시간 유지
         }
-        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf-8')
+        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
         return jsonify({'result': 'success', 'token': token})
     # 찾지 못하면
@@ -152,7 +152,7 @@ def product():
     token_receive = request.cookies.get('mytoken')
     try:
         # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256']).decode('utf-8')
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({"userid": payload["id"]})
         products = list(db.products.find({}))
         result = user_info["role"]
