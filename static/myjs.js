@@ -301,6 +301,24 @@ function off_bucket(pid) {
     })
 }
 
+function getFiles() {
+    $.ajax({
+        type: 'GET',
+        url: '{EB URL}/files',
+        success: function (data) {
+            for (let i = 0; i < data['files'].length; i++) {
+                makeOrder(data['files'][i]);
+            }
+        },
+    });
+}
+
+function makeOrder(data) {
+    let order = `<tr>
+                     <td><img width="200px" src="/${data}"></td>
+                 </tr>`;
+    $("#orders-box").append(order);
+}
 
 function get_buckets(username) {
     if (username == undefined) {

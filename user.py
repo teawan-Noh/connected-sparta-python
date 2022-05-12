@@ -20,9 +20,12 @@ def getUserInfoByToken():
         except jwt.exceptions.DecodeError:
             return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
-    if token_kakao is not None:
+    elif token_kakao is not None:
         set_val = token_kakao.replace('%40', '@')
         user_info = db.users.find_one({"userid": set_val}, {'_id': False})
+
+    else:
+        user_info = 'a'
 
     return user_info;
 
