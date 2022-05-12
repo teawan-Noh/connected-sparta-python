@@ -1,116 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <!-- Webpage Title -->
-    <title>Mypage | CONNECTED</title>
+    <title>Home | CONNECTED</title>
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta property="og:title" content="CONNECTED - 여행자 & 가이드 연결 플랫폼"/>
 
+    <!-- og태그 & Favicon -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <meta property="og:title" content="connected"/>
+    <meta property="og:description" content="mini project for Web Plus"/>
+    <meta property="og:image" content="{{ url_for('static', filename='ogimg.png') }}"/>
     <!-- Bulma CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
-    <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
     <!-- Font Awesome CSS -->
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-
+    <!-- 코드 길이를 줄이기 위해 중복되는 css 파일은 합쳐보자! -->
+    <!-- Bulma에 대한 css이기 때문에 Bulma CSS보다 아래에 위치해야한다. -->
+    <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-
-    <!-- kakao login/logout -->
-    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
-    <script src="{{ url_for('static', filename='login.js') }}"></script>
     <script src="{{ url_for('static', filename='myjs.js') }}"></script>
 
-    <style>
-        .wrap {
-            width: 1200px;
-            margin: auto;
-            display: flex;
-        }
+{#    <script>#}
+{#    $(document).ready(function () {#}
+{#        get_products()#}
+{#    }) #}
+{#    </script>#}
 
-        .subtitle1 {
-            margin: 10px 30px;
-            font-family: 'Jua', sans-serif;
-            font-size: 40px;
-        }
-
-        .section2 {
-            width: 800px;
-            margin: 10px 50px;
-        }
-
-        .btn-posting {
-            width: 800px;
-            display: flex;
-            flex-direction: row-reverse;
-        }
-
-        .card-list {
-            width: 810px;
-            display: flex;
-            flex-wrap: wrap;
-            flex-direction: row;
-        }
-
-        .card {
-            width: 250px;
-            margin: 10px;
-        }
-    </style>
-
+<style>
+    .box {
+        background-color: #569aff;
+        margin-top: 50px;
+        width: 1200px;
+    }
+    .subtitle1 {
+        margin: 20px auto;
+        font-size: 30px;
+        font-family: 'Jua', sans-serif;
+    }
+    .label1 {
+        margin: 50px auto 0px;
+        font-size: 20px;
+        font-family: 'Jua', sans-serif;
+    }
+    .form-group input{
+        width: 1160px;
+    }
+    .field {
+        margin: 30px auto 0px;
+    }
+    .control {
+        display: flex;
+    }
+    .address {
+        margin-right: 10px;
+    }
+</style>
 </head>
 <body>
 {% include 'mainHeader.html' %}
-<div class="wrap">
-    <div class="myPageMenu">
-        {% include 'myPageMenu.html' %}
-    </div>
-    <div class="section">
-        <h3 class="subtitle1">🖼️ 나의 여행 상품</h3>
-        <div class="section2">
-            <div class="btn-posting">
-                <a class="button" onclick="go_posting()">투어 상품 올리기</a>
-            </div>
-            <div id="product-box" class="card-list">
-            {% for row in myProducts %}
-                {% set title = row['title'] %}
-                {% set content = row['content'] %}
-                {% set image = row['file'] %}
-                {% set pid = row['pid'] %}
-                <a href="#", onclick="location.href='http://localhost:5000/product/{{ pid }}'">
-                    <div class="card">
-                        <div class="card-image">
-                            <figure class="image is-4by3">
-                                <img src={{ url_for("static", filename="profile_placeholder.png") }} alt="Image">
-                            </figure>
-                        </div>
-                        <div class="card-content">
-                            <div class="media">
-                                <div class="media-content">
-                                    <p class="title is-5">{{ title }}</p>
-                                    <p class="subtitle is-6">{{ content }}</p>
+<div class="columns" style="max-width: 1200px; margin:auto;">
+    {% if result == 'guide' %}
+        <div class="box">
+        <h3 class="subtitle1">👣 상품 등록하기</h3>
+            <article class="media">
+                <div class="media-content">
+                    <div class="field">
+                        <label class="label1" for="input-title">제목</label>
+                        <p class="control">
+                            <input id="input-title" class="input"
+                                   placeholder="제목" value="{{ products.title }}">
+                        </p>
+                    </div>
+                    <div class="field">
+                        <label class="label1" for="input-picture">사진</label>
+                        <div class="control is-expanded">
+                            {#                            <div class="file has-name">#}
+                            {#                                <label class="file-label" style="width:100%">#}
+                            {#                                    <input id="input-picture" class="file-input" type="file" name="resume">#}
+                            {#                                    <span class="file-cta">#}
+                            {#                                        <span class="file-icon">#}
+                            {#                                            <i class="fa fa-upload"></i>#}
+                            {#                                        </span>#}
+                            {#                                        <span class="file-label">파일 선택</span>#}
+                            {#                                    </span>#}
+                            {#                                    <span id="file-name" class="file-name" style="width:100%;max-width:100%">{{ products.file }}</span>#}
+                            {#                                </label>#}
+                            {#                            </div>#}
+                            <div id="post-box" class="form-post">
+                                <div>
+                                    <div class="form-group">
+                                        <form id="upload-file">
+                                            <input for="post-url" class="input" type="file" name="file"/>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </a>
-            {% endfor %}
-            </div>
+                    <div class="field">
+                        <label class="label1" for="input-content">내용</label>
+                        <p class="control">
+                        <textarea id="input-content" class="textarea"
+                                  placeholder="내용">{{ products.content }}</textarea>
+                        </p>
+                    </div>
+                    <div class="field">
+                        <label class="label1" for="startpoint_address">출발 위치</label>
+                        <p class="control">
+                            <input class="button address" type="button" onclick="sample5_execDaumPostcode()" value="주소 검색"><br>
+                            <input class="input" type="text" id="sample5_address" placeholder="주소">
+                        <div id="map" style="width:100%;height:500px;margin-top:10px;display:none"></div>
+
+                        <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+                        <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=03d0eb34b366026c640028dde39ff7e9&libraries=services"></script>
+                        <script>
+                            let x;
+                            let y;
+                            var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+                                mapOption = {
+                                    center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
+                                    level: 5 // 지도의 확대 레벨
+                                };
+
+                            //지도를 미리 생성
+                            var map = new daum.maps.Map(mapContainer, mapOption);
+                            //주소-좌표 변환 객체를 생성
+                            var geocoder = new daum.maps.services.Geocoder();
+
+                            var marker = new daum.maps.Marker({
+                                position: new daum.maps.LatLng(37.537187, 127.005476),
+                                map: map
+                            });
+
+                            function sample5_execDaumPostcode() {
+                                new daum.Postcode({
+                                    oncomplete: function (data) {
+                                        var addr = data.address; // 최종 주소 변수
+
+                                        // 주소 정보를 해당 필드에 넣는다.
+                                        document.getElementById("sample5_address").value = addr;
+                                        // 주소로 상세 정보를 검색
+                                        geocoder.addressSearch(data.address, function (results, status) {
+                                            // 정상적으로 검색이 완료됐으면
+                                            if (status === daum.maps.services.Status.OK) {
+
+                                                var result = results[0]; //첫번째 결과의 값을 활용
+
+                                                // 해당 주소에 대한 좌표를 받아서
+                                                var coords = new daum.maps.LatLng(result.y, result.x);
+                                                x = coords.La // 경도
+                                                y = coords.Ma // 위도
+                                                // 지도를 보여준다.
+                                                mapContainer.style.display = "block";
+                                                map.relayout();
+                                                // 지도 중심을 변경한다.
+                                                map.setCenter(coords);
+                                                // 마커를 결과값으로 받은 위치로 옮긴다.
+                                                marker.setPosition(coords)
+                                                {#alert(coords)#}
+                                            }
+                                        });
+                                    }
+                                }).open();
+                            }
+
+                        </script>
+                        </p>
+                    </div>
+                    <div class="field">
+                        <label class="label1" for="input-calender">일정</label>
+                        <p class="control">
+                            <input id="input-calender" class="input"
+                                   placeholder="일정" value="{{ products.calender }}">
+                        </p>
+                    </div>
+                    <div class="field">
+                        <label class="label1" for="input-price">가격</label>
+                        <p class="control">
+                            <input id="input-price" class="input"
+                                   placeholder="가격" value="{{ products.price }}">
+                        </p>
+                    </div>
+                    <div class="level-right">
+                        <script>
+                            let productid = '{{ products.pid }}'
+                        </script>
+                        {% if productid != None %}
+                            <div class="level-item">
+                                <a class="button is-sparta" onclick="posting(x,y)">등록</a>
+                            </div>
+                        {% else %}
+                            <div class="level-item">
+                                <a class="button is-sparta" onclick="edit_product(x, y, '{{ products.pid }}')">등록</a>
+                            </div>
+                        {% endif %}
+                        <div class="level-item">
+                            <a class="button is-sparta is-outlined" href="/product">취소</a>
+                        </div>
+                    </div>
+                </div>
+            </article>
         </div>
-    </div>
+    {% endif %}
 </div>
-
-    {#{{ user_info }}#}
-    {#<hr>#}
-    {#<a href='/test2'>myProducts</a>#}
-    {#<hr>#}
-    {#<a href='/test3'>개인정보 수정</a>#}
-
 </body>
 </html>
