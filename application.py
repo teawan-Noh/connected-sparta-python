@@ -293,7 +293,7 @@ def myProduct():
     print(myProducts)
     return render_template('myProducts.html', myProducts=myProducts)
 
-@app.route('/update_bucket', methods=['POST'])
+@application.route('/update_bucket', methods=['POST'])
 def update_bucket():
     token_receive = request.cookies.get('mytoken')
     try:
@@ -315,7 +315,7 @@ def update_bucket():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
-@app.route('/mybucket')
+@application.route('/mybucket')
 def myBuckets():
     # 가이드 카카오 로그인 구현시 사용
     token_kakao = request.cookies.get('kakao')
