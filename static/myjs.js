@@ -165,6 +165,18 @@ function edit_product(pid) {
     });
 }
 
+function delete_product(pid) {
+    $.ajax({
+        type: "POST",
+        url: "/delete_product",
+        data: {"pid_give":pid},
+        success: function (response) {
+            alert(response["msg"])
+            window.location.href = "/product"
+        }
+    });
+}
+
 function add_comment(pid) {
     let comment_content = $('#comment-content').val();
     let form_data = new FormData()
@@ -221,21 +233,65 @@ function get_comment(cid) {
     });
 }
 
-function go_bucket() {
-    window.location.href = "/mypage/bucket"
-}
-
-function delete_product(i) {
-    console.log("deleting", i)
+function go_bucket(pid) {
     $.ajax({
         type: "POST",
-        url: `/api/delete_ex`,
-        data: {
-            word_give: word,
-            number_give: i
-        },
+        url: `/product/bucket`,
+        data: {"pid_give":pid},
         success: function (response) {
-            get_examples()
+            if (response["result"] == "success") {
+                alert(response["msg"])
+            }
         }
     });
 }
+
+function toggle_bucket(pid, type) {
+    console.log(pid, type)
+    let $a_bucket = $(`#${pid} a[aria-label='${type}']`)
+    let $i_bucket = $a_bucket.find("i")
+    let on_bucket = {"star":"fa-star"}
+    let off_bucket = {"star":"fa-star-o"}
+    if ($i_bucket.hasClass(on_bucket[type])) {
+        $.ajax({
+            type: "POST",
+            url: "/update_bucket",
+            data: {
+                pid_give: pid,
+                type_give: type,
+                action_give: "off_bucket"
+            },
+            success: function (response) {
+                console.log("unlike")
+                $i_bucket.addClass(off_bucket[type]).removeClass(on_bucket[type])
+            }
+        })
+    } else {
+        $.ajax({
+            type: "POST",
+            url: "/update_bucket",
+            data: {
+                pid_give: pid,
+                type_give: type,
+                action_give: "on_bucket"
+            },
+            success: function (response) {
+                console.log("on_bucket")
+                $i_bucket.addClass(on_bucket[type]).removeClass(off_bucket[type])
+            }
+        })
+    }
+}
+
+
+// function delete_comment(commentid) {
+//     $.ajax({
+//         type: "POST",
+//         url: "/delete_comment",
+//         data: {"commentid_give":commentid},
+//         success: function (response) {
+//             alert(response["msg"])
+//             window.location.reload()
+//         }
+//     });
+// }

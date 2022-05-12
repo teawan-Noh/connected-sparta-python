@@ -155,13 +155,20 @@
                 <div class="media" id="media-guide">
                     <div class="media-left">
                         <figure class="image is-48x48">
-                            <img src="{{ user_info.profile_pic_real }}" class="card-img-top">
+                            <img src="{{ product_info.profile_pic_real }}" class="card-img-top">
                         </figure>
                     </div>
                     <div class="media-right">
-                        <p class="title is-6">{{ user_info.profile_name }}</p>
-                        <p class="subtitle is-6">{{ user_info.userid }}</p>
+                        <p class="title is-6">{{ product_info.profile_name }}</p>
+                        <p class="subtitle is-6">{{ product_info.userid }}</p>
                     </div>
+                    <nav class="level is-mobile">
+                        <div class="level-left">
+                            <a class="level-item is-sparta" aria-label="bucket" onclick="toggle_bucket('{{ product_info.pid }}', 'heart')">
+                                <span class="icon is-small"><i class="fa fa-star" aria-hidden="true"></i></span>
+                            </a>
+                        </div>
+                    </nav>
                 </div>
                 <table>
                     <thead>
@@ -221,7 +228,7 @@
                 <div id="button-guide" class="is-hidden">
                     <div class="buttons is-centered">
                         <button class="button is-fullwidth" onclick="edit_product('{{ product_info.pid }}')" style="max-width: 280px; height: 30px;">상품 수정하기</button>
-                        <button class="button is-fullwidth" onclick="delete_product()" style="max-width: 280px; height: 30px; margin-bottom: 15px;">상품 삭제하기</button>
+                        <button class="button is-fullwidth" onclick="delete_product('{{ product_info.pid }}')" style="max-width: 280px; height: 30px; margin-bottom: 15px;">상품 삭제하기</button>
                     </div>
                 </div>
                 <div id="button-user" class="">
