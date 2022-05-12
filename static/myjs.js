@@ -1,31 +1,31 @@
-function go_posting() {
-    window.location.href = '/go_posting'
-}
+ function go_posting() {
+        window.location.href = '/go_posting'
+    }
 
-// post 작성
-function posting(x,y) {
-    let title = $('#input-title').val()
-    let file = new FormData($('#upload-file')[0])
-    let content = $("#input-content").val()
-    let calender = $("#input-calender").val()
-    let price = $("#input-price").val()
-    let today = new Date().toISOString()
-    // form_data 초기화
-    let form_data = new FormData()
-    form_data.append("title_give", title)
-    form_data.append("file_give", file)
-    form_data.append("content_give", content)
-    form_data.append("calender_give", calender)
-    form_data.append("price_give", price)
-    form_data.append("date_give", today)
-    form_data.append("x_give",x)
-    form_data.append("y_give",y)
+        // post 작성
+ function posting(x, y) {
+        let title = $('#input-title').val()
+        let file = new FormData($('#upload-file')[0])
+        let content = $("#input-content").val()
+        let calender = $("#input-calender").val()
+        let price = $("#input-price").val()
+        let today = new Date().toISOString()
+        // form_data 초기화
+        let form_data = new FormData()
+        form_data.append("title_give", title)
+        form_data.append("file_give", file)
+        form_data.append("content_give", content)
+        form_data.append("calender_give", calender)
+        form_data.append("price_give", price)
+        form_data.append("date_give", today)
+        form_data.append("x_give", x)
+        form_data.append("y_give", y)
 
-    // let form_data_box = new FormData()
-    // form_data_box.append("contentdata", form_data)
-    // form_data_box.append("filedata", form_data2)
-    var form_data2 = new FormData($('#upload-file')[0]);
-    $.ajax({
+        // let form_data_box = new FormData()
+        // form_data_box.append("contentdata", form_data)
+        // form_data_box.append("filedata", form_data2)
+        var form_data2 = new FormData($('#upload-file')[0]);
+        $.ajax({
         type: 'POST',
         url: '/fileupload',
         data: form_data2,
@@ -308,11 +308,17 @@ function get_comment(cid) {
                                          </div>
                                          <div class="media-content">
                                              <div class="content">
-                                             <p>
-                                                 <strong>${comment['userid']}</strong>
-                                                 <br>
-                                                  ${comment['content']}
-                                             </p>
+                                                 <p>
+                                                     <strong>${comment['userid']}</strong>
+                                                     <br>
+                                                      ${comment['content']}
+                                                 </p>
+                                                 <div class="media-left">
+                                                     <div id="edit_comment" >
+                                                        <a class="button" onclick="edit_comment('{{product_info.pid}}')" style="margin: 5px;">수정</a>
+                                                        <a class="button" onclick="delete_comment('{{product_info.pid}}')" style="margin: 5px;">삭제</a>
+                                                     </div>
+                                                 </div>
                                              </div>
                                          </div>
                                      </article>

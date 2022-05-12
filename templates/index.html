@@ -26,6 +26,8 @@
     <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
     <script src="{{ url_for('static', filename='login.js') }}"></script>
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
     <script>
         let products = {{ products }};
         let all_list = [];
@@ -71,9 +73,16 @@
 </head>
 <body>
 {% include 'mainHeader.html' %}
-<div class="searchbar">
-    {% include 'searchBar.html' %}
-</div>
+{#<div class="searchbar">#}
+    <div class="field is-grouped">
+        <p class="control is-expanded">
+            <input class="searchInput" type="text" placeholder="키워드를 검색하세요.">
+        </p>
+        <p class="control">
+            <a class="button is-info"><i class="fa fa-search"></i></a>
+        </p>
+    </div>
+{#</div>#}
     <section class="product_box">
         <p>
             <a class="section_title" href="/product">가이드 상품 더보기</a>

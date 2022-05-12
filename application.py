@@ -9,6 +9,7 @@ from bson.json_util import dumps
 from datetime import datetime, timedelta
 import user
 import boto3
+import json
 from flask_cors import CORS
 import os
 
@@ -36,18 +37,18 @@ def file_upload():
     filename1 = f'{filenamefront}.{extension}'
     # print(str(filename1))
 
-    # s3 = boto3.client('s3',
-    #                   aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
-    #                   aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
-    #                   )
-    # s3.put_object(
-    #     ACL="public-read",
-    #     # Bucket=os.environ["BUCKET_NAME"],
-    #     Bucket='project1-sparta',
-    #     Body=file,
-    #     Key=file.filename,
-    #     ContentType=file.content_type
-    # )
+    s3 = boto3.client('s3',
+                      aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+                      aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
+                      )
+    s3.put_object(
+        ACL="public-read",
+        # Bucket=os.environ["BUCKET_NAME"],
+        Bucket='project1-sparta',
+        Body=file,
+        Key=file.filename,
+        ContentType=file.content_type
+    )
     return jsonify({'result': 'success'})
 
 @application.route('/')
@@ -154,6 +155,18 @@ def product():
     status = user.get_status()
     result = user_info['role']
     return render_template('product.html', result=result, user_info=user_info, statusbox=status, products=products)
+
+
+@application.route('/searchProductByTitle', methods=['GET'])
+def searchProductByTitle():
+
+    searchVal = request.args.get("searchVal")
+
+    ({'text': {'$regex': 'IP'}}, {'text': 1, 'created_at': 1})
+    # searched_list = list(db.products.find({'title': {'$regex': val}}, {'_id': False}))
+    searched_list = list(db.products.find({'title': searchVal}, {'_id': False}))
+    print(searched_list, '실')
+    return 'a'
 
 
 @application.route('/go_posting')
@@ -370,8 +383,9 @@ def myBuckets():
             bucket2 = db.products.find_one({'pid': bucketid}, {'_id': False})
             bucketlist.append(bucket2)
         print(bucketlist)
-
-    return render_template('myBuckets.html', myBuckets=bucketlist, user_info=user_info)
+    user_info = user.getUserInfoByToken()
+    status = user.get_status()
+    return render_template('myBuckets.html', myBuckets=bucketlist, user_info=user_info, statusbox=status)
 
 # 댓글 작성하기
 @application.route('/product/add_comments', methods=['POST'])
@@ -490,7 +504,6 @@ def myProduct():
         set_val = token_kakao.replace('%40', '@')
         myProducts = list(db.products.find({'userid': set_val}, {'_id': False}))
         user_info = db.users.find_one({"userid": set_val})
-
     print(myProducts)
     status = user.get_status()
     return render_template('myProducts.html', myProducts=myProducts, statusbox=status, user_info=user_info)
@@ -512,7 +525,9 @@ def myBookmark():
     else:
         set_val = token_kakao.replace('%40', '@')
         user_info = db.users.find_one({"userid": set_val})
-    return render_template('myBookmark.html', user_info=user_info)
+    user_info = user.getUserInfoByToken()
+    status = user.get_status()
+    return render_template('myBookmark.html', user_info=user_info, statusbox=status)
 
 # 내 댓글 불러오기
 @application.route('/myComment')
