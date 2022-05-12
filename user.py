@@ -13,7 +13,7 @@ def getUserInfoByToken():
     user_info = ''
     if token_receive is not None:
         try:
-            payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256']).decode('utf-8')
+            payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
             user_info = db.users.find_one({"userid": payload["id"]})
             # print('실행', user_info)
         except jwt.ExpiredSignatureError:
