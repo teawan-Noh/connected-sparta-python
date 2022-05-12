@@ -52,8 +52,9 @@ def file_upload():
 
 @application.route('/')
 def home():
+    user_info = user.getUserInfoByToken()
     status = user.get_status()
-    return render_template('index.html', statusbox=status)
+    return render_template('index.html', user_info=user_info, statusbox=status)
 
 @application.route('/login')
 def login():
@@ -151,8 +152,9 @@ def product():
         products = list(db.products.find({}))
         result = user_info["role"]
         msg = request.args.get("msg")
+        user_info = user.getUserInfoByToken()
         status = user.get_status()
-        return render_template('product.html', result=result, msg=msg, statusbox=status, products=products)
+        return render_template('product.html', result=result, msg=msg,  user_info=user_info, statusbox=status, products=products)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 

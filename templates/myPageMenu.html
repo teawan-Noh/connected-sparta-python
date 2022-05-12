@@ -39,7 +39,7 @@
         <div class="menu-wrap">
             <h1 class="menu-title">마이페이지</h1>
 
-{#            {% if user_info.role == 'traveler' %}#}
+            {% if user_info.role == 'traveler' %}
                 <aside class="menu">
                     <ul class="menu-list">
                         <li><a class="mylist" href="/mypage">MY PROFILE</a></li>
@@ -55,7 +55,7 @@
                         <li><a class="mylist" href="/myInfo">회원정보 관리</a></li>
                     </ul>
                 </aside>
-{#            {% else %}#}
+            {% else %}
                 <aside class="menu">
                     <ul class="menu-list">
                         <li><a class="mylist" href="/mypage">MY PROFILE</a></li>
@@ -69,7 +69,7 @@
                         <li><a class="mylist" href="/myInfo">회원정보 관리</a></li>
                     </ul>
                 </aside>
-{#            {% endif %}#}
+            {% endif %}
         </div>
     </div>
 
