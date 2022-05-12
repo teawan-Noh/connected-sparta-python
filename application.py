@@ -22,16 +22,28 @@ SECRET_KEY = 'SPARTA'
 client = MongoClient('54.180.31.220', 27017, username="test", password="test")
 db = client.cnt_project2
 
+global filename1
+
 @application.route('/fileupload', methods=['POST'])
 def file_upload():
     file = request.files['file']
-    s3 = boto3.client('s3',
-                      aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
-                      aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
+    box = str(file)
+
+    filenamefront = box.split('.')[0].split('\'')[-1]
+    extension = box.split('.')[-1].split('/')[-1].split('\'')[0]
+
+    global filename1
+    filename1 = f'{filenamefront}.{extension}'
+    # print(str(filename1))
+
+    s3 = boto3.client('s3'
+                      # aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+                      # aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
                       )
     s3.put_object(
         ACL="public-read",
-        Bucket=os.environ["BUCKET_NAME"],
+        # Bucket=os.environ["BUCKET_NAME"],
+        Bucket='project1-sparta',
         Body=file,
         Key=file.filename,
         ContentType=file.content_type
@@ -40,6 +52,7 @@ def file_upload():
 
 @application.route('/')
 def home():
+    print(filename1)
     status = user.get_status()
     return render_template('index.html', statusbox=status)
 
@@ -159,6 +172,7 @@ def go_posting():
 
 @application.route('/posting', methods=['POST'])
 def posting():
+    print(filename1, '여기')
     token_receive = request.cookies.get('mytoken')
     try:
         # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
@@ -166,6 +180,7 @@ def posting():
         user_info = db.users.find_one({"userid": payload["id"]})
         # 코멘트에 적힌 글과 현재 날짜를 불러온다.
         today = datetime.now()
+
         title_receive = request.form["title_give"]
         file = request.files["file_give"]
         content_receive = request.form["content_give"]

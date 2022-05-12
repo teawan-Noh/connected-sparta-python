@@ -5,7 +5,7 @@ function go_posting() {
 // post 작성
 function posting(x,y) {
     let title = $('#input-title').val()
-    let file = $('#upload-file')[0]
+    let file = new FormData($('#upload-file')[0])
     let content = $("#input-content").val()
     let calender = $("#input-calender").val()
     let price = $("#input-price").val()
@@ -21,19 +21,33 @@ function posting(x,y) {
     form_data.append("x_give",x)
     form_data.append("y_give",y)
 
+    let form_data_box = new FormData()
+    // form_data_box.append("contentdata", form_data)
+    // form_data_box.append("filedata", form_data2)
+    var form_data2 = new FormData($('#upload-file')[0]);
     $.ajax({
-        type: "POST",
-        url: "/posting",
-        data: form_data,
-        cache: false,
-        contentType: false,
+        type: 'POST',
+        url: '/fileupload',
+        data: form_data2,
         processData: false,
-        success: function (response) {
-            if (response["result"] == "success") {
-                alert(response["msg"])
-                window.location.href = `/product`
-            }
-        }
+        contentType: false,
+        success: function (data) {
+            alert("파일이 업로드 되었습니다!!");
+            $.ajax({
+                type: "POST",
+                url: "/posting",
+                data: form_data_box,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        alert(response["msg"])
+                        window.location.href = `/product`
+                    }
+                }
+            });
+        },
     });
 }
 
@@ -134,7 +148,7 @@ function detail(pid) {
 
 function edit_product(pid) {
     let title = $('#input-title').val()
-    let file = $('#upload-file')[0].files[0]
+    let file = $('#input-picture')[0].files[0]
     let content = $("#input-content").val()
     let calender = $("#input-calender").val()
     let price = $("#input-price").val()
@@ -213,7 +227,7 @@ function get_comment(cid) {
                                      <article class="media">
                                          <div class="media-left">
                                              <figure class="image is-64x64">
-                                                 <img src="/static/${comment['user_pic_real']}" alt="Image">
+                                                 <img src="/static/${comment.user_pic_real}" alt="Image">
                                              </figure>
                                          </div>
                                          <div class="media-content">
