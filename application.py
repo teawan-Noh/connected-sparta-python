@@ -56,6 +56,7 @@ def home():
     user_info = user.getUserInfoByToken()
 
     status = user.get_status()
+    print(user_info)
     if user_info is not None:
         return render_template('index.html', user_info=user_info, statusbox=status)
     else:
@@ -149,19 +150,13 @@ def check_dup():
 
 @application.route('/product')
 def product():
-    token_receive = request.cookies.get('mytoken')
-    try:
-        # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({"userid": payload["id"]})
-        products = list(db.products.find({}))
-        result = user_info["role"]
-        msg = request.args.get("msg")
-        user_info = user.getUserInfoByToken()
-        status = user.get_status()
-        return render_template('product.html', result=result, msg=msg,  user_info=user_info, statusbox=status, products=products)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
+    products = list(db.products.find({}))
+    user_info = user.getUserInfoByToken()
+    status = user.get_status()
+    result = user_info['role']
+
+    return render_template('product.html', result=result, user_info=user_info, statusbox=status, products=products)
+
 
 @application.route('/go_posting')
 def go_posting():

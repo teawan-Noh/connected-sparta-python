@@ -31,8 +31,18 @@
             Kakao.Auth.logout(function () {   // 로그아웃 - 쿠키에 저장된 토큰만 제거 (카카오 연동 상태는 유지)
                 // alert('logout ok\naccess token -> ' + Kakao.Auth.getAccessToken());
             })
+            window.Kakao.API.request({ // 카카오 연결 끊기
+                url: '/v1/user/unlink',
+                success: (res) => {
+                    // alert('logout ok\naccess token -> ' + Kakao.Auth.getAccessToken());
+                    {#console.log(res)#}
+                }
+            });
             alert('로그아웃!')
-            window.location.href = "/"
+            window.Kakao.Auth.cleanup()
+            alert(window.Kakao.isInitialized())
+            {#window.location.replace("/")#}
+            window.location.href="/"
         }
     </script>
     <style>
