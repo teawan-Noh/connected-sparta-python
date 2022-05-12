@@ -28,10 +28,10 @@ jobs:
       - name: Checkout source code.
         uses: actions/checkout@master
 
-      - name: Set up Python 3.8.1
+      - name: Set up Python 3.8.0
         uses: actions/setup-python@v1
         with:
-          python-version: "3.8.1"
+          python-version: "3.8.0"
         #패키징 deploy.zip으로
       - name: Generate deployment package
         run: zip -r deploy.zip . -x '*.git*'
