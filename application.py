@@ -36,9 +36,9 @@ def file_upload():
     filename1 = f'{filenamefront}.{extension}'
     # print(str(filename1))
 
-    s3 = boto3.client('s3',
-                      aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
-                      aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
+    s3 = boto3.client('s3'
+                      # aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+                      # aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
                       )
     s3.put_object(
         ACL="public-read",
@@ -182,7 +182,7 @@ def posting():
         today = datetime.now()
 
         title_receive = request.form["title_give"]
-        file = request.files["file_give"]
+        file = filename1
         content_receive = request.form["content_give"]
         date_receive = request.form["date_give"]
         calender_receive = request.form["calender_give"]
@@ -190,12 +190,12 @@ def posting():
         x_receive = request.form["x_give"]
         y_receive = request.form["y_give"]
         today_receive = today.strftime('%Y-%m-%d-%H-%M-%S')
-        filename = f'file-{today_receive}'
-        # 파일 형식을 따오는 코드
-        extension = file.filename.split('.')[-1]
-        # 따온 파일 이름과 형식을 저장해주는 코드
-        save_to = f'static/{filename}.{extension}'
-        file.save(save_to)
+        # filename = f'file-{today_receive}'
+        # # 파일 형식을 따오는 코드
+        # extension = file.filename.split('.')[-1]
+        # # 따온 파일 이름과 형식을 저장해주는 코드
+        # save_to = f'static/{filename}.{extension}'
+        # file.save(save_to)
         product_count = db.products.estimated_document_count()
         if product_count == 0:
             max_value = 1
@@ -207,7 +207,7 @@ def posting():
             "profile_name": user_info["profile_name"],
             "profile_pic_real": user_info["profile_pic_real"],
             "title": title_receive,
-            "file": f'{filename}.{extension}',
+            "file": file,
             "content": content_receive,
             "x":x_receive,
             "y":y_receive,
