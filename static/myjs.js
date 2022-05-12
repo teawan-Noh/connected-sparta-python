@@ -151,9 +151,9 @@ function detail(pid) {
     window.location.href = `/product/${pid}`
 }
 
-// function go_editing(pid) {
-//     window.location.href = `/go_editing?pid_give=${pid}`
-// }
+function go_editing(pid) {
+    window.location.href = `/go_editing?pid_give=${pid}`
+}
 
 // function edit_product(x, y, pid) {
 //     let title = $('#input-title').val()

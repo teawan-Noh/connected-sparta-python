@@ -36,18 +36,18 @@ def file_upload():
     filename1 = f'{filenamefront}.{extension}'
     # print(str(filename1))
 
-    # s3 = boto3.client('s3',
-    #                   aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
-    #                   aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
-    #                   )
-    # s3.put_object(
-    #     ACL="public-read",
-    #     # Bucket=os.environ["BUCKET_NAME"],
-    #     Bucket='project1-sparta',
-    #     Body=file,
-    #     Key=file.filename,
-    #     ContentType=file.content_type
-    # )
+    s3 = boto3.client('s3',
+                      aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+                      aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
+                      )
+    s3.put_object(
+        ACL="public-read",
+        # Bucket=os.environ["BUCKET_NAME"],
+        Bucket='project1-sparta',
+        Body=file,
+        Key=file.filename,
+        ContentType=file.content_type
+    )
     return jsonify({'result': 'success'})
 
 @application.route('/')
@@ -235,21 +235,21 @@ def posting():
 #     status = user.get_status()
 #     return render_template('myInfo.html', user_info=user_info, statusbox=status)
 
-# @application.route('/go_editing')
-# def go_editing():
-#     pid_receive = request.form["pid_give"]
-#     token_receive = request.cookies.get('mytoken')
-#     try:
-#         # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
-#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-#         user_info = db.users.find_one({"userid": payload["id"]})
-#         result = user_info["role"]
-#         product = db.products.find_one({"pid":pid_receive})
-#         status = user.get_status()
-#         return render_template('product_write.html', result=result, product=product, statusbox=status)
-#     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-#         return redirect(url_for("home"))
-#
+@application.route('/go_editing')
+def go_editing():
+    pid_receive = request.form["pid_give"]
+    token_receive = request.cookies.get('mytoken')
+    try:
+        # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"userid": payload["id"]})
+        result = user_info["role"]
+        product = db.products.find_one({"pid":pid_receive})
+        status = user.get_status()
+        return render_template('product_write.html', result=result, product=product, statusbox=status)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+
 # # 수정하기 추가 예정
 # @application.route('/edit_posting', methods=['POST'])
 # def edit_posting():
