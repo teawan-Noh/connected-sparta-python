@@ -86,7 +86,7 @@ def sign_in():
     password_receive = request.form['password_give']
     # print(userid_receive, password_receive)
 
-    pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
+    pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest().decode('utf-8')
     result = db.users.find_one({'role': role_receive, 'userid': userid_receive, 'password': pw_hash})
     # print(result)
     if result is not None:
