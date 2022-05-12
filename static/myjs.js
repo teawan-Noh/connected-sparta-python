@@ -5,7 +5,7 @@ function go_posting() {
 // post 작성
 function posting(x,y) {
     let title = $('#input-title').val()
-    let file = $('#input-picture')[0].files[0]
+    let file = new FormData($('#upload-file')[0])
     let content = $("#input-content").val()
     let calender = $("#input-calender").val()
     let price = $("#input-price").val()
@@ -21,19 +21,33 @@ function posting(x,y) {
     form_data.append("x_give",x)
     form_data.append("y_give",y)
 
+    let form_data_box = new FormData()
+    // form_data_box.append("contentdata", form_data)
+    // form_data_box.append("filedata", form_data2)
+    var form_data2 = new FormData($('#upload-file')[0]);
     $.ajax({
-        type: "POST",
-        url: "/posting",
-        data: form_data,
-        cache: false,
-        contentType: false,
+        type: 'POST',
+        url: '/fileupload',
+        data: form_data2,
         processData: false,
-        success: function (response) {
-            if (response["result"] == "success") {
-                alert(response["msg"])
-                window.location.href = `/product`
-            }
-        }
+        contentType: false,
+        success: function (data) {
+            alert("파일이 업로드 되었습니다!!");
+            $.ajax({
+                type: "POST",
+                url: "/posting",
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        alert(response["msg"])
+                        window.location.href = `/product`
+                    }
+                }
+            });
+        },
     });
 }
 
@@ -281,6 +295,52 @@ function toggle_bucket(pid, type) {
             }
         })
     }
+}
+
+function get_buckets(username) {
+    if (username == undefined) {
+        username=""
+    }
+    $("#bucket_list").empty()
+    $.ajax({
+        type: "GET",
+        url: `/mybucket`,
+        data: {},
+        success: function (response) {
+            if (response["result"] == "success") {
+                let bucket = response["buckets"]
+                let buckets = JSON.parse(bucket)
+                for (let i = 0; i < buckets.length; i++) {
+                    let bucket = buckets[i]
+                    // let mean = product['mean']
+                    let html_temp = `<div class="card" onclick="detail('${product['pid']}')" style="width: 350px; height: 500px; margin-bottom: 40px;">
+                                         <div class="card-image">
+                                             <figure class="image is-4by3">
+                                                 <img src="../static/${product.file}" class="card-img-top" alt="Placeholder image">
+                                             </figure>
+                                         </div>
+                                         <div class="card-content">
+                                             <div class="media">
+                                                 <div class="media-content">
+                                                     <p class="title is-4">${product['title']}</p>
+                                                     <p class="subtitle is-6">${product['content']}</p>
+                                                     <small style="float:right;">${time_before}</small>
+                                                 </div>
+                                             </div>
+                                             <nav class="level is-mobile">
+                                                 <div class="level-left">
+                                                     <a class="level-item is-sparta" aria-label="grade">
+                                                         <span class="icon is-small"><i class="fa-solid fa-star"></i></span>&nbsp;<span class="like-num"></span>
+                                                     </a>
+                                                 </div>
+                                             </nav>
+                                         </div>
+                                     </div>`
+                    $("#bucket_list").append(html_temp)
+                }
+            }
+        }
+    })
 }
 
 

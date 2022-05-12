@@ -19,20 +19,31 @@ application.config["TEMPLATES_AUTO_RELOAD"] = True
 application.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
 SECRET_KEY = 'SPARTA'
-
 client = MongoClient('54.180.31.220', 27017, username="test", password="test")
 db = client.cnt_project2
+
+global filename1
 
 @application.route('/fileupload', methods=['POST'])
 def file_upload():
     file = request.files['file']
+    box = str(file)
+
+    filenamefront = box.split('.')[0].split('\'')[-1]
+    extension = box.split('.')[-1].split('/')[-1].split('\'')[0]
+
+    global filename1
+    filename1 = f'{filenamefront}.{extension}'
+    # print(str(filename1))
+
     s3 = boto3.client('s3',
                       aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
                       aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
                       )
     s3.put_object(
         ACL="public-read",
-        Bucket=os.environ["BUCKET_NAME"],
+        # Bucket=os.environ["BUCKET_NAME"],
+        Bucket='project1-sparta',
         Body=file,
         Key=file.filename,
         ContentType=file.content_type
@@ -161,6 +172,7 @@ def go_posting():
 
 @application.route('/posting', methods=['POST'])
 def posting():
+    print(filename1, '여기')
     token_receive = request.cookies.get('mytoken')
     try:
         # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
@@ -168,8 +180,9 @@ def posting():
         user_info = db.users.find_one({"userid": payload["id"]})
         # 코멘트에 적힌 글과 현재 날짜를 불러온다.
         today = datetime.now()
+
         title_receive = request.form["title_give"]
-        file = request.files["file_give"]
+        file = filename1
         content_receive = request.form["content_give"]
         date_receive = request.form["date_give"]
         calender_receive = request.form["calender_give"]
@@ -177,12 +190,12 @@ def posting():
         x_receive = request.form["x_give"]
         y_receive = request.form["y_give"]
         today_receive = today.strftime('%Y-%m-%d-%H-%M-%S')
-        filename = f'file-{today_receive}'
-        # 파일 형식을 따오는 코드
-        extension = file.filename.split('.')[-1]
-        # 따온 파일 이름과 형식을 저장해주는 코드
-        save_to = f'static/{filename}.{extension}'
-        file.save(save_to)
+        # filename = f'file-{today_receive}'
+        # # 파일 형식을 따오는 코드
+        # extension = file.filename.split('.')[-1]
+        # # 따온 파일 이름과 형식을 저장해주는 코드
+        # save_to = f'static/{filename}.{extension}'
+        # file.save(save_to)
         product_count = db.products.estimated_document_count()
         if product_count == 0:
             max_value = 1
@@ -194,7 +207,7 @@ def posting():
             "profile_name": user_info["profile_name"],
             "profile_pic_real": user_info["profile_pic_real"],
             "title": title_receive,
-            "file": f'{filename}.{extension}',
+            "file": file,
             "content": content_receive,
             "x":x_receive,
             "y":y_receive,
@@ -256,6 +269,12 @@ def delete_product():
 def get_products():
     products = list(db.products.find({}).sort("date", -1))
     return jsonify({"result": "success", "msg": "포스팅을 가져왔습니다.", "products":dumps(products)})
+
+# # 포스팅 불러오기
+# @application.route("/bucket/get", methods=['GET'])
+# def get_bucket():
+#     buckets = list(db.buckets.find({}).sort("date", -1))
+#     return jsonify({"result": "success", "msg": "포스팅을 가져왔습니다.", "buckets":buckets})
 
 # 상품 상세 페이지로 이동
 @application.route('/product/<pid>')
@@ -327,11 +346,17 @@ def add_comments():
         cid_receive = request.form["cid_give"]
         # grade_receive = request.form['grade_give']
         content_receive = request.form['content_give']
+        comment_count = db.comments.estimated_document_count({"cid":cid_receive})
+        if comment_count == 0:
+            comment_value = 1
+        else:
+            comment_value = comment_count + 1
         doc = {
             "cid":cid_receive,
             "userid":user_info["userid"],
             "profile_pic_real": user_info["profile_pic_real"],
-            "content": content_receive
+            "content": content_receive,
+            "pcid":comment_value
             # "grade": grade_receive
         }
         db.comments.insert_one(doc)
@@ -424,6 +449,7 @@ def myProduct():
         token_receive = request.cookies.get('mytoken')
         try:
             payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+            user_info = db.users.find_one({"userid": payload["id"]})
             myProducts = list(db.products.find({'userid': payload["id"]}, {'_id': False}))
         except jwt.ExpiredSignatureError:
             return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
@@ -432,10 +458,11 @@ def myProduct():
     else:
         set_val = token_kakao.replace('%40', '@')
         myProducts = list(db.products.find({'userid': set_val}, {'_id': False}))
+        user_info = db.users.find_one({"userid": set_val})
 
     print(myProducts)
     status = user.get_status()
-    return render_template('myProducts.html', myProducts=myProducts, statusbox=status)
+    return render_template('myProducts.html', myProducts=myProducts, statusbox=status, user_info=user_info)
 
 
 # 개인정보 페이지 호출

@@ -27,11 +27,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script src="{{ url_for('static', filename='myjs.js') }}"></script>
 
-<!--    <script>-->
-<!--    $(document).ready(function () {-->
-<!--        get_products()-->
-<!--    })-->
-<!--    </script>-->
+    <!--    <script>-->
+    <!--    $(document).ready(function () {-->
+    <!--        get_products()-->
+    <!--    })-->
+    <!--    </script>-->
 
 </head>
 <body>
@@ -101,45 +101,55 @@
 </nav>
 <div class="columns" style="max-width: 1200px; margin:auto;">
     {% if result == 'guide' %}
-    <div class="box">
-        <article class="media">
-            <div class="media-content">
-                <div class="field">
-                    <label class="label" for="input-title">제목</label>
-                    <p class="control">
-                        <input id="input-title" class="input"
-                               placeholder="제목" value="{{ products.title }}">
-                    </p>
-                </div>
-                <div class="field">
-                    <label class="label" for="input-picture">사진</label>
-                    <div class="control is-expanded">
-                        <div class="file has-name">
-                            <label class="file-label" style="width:100%">
-                                <input id="input-picture" class="file-input" type="file"
-                                       name="resume">
-                                <span class="file-cta">
-                                    <span class="file-icon"><i class="fa fa-upload"></i></span>
-                                    <span class="file-label">파일 선택</span>
-                                </span>
-                                <span id="file-name" class="file-name"
-                                      style="width:100%;max-width:100%">{{ products.file }}</span>
-                            </label>
+        <div class="box">
+            <article class="media">
+                <div class="media-content">
+                    <div class="field">
+                        <label class="label" for="input-title">제목</label>
+                        <p class="control">
+                            <input id="input-title" class="input"
+                                   placeholder="제목" value="{{ products.title }}">
+                        </p>
+                    </div>
+                    <div class="field">
+                        <label class="label" for="input-picture">사진</label>
+                        <div class="control is-expanded">
+{#                            <div class="file has-name">#}
+{#                                <label class="file-label" style="width:100%">#}
+{#                                    <input id="input-picture" class="file-input" type="file" name="resume">#}
+{#                                    <span class="file-cta">#}
+{#                                        <span class="file-icon">#}
+{#                                            <i class="fa fa-upload"></i>#}
+{#                                        </span>#}
+{#                                        <span class="file-label">파일 선택</span>#}
+{#                                    </span>#}
+{#                                    <span id="file-name" class="file-name" style="width:100%;max-width:100%">{{ products.file }}</span>#}
+{#                                </label>#}
+{#                            </div>#}
+                            <div id="post-box" class="form-post">
+                                <div>
+                                    <div class="form-group">
+                                        <form id="upload-file">
+                                            <label for="post-url">이미지 파일</label>
+                                            <input type="file" name="file"/>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="field">
-                    <label class="label" for="input-content">내용</label>
-                    <p class="control">
+                    <div class="field">
+                        <label class="label" for="input-content">내용</label>
+                        <p class="control">
                         <textarea id="input-content" class="textarea"
                                   placeholder="내용">{{ products.content }}</textarea>
-                    </p>
-                </div>
-                <div class="field">
-                    <label class="label" for="startpoint_address">출발 위치</label>
-                    <p class="control">
-                        <input type="text" id="sample5_address" placeholder="주소">
-                        <input type="button" onclick="sample5_execDaumPostcode()" value="주소 검색"><br>
+                        </p>
+                    </div>
+                    <div class="field">
+                        <label class="label" for="startpoint_address">출발 위치</label>
+                        <p class="control">
+                            <input type="text" id="sample5_address" placeholder="주소">
+                            <input type="button" onclick="sample5_execDaumPostcode()" value="주소 검색"><br>
                         <div id="map" style="width:50%;height:650px;margin-top:10px;display:none"></div>
 
                         <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -188,7 +198,7 @@
                                                 map.setCenter(coords);
                                                 // 마커를 결과값으로 받은 위치로 옮긴다.
                                                 marker.setPosition(coords)
-                                                alert(coords)
+                                                {#alert(coords)#}
                                             }
                                         });
                                     }
@@ -196,33 +206,33 @@
                             }
 
                         </script>
-                    </p>
-                </div>
-                <div class="field">
-                    <label class="label" for="input-calender">달력</label>
-                    <p class="control">
-                        <input id="input-calender" class="input"
-                               placeholder="달력" value="{{ products.calender }}">
-                    </p>
-                </div>
-                <div class="field">
-                    <label class="label" for="input-price">가격</label>
-                    <p class="control">
-                        <input id="input-price" class="input"
-                               placeholder="가격" value="{{ products.price }}">
-                    </p>
-                </div>
-                <div class="level-right">
-                    <div class="level-item">
-                        <a class="button is-sparta" onclick="posting(x,y)">등록</a>
+                        </p>
                     </div>
-                    <div class="level-item">
-                        <a class="button is-sparta is-outlined" href="/product">취소</a>
+                    <div class="field">
+                        <label class="label" for="input-calender">달력</label>
+                        <p class="control">
+                            <input id="input-calender" class="input"
+                                   placeholder="달력" value="{{ products.calender }}">
+                        </p>
+                    </div>
+                    <div class="field">
+                        <label class="label" for="input-price">가격</label>
+                        <p class="control">
+                            <input id="input-price" class="input"
+                                   placeholder="가격" value="{{ products.price }}">
+                        </p>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <a class="button is-sparta" onclick="posting(x,y)">등록</a>
+                        </div>
+                        <div class="level-item">
+                            <a class="button is-sparta is-outlined" href="/product">취소</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </article>
-    </div>
+            </article>
+        </div>
     {% endif %}
 </div>
 </body>
