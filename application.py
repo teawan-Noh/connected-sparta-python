@@ -137,10 +137,11 @@ def product():
         # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({"userid": payload["id"]})
+        products = list(db.products.find({}))
         result = user_info["role"]
         msg = request.args.get("msg")
         status = user.get_status()
-        return render_template('product.html', result=result, msg=msg, statusbox=status)
+        return render_template('product.html', result=result, msg=msg, statusbox=status, products=products)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
@@ -310,9 +311,10 @@ def myBuckets():
     else:
         set_val = token_kakao.replace('%40', '@')
         myBuckets = list(db.buckets.find({'userid': set_val}, {'_id': False}))
-
     print(myBuckets)
-    return render_template('myBuckets.html', myBuckets=myBuckets)
+    user_info = user.getUserInfoByToken()
+    status = user.get_status()
+    return render_template('myBuckets.html', myBuckets=myBuckets, user_info=user_info, statusbox=status)
 
 # 댓글 작성하기
 @application.route('/product/add_comments', methods=['POST'])

@@ -1,11 +1,105 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <!-- Webpage Title -->
+    <title>Mypage | CONNECTED</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta property="og:title" content="CONNECTED - 여행자 & 가이드 연결 플랫폼"/>
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <!-- kakao login/logout -->
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    <script src="{{ url_for('static', filename='login.js') }}"></script>
+
+    <style>
+        .wrap {
+            width: 1200px;
+            margin: auto;
+            display: flex;
+        }
+
+        .subtitle {
+            margin: 10px 30px;
+            font-family: 'Jua', sans-serif;
+            font-size: 40px;
+        }
+
+        .section2 {
+            width: 800px;
+            margin: 10px 50px;
+        }
+        .btn-pay{
+            width: 800px;
+            display: flex;
+            flex-direction: row-reverse;
+        }
+        .card-list {
+            width: 810px;
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+        }
+        .card {
+            width: 250px;
+            margin: 10px;
+        }
+    </style>
 </head>
 <body>
-test2
-{{ myBuckets }}
+{% include 'mainHeader.html' %}
+<div class="wrap">
+    <div class="myPageMenu">
+        {% include 'myPageMenu.html' %}
+    </div>
+    <div class="section">
+        <h3 class="subtitle">🛒 장바구니</h3>
+        <div class="section2">
+            <div class="btn-pay">
+                <button class="button">결제하기</button>
+            </div>
+            <div id="product-box" class="card-list">
+            <div class="card">
+                <div class="card-image">
+                    <figure class="image is-4by3">
+                        <img src={{ url_for("static", filename="profile_placeholder.png") }} alt="Image">
+                    </figure>
+                </div>
+                <div class="card-content">
+                    <div class="content">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Phasellus nec iaculis mauris. <a>@bulmaio</a>.
+                        <a href="#">#css</a> <a href="#">#responsive</a>
+                        <br>
+                        <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{#{{ user_info }}#}
+{#<hr>#}
+{#<a href='/test2'>myProducts</a>#}
+{#<hr>#}
+{#<a href='/test3'>개인정보 수정</a>#}
+
 </body>
 </html>
