@@ -21,7 +21,7 @@ function posting(x,y) {
     form_data.append("x_give",x)
     form_data.append("y_give",y)
 
-    let form_data_box = new FormData()
+    // let form_data_box = new FormData()
     // form_data_box.append("contentdata", form_data)
     // form_data_box.append("filedata", form_data2)
     var form_data2 = new FormData($('#upload-file')[0]);
@@ -120,13 +120,13 @@ function get_products(username) {
                     let html_temp = `<div class="card" onclick="detail('${product['pid']}')" style="width: 350px; height: 500px; margin-bottom: 40px;">
                                          <div class="card-image">
                                              <figure class="image is-4by3">
-                                                 <img src="../static/${product.file}" class="card-img-top" alt="Placeholder image">
+                                                 <img src="../static/${product['file']}" class="card-img-top" alt="Placeholder image">
                                              </figure>
                                          </div>
                                          <div class="card-content">
                                              <div class="media">
                                                  <div class="media-content">
-                                                     <p class="title is-4">${product['title']}</p>
+                                                     <p id="search-box" class="title is-4">${product['title']}</p>
                                                      <p class="subtitle is-6">${product['content']}</p>
                                                      <small style="float:right;">${time_before}</small>
                                                  </div>
@@ -151,38 +151,58 @@ function detail(pid) {
     window.location.href = `/product/${pid}`
 }
 
-function edit_product(pid) {
-    let title = $('#input-title').val()
-    let file = $('#input-picture')[0].files[0]
-    let content = $("#input-content").val()
-    let calender = $("#input-calender").val()
-    let price = $("#input-price").val()
-    let today = new Date().toISOString()
-    // form_data 초기화
-    let form_data = new FormData()
-    form_data.append("title_give", title)
-    form_data.append("file_give", file)
-    form_data.append("content_give", content)
-    form_data.append("calender_give", calender)
-    form_data.append("price_give", price)
-    form_data.append("date_give", today)
-    form_data.append("pid", pid)
-
-    $.ajax({
-        type: "POST",
-        url: "/edit_posting",
-        data: form_data,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (response) {
-            if (response["result"] == "success") {
-                alert(response["msg"])
-                window.location.href = `/product`
-            }
-        }
-    });
+function go_editing(pid) {
+    window.location.href = `/go_editing?pid_give=${pid}`
 }
+
+// function edit_product(x, y, pid) {
+//     let title = $('#input-title').val()
+//     let file = new FormData($('#upload-file')[0])
+//     let content = $("#input-content").val()
+//     let calender = $("#input-calender").val()
+//     let price = $("#input-price").val()
+//     let today = new Date().toISOString()
+//     // form_data 초기화
+//     let form_data = new FormData()
+//     form_data.append("title_give", title)
+//     form_data.append("file_give", file)
+//     form_data.append("pid_give", pid)
+//     form_data.append("content_give", content)
+//     form_data.append("calender_give", calender)
+//     form_data.append("price_give", price)
+//     form_data.append("date_give", today)
+//     form_data.append("x_give",x)
+//     form_data.append("y_give",y)
+//
+//     // let form_data_box = new FormData()
+//     // form_data_box.append("contentdata", form_data)
+//     // form_data_box.append("filedata", form_data2)
+//     var form_data2 = new FormData($('#upload-file')[0]);
+//     $.ajax({
+//         type: 'POST',
+//         url: '/fileupload',
+//         data: form_data2,
+//         processData: false,
+//         contentType: false,
+//         success: function (data) {
+//             alert("파일이 업로드 되었습니다!!");
+//             $.ajax({
+//                 type: "POST",
+//                 url: "/posting",
+//                 data: form_data,
+//                 cache: false,
+//                 contentType: false,
+//                 processData: false,
+//                 success: function (response) {
+//                     if (response["result"] == "success") {
+//                         alert(response["msg"])
+//                         window.location.href = `/product/${pid}`
+//                     }
+//                 }
+//             });
+//         },
+//     });
+// }
 
 function delete_product(pid) {
     $.ajax({
@@ -226,7 +246,7 @@ function get_comment(cid) {
         success: function (response) {
             let comments = response["comments"];
             console.log(comments.length)
-            for (let i = 0; i < comments.length; i++) {
+            for (let i = comments.length - 1; i >= 0; i--) {
                 let comment = comments[i];
                 let html_temp = `<div id="box-outline" class="box">
                                      <article class="media">
@@ -262,7 +282,7 @@ function on_bucket(pid) {
         },
         success: function (response) {
             alert(response["msg"])
-            toggle_user_bucket()
+            window.location.reload()
         }
     })
 }
@@ -276,7 +296,7 @@ function off_bucket(pid) {
         },
         success: function (response) {
             alert(response["msg"])
-            toggle_user_bucket()
+            window.location.reload()
         }
     })
 }
