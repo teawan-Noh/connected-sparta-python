@@ -589,7 +589,7 @@ def myInfo():
 # 개인정보 수정
 @application.route('/userInfoUpdate', methods=['POST'])
 def userInfoUpdate():
-    email = request.form['email1']
+    # email = request.form['email1']
     profile_name = request.form['nickname']
     userid = request.args.get('user')
     print(userid)
