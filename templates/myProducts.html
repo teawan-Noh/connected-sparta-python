@@ -63,6 +63,7 @@
             margin: 10px;
         }
     </style>
+
 </head>
 <body>
 {% include 'mainHeader.html' %}
@@ -76,58 +77,34 @@
             <div class="btn-posting">
                 <a class="button" onclick="go_posting()">투어 상품 올리기</a>
             </div>
-            <div id="product-box" class="card-list">
-                <div class="card">
-                    <div class="card-image">
-                        <figure class="image is-4by3">
-                            <img src={{ url_for("static", filename="profile_placeholder.png") }} alt="Image">
-                        </figure>
-                    </div>
-                    <div class="card-content">
-                        <div class="content">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                            Phasellus nec iaculis mauris. <a>@bulmaio</a>.
-                            <a href="#">#css</a> <a href="#">#responsive</a>
-                            <br>
-                            <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+            {% for row in myProducts %}
+                {% set title = row['title'] %}
+                {% set content = row['content'] %}
+                {% set image = row['file'] %}
+                {% set pid = row['pid'] %}
+                <a href="#", onclick="location.href='http://localhost:5000/product/{{ pid }}'">
+                <div id="product-box" class="card-list">
+                    <div class="card">
+                        <div class="card-image">
+                            <figure class="image is-4by3">
+                                <img src={{ url_for("static", filename="profile_placeholder.png") }} alt="Image">
+                            </figure>
+                        </div>
+                        <div class="card-content">
+                            <div class="media">
+                                <div class="media-content">
+                                    <p class="title is-5">{{ title }}</p>
+                                    <p class="subtitle is-6">{{ content }}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
+            {% endfor %}
+        </a>
         </div>
     </div>
 </div>
-
-    {% for row in myProducts %}
-        {% set title = row['title'] %}
-        {% set content = row['content'] %}
-        {% set image = row['file'] %}
-        <div id="product-box" class="card-list">
-            <div class="card">
-                <div class="card-image">
-                    <figure class="image is-4by3">
-                        <img src={{ url_for("static", filename="profile_placeholder.png") }} alt="Image">
-                    </figure>
-                </div>
-                <div class="card-content">
-                    <div class="media">
-                        <div class="media-content">
-                            <p class="title is-5">{{ title }}</p>
-                            <p class="subtitle is-6">{{ content }}</p>
-                            <small style="float:right;">2시간 전</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% endfor %}
-
-
-
-
-
-
 
     {#{{ user_info }}#}
     {#<hr>#}
