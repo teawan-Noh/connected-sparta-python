@@ -20,9 +20,12 @@ CONNECTE 는 가이드와 여행자를 연결해주는 서비스입니다.
 - 이승현 - 지도 api, 상품 상세 페이지
 - 최재연 - 상품 상세페이지, 상품 페이지
 
-### 📌 기술 선택 이유! [https://github.com/teawan-Noh/connected-sparta-python.wiki.git]
+### 📌 기술 선택 이유!  
+<a href="https://github.com/teawan-Noh/connected-sparta-python.wiki.git" >상세보기 - WIKI 이동</a>
 
-### 📌 주요 기능
+### 📌 주요 기능  
+<a href="https://github.com/teawan-Noh/connected-sparta-python.wiki.git" >상세보기 - WIKI 이동</a>
+
 #### 로그인/회원가입
 - 가이드 - JWT 기반 일반 로그인
 - 여행자 - JWT 기반 일반 로그인, 카카오 소셜 로그인
