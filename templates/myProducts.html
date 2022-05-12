@@ -82,9 +82,8 @@
                 {% set content = row['content'] %}
                 {% set image = row['file'] %}
                 {% set pid = row['pid'] %}
-                <a href="#", onclick="location.href='http://localhost:5000/product/{{ pid }}'">
                 <div id="product-box" class="card-list">
-                    <div class="card">
+                    <div class="card" onclick="location.href='http://localhost:5000/product/{{ pid }}'">>
                         <div class="card-image">
                             <figure class="image is-4by3">
                                 <img src={{ url_for("static", filename="profile_placeholder.png") }} alt="Image">
