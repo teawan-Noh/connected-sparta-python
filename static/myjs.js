@@ -315,21 +315,13 @@ function get_comment(cid) {
                                                  </p>
                                                  <div class="media-left">
                                                      <div id="edit_comment" >
-                                                        <a class="button" onclick="edit_comment('{{product_info.pid}}')" style="margin: 5px;">수정</a>
-                                                        <a class="button" onclick="delete_comment('{{product_info.pid}}')" style="margin: 5px;">삭제</a>
+                                                        <a class="button" onclick="edit_comment(${x},${y})" style="margin: 5px;">수정</a>
+                                                        <a class="button" onclick="delete_comment(${x},${y})" style="margin: 5px;">삭제</a>
                                                      </div>
                                                  </div>
                                              </div>
                                          </div>
                                      </article>
-                                     <nav id="btns-me" class="level is-mobile" style="margin-top:2rem">
-                                         <a class="button level-item has-text-centered is-sparta" aria-label="edit" onclick='$("#modal-edit").addClass("is-active")'>
-                                             댓글 수정&nbsp;&nbsp;&nbsp;<span class="icon is-small"><i class="fa fa-pencil" aria-hidden="true"></i></span>
-                                         </a>
-                                         <div class="level-item">
-                                             <a class="button is-sparta" onclick="delete_comment(${x},${y})">삭제</a>
-                                         </div>
-                                     </nav>
                                      <div class="modal" id="modal-edit">
                                         <div class="modal-background" onclick='$("#modal-edit").removeClass("is-active")'></div>
                                         <div class="modal-content">
