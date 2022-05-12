@@ -29,10 +29,12 @@
     <script src="{{ url_for('static', filename='myjs.js') }}"></script>
 
     <script>
-    let value = '{{ result }}'
+    let role = '{{ result }}'
+    let user = '{{ user_info.userid }}'
+    let product = '{{ product_info.userid }}'
     $(document).ready(function () {
         get_comment('{{ product_info.pid }}')
-        if (value == 'guide') {
+        if (role == 'guide' & user == product) {
             toggle_guide_detail()
         }
     })
@@ -109,7 +111,7 @@
             <div class="card">
                 <h1 style="margin-left: 2rem">{{ product_info.title }}</h1>
                 <figure class="image is-4by3">
-                    <img src='/static/{{ product_info.file }}'>
+                    <img src='{{ product_info.file }}'>
                 </figure>
                 <div class="card-content" id="blablabla" style="max-width: 1000px; margin-top: 2rem">
                     <div class="content">
@@ -164,7 +166,7 @@
                     </div>
                     <nav class="level is-mobile">
                         <div class="level-left">
-                            <a class="level-item is-sparta" aria-label="bucket" onclick="toggle_bucket('{{ product_info.pid }}', 'heart')">
+                            <a class="level-item is-sparta" aria-label="bucket" onclick="toggle_bucket('{{ product_info.pid }}', 'star')">
                                 <span class="icon is-small"><i class="fa fa-star" aria-hidden="true"></i></span>
                             </a>
                         </div>

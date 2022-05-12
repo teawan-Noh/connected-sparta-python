@@ -2,12 +2,9 @@ function go_posting() {
     window.location.href = '/go_posting'
 }
 
-
-
 // post 작성
 function posting(x,y) {
     let title = $('#input-title').val()
-    // let file = $('#input-picture')[0].files[0]
     let file = new FormData($('#upload-file')[0])
     let content = $("#input-content").val()
     let calender = $("#input-calender").val()
@@ -22,7 +19,6 @@ function posting(x,y) {
     form_data.append("price_give", price)
     form_data.append("date_give", today)
     form_data.append("x_give",x)
-    form_data.append("y_give",y)
     form_data.append("y_give",y)
 
     let form_data_box = new FormData()
@@ -40,7 +36,7 @@ function posting(x,y) {
             $.ajax({
                 type: "POST",
                 url: "/posting",
-                data: form_data_box,
+                data: form_data,
                 cache: false,
                 contentType: false,
                 processData: false,
@@ -53,8 +49,6 @@ function posting(x,y) {
             });
         },
     });
-
-
 }
 
 function toggle_guide_product() {
