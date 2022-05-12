@@ -161,7 +161,7 @@
             margin: auto;
             display: flex;
         }
-        .subtitle {
+        .subtitle1 {
             margin: 10px 30px;
             font-family: 'Jua', sans-serif;
             font-size: 40px;
@@ -220,6 +220,11 @@
             display: flex;
             align-content: center;
         }
+        .chk-btn {
+            padding-top: 15px;
+            display: flex;
+            flex-direction: row-reverse;
+        }
     </style>
 </head>
 <body>
@@ -229,7 +234,7 @@
         {% include 'myPageMenu.html' %}
     </div>
     <div class="section">
-        <h3 class="subtitle">🔒 개인정보수정</h3>
+        <h3 class="subtitle1">🔒 개인정보수정</h3>
         <div class="section2">
             <form method="post" action="userInfoUpdate?user={{ user_info.userid }}">
             <table>
@@ -253,7 +258,7 @@
                     <th class="info_title">비밀번호 확인</th>
                     <td>
                         <input class="my_input" type="password" name="pwdchk" placeholder="비밀번호 확인">
-                        <span class="chkResult" id="pwChkSpan"></span>
+                        <span class="help chkResult" id="pwChkSpan"></span>
                     </td>
                 </tr>
                 {% if user_info.role == 'guide' %}
@@ -285,7 +290,7 @@
                 </tr>
             </table>
 
-            <div>
+            <div class="chk-btn">
                 <button type="submit" id="updatebtn" class="button">수정</button>
                 <button type="button" id="cancel" class="button" onclick="location.href='/mypage'">취소</button>
             </div>

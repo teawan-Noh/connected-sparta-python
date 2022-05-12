@@ -43,73 +43,25 @@
         }
     })
     </script>
+
+    <style>
+        .media{
+            margin: 50px 10px;
+            padding: 20px;
+        }
+        .media-content {
+            display: flex;
+        }
+        .control1 {
+            width: 500px;
+            margin-right: 10px;
+        }
+    </style>
     </head>
 
     <body>
-    <nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-            <a class="navbar-item" href="/">
-                <img src="{{ url_for('static', filename='logo.png') }}">
-                <strong class="is-sparta"
-                        style="font-family: 'Stylish', sans-serif;font-size: larger;">connected</strong>
-            </a>
+    {% include 'mainHeader.html' %}
 
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
-               data-target="navbarBasicExample">
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-            </a>
-        </div>
-
-        <div id="navbar-category" class="navbar-menu" style="align-self: center">
-            <div class="navbar-start">
-                <a class="navbar-item" onclick='$("#modal-category").addClass("is-active")'>
-                    지역 검색 / 일정 검색
-                </a>
-            </div>
-        </div>
-        <div class="modal" id="modal-category">
-            <div class="modal-background" onclick='$("#modal-category").removeClass("is-active")'></div>
-            <div class="tabs is-centered">
-                <ul>
-                    <li class="is-active"><a>지역</a></li>
-                    <li><a>일정</a></li>
-                </ul>
-            </div>
-            <button class="modal-close is-large" aria-label="close"
-                    onclick='$("#modal-category").removeClass("is-active")'></button>
-        </div>
-
-        <div id="navbar-content" class="navbar-end">
-            <div class="navbar-start">
-                <a class="navbar-item">여행 상품</a>
-                <a class="navbar-item">커뮤니티</a>
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link" href="/mypage/{{ user_info.username }}">
-                        마이페이지
-                    </a>
-                    <div class="navbar-dropdown">
-                        <a class="navbar-item" href="/mypage/myinfo_update/{{ user_info.username }}">
-                            회원정보
-                        </a>
-                        <a class="navbar-item" href="/mypage/bucket/{{ user_info.username }}">
-                            장바구니 내역
-                        </a>
-                        <a class="navbar-item" href="/mypage/bookmark/{{ user_info.username }}">
-                            즐겨찾기
-                        </a>
-                        <a class="navbar-item" href="/mypage/mycomment/{{ user_info.username }}">
-                            내가 쓴 댓글
-                        </a>
-                        <a class="navbar-item" href="/logout">
-                            로그아웃
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
     <div class="columns" style="max-width: 1200px; margin:auto;">
         <div class="content" style="width: 800px; margin: 5rem auto;">
             <div class="card">
@@ -123,8 +75,8 @@
                     </div>
                 </div>
             </div>
-            <blockquote> maybe 조건?
-            </blockquote>
+{#            <blockquote> maybe 조건?#}
+{#            </blockquote>#}
             <div id="new-comment" class="container">
                 <article class="media">
                     <figure class="media-left">
@@ -137,7 +89,7 @@
                     </figure>
                     <div class="media-content">
                         <div class="field">
-                            <p class="control">
+                            <p class="control1">
                                 <textarea id="comment-content" class="textarea" placeholder="댓글"></textarea>
 {#                                id class 식별자 id는 유일값, class 형제#}
                             </p>

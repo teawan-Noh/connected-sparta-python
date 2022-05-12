@@ -210,7 +210,7 @@ function add_comment(pid) {
         processData: false,
         success: function (response) {
             if (response["result"] == "success") {
-                alert(response["msg"])
+                // alert(response["msg"])
                 window.location.reload()
             }
         }
