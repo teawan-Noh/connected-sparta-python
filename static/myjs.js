@@ -304,11 +304,9 @@ function off_bucket(pid) {
 function getFiles() {
     $.ajax({
         type: 'GET',
-        url: '{EB URL}/files',
+        url: '/download',
         success: function (data) {
-            for (let i = 0; i < data['files'].length; i++) {
-                makeOrder(data['files'][i]);
-            }
+            alert('done')
         },
     });
 }

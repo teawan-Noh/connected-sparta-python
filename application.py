@@ -14,6 +14,7 @@ import redis
 import logging
 from logstash_async.handler import AsynchronousLogstashHandler
 import json
+import botocore
 from flask_cors import CORS
 import os
 
@@ -27,24 +28,26 @@ SECRET_KEY = 'SPARTA'
 client = MongoClient('54.180.31.220', 27017, username="test", password="test")
 db = client.cnt_project2
 
-# cors
-cors = CORS(application, resources={r"/*": {"origins": "*"}})
+file_name = '/static'
 
-# mysql
-mysql = MySQL()
-application.config['MYSQL_DATABASE_USER'] = os.environ["MYSQL_DATABASE_USER"]
-application.config['MYSQL_DATABASE_PASSWORD'] = os.environ["MYSQL_DATABASE_PASSWORD"]
-application.config['MYSQL_DATABASE_DB'] = os.environ["MYSQL_DATABASE_DB"]
-application.config['MYSQL_DATABASE_HOST'] = os.environ["MYSQL_DATABASE_HOST"]
-mysql.init_app(application)
-
-# redis
-db = redis.Redis(os.environ["REDIS_HOST"], decode_responses=True)
-
-#logstash
-python_logger = logging.getLogger('python-logstash-logger')
-python_logger.setLevel(logging.INFO)
-python_logger.addHandler(AsynchronousLogstashHandler(os.environ["LOGSTASH_HOST"], 5044, database_path=''))
+# # cors
+# cors = CORS(application, resources={r"/*": {"origins": "*"}})
+#
+# # mysql
+# mysql = MySQL()
+# application.config['MYSQL_DATABASE_USER'] = os.environ["MYSQL_DATABASE_USER"]
+# application.config['MYSQL_DATABASE_PASSWORD'] = os.environ["MYSQL_DATABASE_PASSWORD"]
+# application.config['MYSQL_DATABASE_DB'] = os.environ["MYSQL_DATABASE_DB"]
+# application.config['MYSQL_DATABASE_HOST'] = os.environ["MYSQL_DATABASE_HOST"]
+# mysql.init_app(application)
+#
+# # redis
+# db = redis.Redis(os.environ["REDIS_HOST"], decode_responses=True)
+#
+# #logstash
+# python_logger = logging.getLogger('python-logstash-logger')
+# python_logger.setLevel(logging.INFO)
+# python_logger.addHandler(AsynchronousLogstashHandler(os.environ["LOGSTASH_HOST"], 5044, database_path=''))
 
 global filename1
 
@@ -170,14 +173,34 @@ def check_dup():
 
 ########################################################################################################################
 
-@application.route('/files', methods=['GET'])
-def files():
-    conn = mysql.connect()
-    cursor = conn.cursor()
-    cursor.execute("SELECT file_name from file")
-    data = cursor.fetchall()
-    conn.close()
-    return jsonify({'result': 'success', 'files':data})
+@application.route('/download', methods=['GET'])
+def download_img():
+    bucket_name = 'project1-sparta'
+    object_path = ''
+    file_path = '/static'
+
+    s3 = boto3.client('s3')
+    s3.download_file(bucket_name, object_path, file_path)
+
+    s3 = boto3.resource('s3')
+    BUCKET_NAME = 'project1-sparta'
+    KEY = filename1
+    try:
+        s3.Bucket(BUCKET_NAME).download_file(KEY, 'my_local_image.jpg')
+    except botocore.exceptions.ClientError as e:
+        if e.response['Error']['Code'] == "404":
+            print("The object does not exist.")
+        else:
+            raise
+
+# @application.route('/files', methods=['GET'])
+# def files():
+#     conn = mysql.connect()
+#     cursor = conn.cursor()
+#     cursor.execute("SELECT file_name from file")
+#     data = cursor.fetchall()
+#     conn.close()
+#     return jsonify({'result': 'success', 'files':data})
 
 @application.route('/product')
 def product():
