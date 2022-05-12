@@ -72,36 +72,36 @@
         {% include 'myPageMenu.html' %}
     </div>
     <div class="section">
-        <h3 class="subtitle1">🖼️ 나의 여행 상품</h3>
+        <h3 class="subtitle1">🖼️ 나의 커뮤니티</h3>
         <div class="section2">
             <div class="btn-posting">
-                <a class="button" onclick="go_posting()">투어 상품 올리기</a>
+                <a class="button" onclick="go_community_posting()">커뮤니티 작성하기</a>
             </div>
-            <div id="product-box" class="card-list">
-            {% for row in myProducts %}
-                {% set title = row['title'] %}
-                {% set content = row['content'] %}
-                {% set image = row['file'] %}
-                {% set pid = row['pid'] %}
-                <a href="#", onclick="location.href='http://localhost:5000/product/{{ pid }}'">
-                    <div class="card">
-                        <div class="card-image">
-                            <figure class="image is-4by3">
-                                <img src={{ url_for("static", filename="profile_placeholder.png") }} alt="Image">
-                            </figure>
-                        </div>
-                        <div class="card-content">
-                            <div class="media">
-                                <div class="media-content">
-                                    <p class="title is-5">{{ title }}</p>
-                                    <p class="subtitle is-6">{{ content }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            {% endfor %}
-            </div>
+{#            <div id="product-box" class="card-list">#}
+{#            {% for row in myProducts %}#}
+{#                {% set title = row['title'] %}#}
+{#                {% set content = row['content'] %}#}
+{#                {% set image = row['file'] %}#}
+{#                {% set pid = row['pid'] %}#}
+{#                <a href="#", onclick="location.href='http://localhost:5000/product/{{ pid }}'">#}
+{#                    <div class="card">#}
+{#                        <div class="card-image">#}
+{#                            <figure class="image is-4by3">#}
+{#                                <img src={{ url_for("static", filename="profile_placeholder.png") }} alt="Image">#}
+{#                            </figure>#}
+{#                        </div>#}
+{#                        <div class="card-content">#}
+{#                            <div class="media">#}
+{#                                <div class="media-content">#}
+{#                                    <p class="title is-5">{{ title }}</p>#}
+{#                                    <p class="subtitle is-6">{{ content }}</p>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </a>#}
+{#            {% endfor %}#}
+{#            </div>#}
         </div>
     </div>
 </div>

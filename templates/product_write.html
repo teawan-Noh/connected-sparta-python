@@ -27,11 +27,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script src="{{ url_for('static', filename='myjs.js') }}"></script>
 
-    <!--    <script>-->
-    <!--    $(document).ready(function () {-->
-    <!--        get_products()-->
-    <!--    })-->
-    <!--    </script>-->
+{#    <script>#}
+{#    $(document).ready(function () {#}
+{#        get_products()#}
+{#    }) #}
+{#    </script>#}
 
 <style>
     .box {
@@ -189,9 +189,18 @@
                         </p>
                     </div>
                     <div class="level-right">
-                        <div class="level-item">
-                            <a class="button is-sparta" onclick="posting(x,y)">등록</a>
-                        </div>
+                        <script>
+                            let productid = '{{ products.pid }}'
+                        </script>
+                        {% if productid != None %}
+                            <div class="level-item">
+                                <a class="button is-sparta" onclick="posting(x,y)">등록</a>
+                            </div>
+                        {% else %}
+                            <div class="level-item">
+                                <a class="button is-sparta" onclick="edit_product(x, y, '{{ products.pid }}')">등록</a>
+                            </div>
+                        {% endif %}
                         <div class="level-item">
                             <a class="button is-sparta is-outlined" href="/product">취소</a>
                         </div>

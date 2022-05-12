@@ -36,23 +36,24 @@ def file_upload():
     filename1 = f'{filenamefront}.{extension}'
     # print(str(filename1))
 
-    s3 = boto3.client('s3',
-                      aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
-                      aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
-                      )
-    s3.put_object(
-        ACL="public-read",
-        # Bucket=os.environ["BUCKET_NAME"],
-        Bucket='project1-sparta',
-        Body=file,
-        Key=file.filename,
-        ContentType=file.content_type
-    )
+    # s3 = boto3.client('s3',
+    #                   aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+    #                   aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
+    #                   )
+    # s3.put_object(
+    #     ACL="public-read",
+    #     # Bucket=os.environ["BUCKET_NAME"],
+    #     Bucket='project1-sparta',
+    #     Body=file,
+    #     Key=file.filename,
+    #     ContentType=file.content_type
+    # )
     return jsonify({'result': 'success'})
 
 @application.route('/')
 def home():
     status = user.get_status()
+    # user_info = user.getUserInfoByToken()
     return render_template('index.html', statusbox=status)
 
 @application.route('/login')
@@ -179,8 +180,7 @@ def posting():
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({"userid": payload["id"]})
         # 코멘트에 적힌 글과 현재 날짜를 불러온다.
-        today = datetime.now()
-
+        # today = datetime.now()
         title_receive = request.form["title_give"]
         file = filename1
         content_receive = request.form["content_give"]
@@ -189,7 +189,7 @@ def posting():
         price_receive = request.form["price_give"]
         x_receive = request.form["x_give"]
         y_receive = request.form["y_give"]
-        today_receive = today.strftime('%Y-%m-%d-%H-%M-%S')
+        # today_receive = today.strftime('%Y-%m-%d-%H-%M-%S')
         # filename = f'file-{today_receive}'
         # # 파일 형식을 따오는 코드
         # extension = file.filename.split('.')[-1]
@@ -222,6 +222,75 @@ def posting():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
+# # 개인정보 수정
+# @application.route('/userInfoUpdate', methods=['POST'])
+# def userInfoUpdate():
+#     email = request.form['email1']
+#     profile_name = request.form['nickname']
+#     userid = request.args.get('user')
+#     print(userid)
+# 
+#     db.users.update_one({'userid': userid}, {'$set': {'profile_name': profile_name}})
+#     user_info = user.getUserInfoByToken()
+#     status = user.get_status()
+#     return render_template('myInfo.html', user_info=user_info, statusbox=status)
+
+# @application.route('/go_editing')
+# def go_editing():
+#     pid_receive = request.form["pid_give"]
+#     token_receive = request.cookies.get('mytoken')
+#     try:
+#         # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
+#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+#         user_info = db.users.find_one({"userid": payload["id"]})
+#         result = user_info["role"]
+#         product = db.products.find_one({"pid":pid_receive})
+#         status = user.get_status()
+#         return render_template('product_write.html', result=result, product=product, statusbox=status)
+#     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+#         return redirect(url_for("home"))
+#
+# # 수정하기 추가 예정
+# @application.route('/edit_posting', methods=['POST'])
+# def edit_posting():
+#     token_receive = request.cookies.get('mytoken')
+#     try:
+#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+#         user_info = db.users.find_one({"userid": payload["id"]})
+#         title_receive = request.form["title_give"]
+#         file = filename1
+#         content_receive = request.form["content_give"]
+#         date_receive = request.form["date_give"]
+#         calender_receive = request.form["calender_give"]
+#         price_receive = request.form["price_give"]
+#         x_receive = request.form["x_give"]
+#         y_receive = request.form["y_give"]
+#         product_count = db.products.estimated_document_count()
+#         if product_count == 0:
+#             max_value = 1
+#         else:
+#             max_value = product_count + 1
+#         # username(id), 닉네임, 프로필 사진, 코멘트, 날짜 doc dictionary에 저장
+#         doc = {
+#             "userid": user_info["userid"],
+#             "profile_name": user_info["profile_name"],
+#             "profile_pic_real": user_info["profile_pic_real"],
+#             "title": title_receive,
+#             "file": file,
+#             "content": content_receive,
+#             "x": x_receive,
+#             "y": y_receive,
+#             "calender": calender_receive,
+#             "price": price_receive,
+#             "date": date_receive,
+#             "pid": max_value
+#         }
+#         db.products.update_one(doc)
+#         # 성공하면 '포스팅 성공!'을 띄우자!
+#         return jsonify({"result": "success", 'msg': '업데이트 성공'})
+#     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+#         return redirect(url_for("home"))
+
 @application.route('/delete_product', methods=['POST'])
 def delete_product():
     pid_receive = request.form["pid_give"]
@@ -246,7 +315,7 @@ def product_detail(pid):
         result = user_info["role"]
         product_info = db.products.find_one({"pid": int(pid)}, {"_id": False})
         status = user.get_status()
-        bucket_info = db.buckets.find_one({"pid":int(pid)}, {"_id": False})
+        bucket_info = db.buckets.find_one({"pid": int(pid)}, {"_id": False})
         return render_template('product_info.html', result=result, user_info=user_info, product_info=product_info, statusbox=status, bucket_info=bucket_info)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
@@ -370,7 +439,7 @@ def get_comments():
     # data form box / get args
     # comments = list(db.comments.find({"comment":comment_receive}, {"_id": False}))
     # return jsonify({'result': 'success', 'comments': comments})
-    comments = list(db.comments.find({"cid":cid_receive}, {'_id': False}))
+    comments = list(db.comments.find({"cid":cid_receive}, {'_id': False}).sort("date",-1))
     # count_grade = db.comments.count_documents({})
     # add_grade = 0
     # for comment in comments:
@@ -430,6 +499,56 @@ def myProduct():
     return render_template('myProducts.html', myProducts=myProducts, statusbox=status, user_info=user_info)
 
 
+# 내 댓글 불러오기
+@application.route('/myComment')
+def myComment():
+    # 가이드 카카오 로그인 구현시 사용
+    token_kakao = request.cookies.get('kakao')
+    # print(token_kakao) # 화면단에서 토큰 값 세팅시 '@' 가 %40으로 변환되므로 서버단에서 사용시 replace를 사용하여 변환
+    if token_kakao is None:
+        token_receive = request.cookies.get('mytoken')
+        try:
+            payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+            user_info = db.users.find_one({"userid": payload["id"]})
+            myComments = list(db.comments.find({'userid': payload["id"]}, {'_id': False}))
+        except jwt.ExpiredSignatureError:
+            return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+        except jwt.exceptions.DecodeError:
+            return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+    else:
+        set_val = token_kakao.replace('%40', '@')
+        user_info = db.users.find_one({"userid": set_val})
+        myComments = list(db.comments.find({'userid': set_val}, {'_id': False}))
+
+    print(myComments)
+    status = user.get_status()
+    return render_template('myComments.html', myComments=myComments, statusbox=status, user_info=user_info)
+
+# 내 커뮤니티 불러오기
+@application.route('/myCommunity')
+def myCommunity():
+    # 가이드 카카오 로그인 구현시 사용
+    token_kakao = request.cookies.get('kakao')
+    # print(token_kakao) # 화면단에서 토큰 값 세팅시 '@' 가 %40으로 변환되므로 서버단에서 사용시 replace를 사용하여 변환
+    if token_kakao is None:
+        token_receive = request.cookies.get('mytoken')
+        try:
+            payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+            user_info = db.users.find_one({"userid": payload["id"]})
+            myCommunity = list(db.community.find({'userid': payload["id"]}, {'_id': False}))
+        except jwt.ExpiredSignatureError:
+            return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+        except jwt.exceptions.DecodeError:
+            return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+    else:
+        set_val = token_kakao.replace('%40', '@')
+        user_info = db.users.find_one({"userid": set_val})
+        myCommunity = list(db.community.find({'userid': set_val}, {'_id': False}))
+
+    print(myCommunity)
+    status = user.get_status()
+    return render_template('myCommunity.html', myCommunity=myCommunity, statusbox=status, user_info=user_info)
+
 # 개인정보 페이지 호출
 @application.route('/myInfo')
 def myInfo():
@@ -455,42 +574,6 @@ if __name__ == '__main__':
     application.run('0.0.0.0', port=5000, debug=True)
 
 ########################################################################################################################
-
-# # 수정하기 추가 예정
-# @application.route('/edit_posting', methods=['POST'])
-# def edit_posting():
-#     token_receive = request.cookies.get('mytoken')
-#     try:
-#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-#         user_info = db.users.find_one({"userid": payload["id"]})
-#         today = datetime.now()
-#         title_receive = request.form["title_give"]
-#         file = request.files["file_give"]
-#         content_receive = request.form["content_give"]
-#         date_receive = request.form["date_give"]
-#         calender_receive = request.form["calender_give"]
-#         price_receive = request.form["price_give"]
-#         today_receive = today.strftime('%Y-%m-%d-%H-%M-%S')
-#         filename = f'file-{today_receive}'
-#         extension = file.filename.split('.')[-1]
-#         save_to = f'static/{filename}.{extension}'
-#         file.save(save_to)
-#         doc = {
-#             "userid": user_info["userid"],
-#             "profile_name": user_info["profile_name"],
-#             "profile_pic_real": user_info["profile_pic_real"],
-#             "title": title_receive,
-#             "file": f'{filename}.{extension}',
-#             "content": content_receive,
-#             "calender":calender_receive,
-#             "price":price_receive,
-#             "date": date_receive
-#         }
-#         db.products.update_one(doc)
-#         # 성공하면 '포스팅 성공!'을 띄우자!
-#         return jsonify({"result": "success", 'msg': '포스팅 성공'})
-#     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-#         return redirect(url_for("home"))
 
 # # 댓글 수정하기
 # @application.route('/product/edit_comments', methods=['POST'])

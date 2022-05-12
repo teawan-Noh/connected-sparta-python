@@ -39,43 +39,6 @@
     for (let i = 0; i < value.length; i++) {
        product_list.push(value[i])
     }
-    function search_product() {
-        let oldVal = $("#searchInput").val()
-        /* 검색 내용 변경 감지 */
-        $("#searchInput").on("propertychange change keyup paste input", function () {
-            // 변화에 바로바로 반응하면 부하가 걸릴 수 있어서 1초 딜레이를 준다.
-            setTimeout(function () {
-            // 변경된 현재 박스 값을 받아온다.
-            let currentVal = $("#searchInput").val()
-            if (currentVal == oldVal) {
-                return;
-            }
-            var listArray = `${products}`.toArray();
-            // forEach의 첫번째 인자값 = 배열 내 현재 값
-            // 두번째 값 = index
-            // 세번째 값 = 현재 배열
-            listArray.forEach(function (c, i) {
-                var currentList = c;
-                // 현재 배열값에서 내용 추출
-                var currentListText = c.innerText;
-                // 검색 내용을 포함하지 않을 경우
-                if (currentListText.includes(currentVal) == false) {
-                    {#currentList.style.display = "none";#}
-                    alert("결과가 없습니다")
-                }
-                // 검색 내용을 포함할 경우
-                if (currentListText.includes(currentVal)) {
-                    {#currentList.style.display = "block";#}
-                    alert("결과")
-                }
-                // 검색 내용이 없을 경우
-                if (currentVal.trim() == "") {
-                    currentList.style.display = "block";
-                }
-            });
-            }, 1000);
-         });
-    }
 
     </script>
     <style>
@@ -136,8 +99,45 @@
             <a class="button" onclick="go_posting()">투어 상품 올리기</a>
         </div>
         <div class="field is-grouped">
+            <script>
+                function search_product() {
+                    var oldVal = $(".searchInput").val()
+                    /* 검색 내용 변경 감지 */
+                    $(".searchInput").on("propertychange change keyup paste input", function () {
+                        // 변화에 바로바로 반응하면 부하가 걸릴 수 있어서 1초 딜레이를 준다.
+                        setTimeout(function () {
+                            // 변경된 현재 박스 값을 받아온다.
+                            let currentVal = $(".searchInput").val()
+                            if (currentVal == oldVal) {
+                                return;
+                            }
+                            var listArray = $("#search-box").toArray();
+                            // forEach의 첫번째 인자값 = 배열 내 현재 값
+                            // 두번째 값 = index
+                            // 세번째 값 = 현재 배열
+                            listArray.forEach(function (c, i) {
+                                var currentList = c;
+                                // 현재 배열값에서 내용 추출
+                                var currentListText = c.innerText;
+                                // 검색 내용을 포함하지 않을 경우
+                                if (currentListText.includes(currentVal) == false) {
+                                    currentList.style.display = "none";
+                                }
+                                // 검색 내용을 포함할 경우
+                                if (currentListText.includes(currentVal)) {
+                                    currentList.style.display = "block";
+                                }
+                                // 검색 내용이 없을 경우
+                                if (currentVal.trim() == "") {
+                                    currentList.style.display = "block";
+                                }
+                            });
+                        }, 1000);
+                    });
+                }
+            </script>
             <p class="control is-expanded">
-                <input id="searchInput" class="searchInput" type="text" placeholder="키워드를 검색하세요.">
+                <input class="searchInput" type="text" placeholder="키워드를 검색하세요.">
             </p>
             <p class="control">
                 <a class="button is-info" onclick="search_product()"><i class="fa fa-search"></i></a>
