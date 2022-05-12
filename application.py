@@ -370,8 +370,9 @@ def myBuckets():
             bucket2 = db.products.find_one({'pid': bucketid}, {'_id': False})
             bucketlist.append(bucket2)
         print(bucketlist)
-
-    return render_template('myBuckets.html', myBuckets=bucketlist, user_info=user_info)
+    user_info = user.getUserInfoByToken()
+    status = user.get_status()
+    return render_template('myBuckets.html', myBuckets=bucketlist, user_info=user_info, statusbox=status)
 
 # 댓글 작성하기
 @application.route('/product/add_comments', methods=['POST'])
@@ -488,7 +489,6 @@ def myProduct():
         set_val = token_kakao.replace('%40', '@')
         myProducts = list(db.products.find({'userid': set_val}, {'_id': False}))
         user_info = db.users.find_one({"userid": set_val})
-
     print(myProducts)
     status = user.get_status()
     return render_template('myProducts.html', myProducts=myProducts, statusbox=status, user_info=user_info)
@@ -510,7 +510,9 @@ def myBookmark():
     else:
         set_val = token_kakao.replace('%40', '@')
         user_info = db.users.find_one({"userid": set_val})
-    return render_template('myBookmark.html', user_info=user_info)
+    user_info = user.getUserInfoByToken()
+    status = user.get_status()
+    return render_template('myBookmark.html', user_info=user_info, statusbox=status)
 
 # 내 댓글 불러오기
 @application.route('/myComment')
