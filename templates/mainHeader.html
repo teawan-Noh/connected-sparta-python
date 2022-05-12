@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <script>
+        function sign_out() {
+            $.removeCookie('mytoken', {path: '/'});
+            // 사용자 액세스 토큰과 리프레시 토큰을 모두 만료시킵니다. 사용자가 서비스에서 로그아웃할 때 이 API를 호출하여 더 이상 해당 사용자의 정보로 카카오 API를 호출할 수 없도록 합니다.
+            // 로그아웃 요청 성공 시, 응답 코드와 로그아웃된 사용자의 회원번호를 받습니다. 로그아웃 시에도 웹 브라우저의 카카오계정 세션은 만료되지 않고, 로그아웃을 호출한 앱의 토큰만 만료됩니다.
+            // 따라서 웹 브라우저의 카카오계정 로그인 상태는 로그아웃을 호출해도 유지됩니다. 로그아웃 후에는 서비스 초기 화면으로 리다이렉트하는 등 후속 조치를 취하도록 합니다.
+            $.removeCookie('kakao', {path: '/'});
+            Kakao.Auth.logout(function () {   // 로그아웃 - 쿠키에 저장된 토큰만 제거 (카카오 연동 상태는 유지)
+                // alert('logout ok\naccess token -> ' + Kakao.Auth.getAccessToken());
+            })
+            alert('로그아웃!')
+            window.location.href = "/"
+        }
+    </script>
+    <style>
+        .header{
+            background-color: white;
+            padding: 30px 50px 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .title {
+            width: 200px;
+            color: navy;
+            font-size: 40px;
+            font-family: 'Righteous', cursive;
+            cursor: pointer;
+        }
+        .navList {
+            font-family: 'Jua', sans-serif;
+            margin-top: 10px;
+            width: 250px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 25px;
+            cursor: pointer;
+        }
+        .topUtil {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<header>
+        <section class="header">
+            <a class="title" href="/">connected</a>
+
+            <h2 class="navList">
+                <a href="/product">가이드 상품</a>
+                <a>커뮤니티</a>
+            </h2>
+            <ul class="topUtil">
+                {% if statusbox == 0 %}
+{#                    {% if user_info.role == 'traveler' %}#}
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link">
+                                MY MENU
+                            </a>
+                            <div class="navbar-dropdown">
+                                <a class="navbar-item" href="/mypage">
+                                    마이페이지
+                                </a>
+                                <a class="navbar-item" href="">
+                                    결제내역
+                                </a>
+                                <a class="navbar-item" href="">
+                                    장바구니
+                                </a>
+                                <a class="navbar-item" href="">
+                                    즐겨찾기
+                                </a>
+                                <a class="navbar-item" href="">
+                                    활동
+                                </a>
+                                <a class="navbar-item" onclick="sign_out()">
+                                    로그아웃
+                                </a>
+                            </div>
+                        </div>
+{#                    {% else %}#}
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link">
+                                MY MENU
+                            </a>
+                            <div class="navbar-dropdown">
+                            <a class="navbar-item" href="/mypage">
+                                마이페이지
+                            </a>
+                            <a class="navbar-item" href="">
+                                나의 여행 상품
+                            </a>
+                            <a class="navbar-item" href="">
+                                활동
+                            </a>
+                            <a class="navbar-item" onclick="sign_out()">
+                                로그아웃
+                            </a>
+                            </div>
+                        </div>
+{#                    {% endif %}#}
+                {% else %}
+                    <div class="navbar-item is-hoverable"><a href="/login">로그인</a></div>
+                {% endif %}
+            </ul>
+        </section>
+    </header>
+</body>
+</html>
