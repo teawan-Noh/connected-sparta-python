@@ -24,7 +24,13 @@ def getUserInfoByToken():
         set_val = token_kakao.replace('%40', '@')
         user_info = db.users.find_one({"userid": set_val}, {'_id': False})
 
-    return user_info;
+
+    if user_info is not None:
+        return user_info;
+
+    if user_info is None:
+        user_info = 'a';
+        return user_info;
 
 def get_status():
     token_kakao = request.cookies.get('kakao')
