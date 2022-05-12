@@ -3,23 +3,28 @@ body {
     background-color: #F8F8F8;
     min-height: 100vh;
 }
+
 .help {
     color: gray;
 }
+
 .button {
     font-size: 16px;
     background-color: #569aff;
     color: white;
     border-radius: 8px;
 }
+
 .button.is-outlined {
     color: #569aff;
     background-color: white;
     border-color: #569aff;
 }
+
 .role_obj input[type="radio"] {
     display: none;
 }
+
 .role_obj input[type="radio"] + span {
     display: inline-block;
     padding: 8px 80px;
@@ -30,7 +35,36 @@ body {
     text-align: center;
     cursor: pointer;
 }
+
 .role_obj input[type="radio"]:checked + span {
     background-color: #569aff;
     color: #ffffff;
+}
+
+
+/* 검색창 css */
+.is-grouped {
+    margin: 30px auto;
+    width: 580px;
+}
+
+.searchInput {
+    width: 520px;
+    height: 64px;
+    padding-left: 24px;
+    color: #202020;
+    font-size: 18px;
+    border: 0;
+    border-radius: 16px;
+    box-shadow: 0 8px 16px 0 rgb(32 32 32 / 8%);
+}
+
+.is-info {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: #569aff;
+    -webkit-box-shadow: 0 8px 16px 0 rgb(35 0 104 / 16%);
+    box-shadow: 0 8px 16px 0 rgb(35 0 104 / 16%);
 }

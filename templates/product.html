@@ -28,17 +28,17 @@
     <script src="{{ url_for('static', filename='myjs.js') }}"></script>
 
     <script>
-    let value = '{{ result }}'
-    $(document).ready(function () {
-        get_products()
-        if (value == 'guide') {
-            toggle_guide_product()
+        let value = '{{ result }}'
+        $(document).ready(function () {
+            get_products()
+            if (value == 'guide') {
+                toggle_guide_product()
+            }
+        })
+        let product_list = [];
+        for (let i = 0; i < value.length; i++) {
+            product_list.push(value[i])
         }
-    })
-    let product_list = [];
-    for (let i = 0; i < value.length; i++) {
-       product_list.push(value[i])
-    }
 
 
     </script>
@@ -47,6 +47,7 @@
             width: 1200px;
             margin: auto;
         }
+
         .section_subtitle {
             width: 170px;
             font-family: 'Jua', sans-serif;
@@ -55,12 +56,14 @@
             font-size: 30px;
             color: navy;
         }
+
         .btn-posting {
             margin: 60px 30px 0px;
             width: 1200px;
             display: flex;
             flex-direction: row-reverse;
         }
+
         .card-list {
             margin-top: 10px;
             width: 1200px;
@@ -68,24 +71,47 @@
             flex-wrap: wrap;
             flex-direction: row;
         }
+
         .card {
             margin: 24px;
         }
     </style>
+    <script>
+        function searchProductByTitle(){
+            let val = $('#searchVal').val()
+            $.ajax({
+                type: "GET",
+                url: `/searchProductByTitle?searchVal=${val}`,
+                data: {},
+                success: function (response) {
+                    console.log(response)
+                }
+            })
+        }
+
+    </script>
 </head>
 <body>
 {% include 'mainHeader.html' %}
 
-    <section class="product_box">
-        <h3 class="section_subtitle">🖼️ 투어 상품</h3>
-        {% include 'searchBar.html' %}
-        <div id="button-guide" class="level-item is-hidden">
-            <div class="btn-posting">
-                <a class="button" onclick="go_posting()">투어 상품 올리기</a>
-            </div>
+<section class="product_box">
+    <h3 class="section_subtitle">🖼️ 투어 상품</h3>
+    {#        {% include 'searchBar.html' %}#}
+    <div class="field is-grouped">
+        <p class="control is-expanded">
+            <input id="searchVal" class="searchInput" type="text" placeholder="키워드를 검색하세요.">
+        </p>
+        <p class="control" onclick="searchProductByTitle()">
+            <a class="button is-info"><i class="fa fa-search"></i></a>
+        </p>
+    </div>
+    <div id="button-guide" class="level-item is-hidden">
+        <div class="btn-posting">
+            <a class="button" onclick="go_posting()">투어 상품 올리기</a>
         </div>
-        <div id="product-box" class="card-list">
-            <div class="card">
+    </div>
+    <div id="product-box" class="card-list">
+        <div class="card">
             <div class="card-image">
                 <figure class="image is-4by3">
                     <img src={{ url_for("static", filename="profile_placeholder.png") }} alt="Image">
@@ -101,7 +127,7 @@
                 </div>
             </div>
         </div>
-        </div>
-    </section>
+    </div>
+</section>
 </body>
 </html>
