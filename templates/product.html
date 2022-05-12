@@ -108,15 +108,21 @@
             margin: auto;
         }
         .section_subtitle {
+            width: 170px;
             font-family: 'Jua', sans-serif;
-            width:9%;
             margin: 50px auto 30px;
             display: flex;
             font-size: 30px;
             color: navy;
         }
-        .card-list {
+        .btn-posting {
             margin-top: 60px;
+            width: 1200px;
+            display: flex;
+            flex-direction: row-reverse;
+        }
+        .card-list {
+            margin-top: 10px;
             width: 1200px;
             display: flex;
             flex-wrap: wrap;
@@ -131,17 +137,12 @@
 {% include 'mainHeader.html' %}
 
     <section class="product_box">
-        <h3 class="section_subtitle">투어 상품</h3>
+        <h3 class="section_subtitle">🖼️ 투어 상품</h3>
+        {% include 'searchBar.html' %}
         <div id="button-guide" class="level-item is-hidden">
-            <a class="button" onclick="go_posting()">투어 상품 올리기</a>
-        </div>
-        <div class="field is-grouped">
-            <p class="control is-expanded">
-                <input id="searchInput" class="searchInput" type="text" placeholder="키워드를 검색하세요.">
-            </p>
-            <p class="control">
-                <a class="button is-info" onclick="search_product()"><i class="fa fa-search"></i></a>
-            </p>
+            <div class="btn-posting">
+                <a class="button" onclick="go_posting()">투어 상품 올리기</a>
+            </div>
         </div>
         <div id="product-box" class="card-list">
             <div class="card">
