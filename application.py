@@ -158,6 +158,18 @@ def product():
     return render_template('product.html', result=result, user_info=user_info, statusbox=status, products=products)
 
 
+@application.route('/searchProductByTitle', methods=['GET'])
+def searchProductByTitle():
+
+    searchVal = request.args.get("searchVal")
+
+    ({'text': {'$regex': 'IP'}}, {'text': 1, 'created_at': 1})
+    # searched_list = list(db.products.find({'title': {'$regex': val}}, {'_id': False}))
+    searched_list = list(db.products.find({'title': searchVal}, {'_id': False}))
+    print(searched_list, '실')
+    return 'a'
+
+
 @application.route('/go_posting')
 def go_posting():
     token_receive = request.cookies.get('mytoken')
@@ -306,8 +318,8 @@ def product_detail(pid):
         product_info = db.products.find_one({"pid": int(pid)}, {"_id": False})
         status = user.get_status()
         bucket_info = db.buckets.find_one({"pid": int(pid)}, {"_id": False})
-        comments = list(db.comments.find({"cid": cid_receive}, {'_id': False}).sort("date", -1))
-        return render_template('product_info.html', result=result, user_info=user_info, product_info=product_info, statusbox=status, bucket_info=bucket_info, comments= comments)
+        comment_info = db.comments.find_one({"cid": int(pid)}, {"_id": False})
+        return render_template('product_info.html', result=result, user_info=user_info, product_info=product_info, statusbox=status, bucket_info=bucket_info, comments= comment_info)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
