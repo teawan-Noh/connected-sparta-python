@@ -32,10 +32,14 @@
     let role = '{{ result }}'
     let user = '{{ user_info.userid }}'
     let product = '{{ product_info.userid }}'
+    let action = '{{ bucket_info.action }}'
     $(document).ready(function () {
         get_comment('{{ product_info.pid }}')
         if (role == 'guide' & user == product) {
             toggle_guide_detail()
+        }
+        else if (action == 'on_bucket') {
+            toggle_user_bucket()
         }
     })
     </script>
@@ -164,13 +168,13 @@
                         <p class="title is-6">{{ product_info.profile_name }}</p>
                         <p class="subtitle is-6">{{ product_info.userid }}</p>
                     </div>
-                    <nav class="level is-mobile">
-                        <div class="level-left">
-                            <a class="level-item is-sparta" aria-label="bucket" onclick="toggle_bucket('{{ product_info.pid }}', 'star')">
-                                <span class="icon is-small"><i class="fa fa-star" aria-hidden="true"></i></span>
-                            </a>
-                        </div>
-                    </nav>
+{#                    <nav class="level is-mobile">#}
+{#                        <div class="level-left">#}
+{#                            <a class="level-item is-sparta" aria-label="bucket" onclick="toggle_bucket('{{ product_info.pid }}', 'star')">#}
+{#                                <span class="icon is-small"><i class="fa fa-star" aria-hidden="true"></i></span>#}
+{#                            </a>#}
+{#                        </div>#}
+{#                    </nav>#}
                 </div>
                 <table>
                     <thead>
@@ -233,9 +237,10 @@
                         <button class="button is-fullwidth" onclick="delete_product('{{ product_info.pid }}')" style="max-width: 280px; height: 30px; margin-bottom: 15px;">상품 삭제하기</button>
                     </div>
                 </div>
-                <div id="button-user" class="">
+                <div id="button-user">
                     <div class="buttons is-centered">
-                        <button class="button is-fullwidth" onclick="go_bucket()" style="max-width: 280px; height: 80px; margin-bottom: 15px;">장바구니</button>
+                        <button id="bucket-on" class="button is-fullwidth" onclick="on_bucket('{{ product_info.pid }}')" style="max-width: 280px; height: 30px;">장바구니 등록하기</button>
+                        <button id="bucket-off" class="button is-fullwidth is-hidden" onclick="off_bucket('{{ product_info.pid }}')" style="max-width: 280px; height: 30px; margin-bottom: 15px;">장바구니 해제하기</button>
                     </div>
                 </div>
             </div>
