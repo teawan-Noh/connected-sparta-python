@@ -60,6 +60,11 @@ function toggle_guide_detail() {
     $("#button-user").toggleClass("is-hidden")
 }
 
+function toggle_user_bucket() {
+    $("#bucket-on").toggleClass("is-hidden")
+    $("#bucket-off").toggleClass("is-hidden")
+}
+
 // 몇 시간 전 계산
 function time2str(date) {
     let today = new Date()
@@ -247,55 +252,35 @@ function get_comment(cid) {
     });
 }
 
-function go_bucket(pid) {
+function on_bucket(pid) {
     $.ajax({
         type: "POST",
-        url: `/product/bucket`,
-        data: {"pid_give":pid},
+        url: "/on_bucket",
+        data: {
+            pid_give: pid,
+            action_give: 'on_bucket'
+        },
         success: function (response) {
-            if (response["result"] == "success") {
-                alert(response["msg"])
-            }
+            alert(response["msg"])
+            toggle_user_bucket()
         }
-    });
+    })
 }
 
-function toggle_bucket(pid, type) {
-    console.log(pid, type)
-    let $a_bucket = $(`#${pid} a[aria-label='${type}']`)
-    let $i_bucket = $a_bucket.find("i")
-    let on_bucket = {"star":"fa-star"}
-    let off_bucket = {"star":"fa-star-o"}
-    if ($i_bucket.hasClass(on_bucket[type])) {
-        $.ajax({
-            type: "POST",
-            url: "/update_bucket",
-            data: {
-                pid_give: pid,
-                type_give: type,
-                action_give: "off_bucket"
-            },
-            success: function (response) {
-                console.log("unlike")
-                $i_bucket.addClass(off_bucket[type]).removeClass(on_bucket[type])
-            }
-        })
-    } else {
-        $.ajax({
-            type: "POST",
-            url: "/update_bucket",
-            data: {
-                pid_give: pid,
-                type_give: type,
-                action_give: "on_bucket"
-            },
-            success: function (response) {
-                console.log("on_bucket")
-                $i_bucket.addClass(on_bucket[type]).removeClass(off_bucket[type])
-            }
-        })
-    }
+function off_bucket(pid) {
+    $.ajax({
+        type: "POST",
+        url: "/off_bucket",
+        data: {
+            pid_give: pid
+        },
+        success: function (response) {
+            alert(response["msg"])
+            toggle_user_bucket()
+        }
+    })
 }
+
 
 function get_buckets(username) {
     if (username == undefined) {
@@ -343,7 +328,47 @@ function get_buckets(username) {
     })
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// // 즐겨찾기 추가 예정
+// function toggle_favorites(pid, type) {
+//     console.log(pid, type)
+//     let $a_favorite = $(`#${pid} a[aria-label='${type}']`)
+//     let $i_favorite = $a_favorite.find("i")
+//     let on_favorite = {"star":"fa-star"}
+//     let off_favorite = {"star":"fa-star-o"}
+//     if ($i_favorite.hasClass(on_favorite[type])) {
+//         $.ajax({
+//             type: "POST",
+//             url: "/update_favorite",
+//             data: {
+//                 pid_give: pid,
+//                 type_give: type,
+//                 action_give: "off_favorite"
+//             },
+//             success: function (response) {
+//                 $i_favorite.addClass(off_favorite[type]).removeClass(on_favorite[type])
+//                 alert(response["msg"])
+//             }
+//         })
+//     } else {
+//         $.ajax({
+//             type: "POST",
+//             url: "/update_favorite",
+//             data: {
+//                 pid_give: pid,
+//                 type_give: type,
+//                 action_give: "on_favorite"
+//             },
+//             success: function (response) {
+//                 $i_favorite.addClass(on_favorite[type]).removeClass(off_favorite[type])
+//                 alert(response["msg"])
+//             }
+//         })
+//     }
+// }
+
+// // 댓글 삭제 추가 예정
 // function delete_comment(commentid) {
 //     $.ajax({
 //         type: "POST",
@@ -355,3 +380,5 @@ function get_buckets(username) {
 //         }
 //     });
 // }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
