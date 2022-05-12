@@ -36,9 +36,11 @@ def file_upload():
     filename1 = f'{filenamefront}.{extension}'
     # print(str(filename1))
 
-    s3 = boto3.client('s3'
+    s3 = boto3.client('s3',
                       # aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
                       # aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
+                      aws_access_key_id = 'AKIA473YIRHLPKWSGQFI',
+                      aws_secret_access_key='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'
                       )
     s3.put_object(
         ACL="public-read",
