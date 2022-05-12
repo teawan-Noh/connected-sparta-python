@@ -167,8 +167,9 @@ def go_posting():
         user_info = db.users.find_one({"userid": payload["id"]})
         result = user_info["role"]
         products = db.products.find({})
+        user_info = user.getUserInfoByToken()
         status = user.get_status()
-        return render_template('product_write.html', result=result, products=products, statusbox=status)
+        return render_template('product_write.html', result=result, products=products, user_info=user_info,statusbox=status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
