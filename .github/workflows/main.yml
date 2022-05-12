@@ -32,7 +32,7 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: "3.8"
-        #패키징 deploy.zip으로
+        #패키징 deploy.zip으로 함
       - name: Generate deployment package
         run: zip -r deploy.zip . -x '*.git*'
 
