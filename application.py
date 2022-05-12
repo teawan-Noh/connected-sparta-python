@@ -54,8 +54,12 @@ def file_upload():
 @application.route('/')
 def home():
     user_info = user.getUserInfoByToken()
+
     status = user.get_status()
-    return render_template('index.html', user_info=user_info, statusbox=status)
+    if user_info is not None:
+        return render_template('index.html', user_info=user_info, statusbox=status)
+    else:
+        return render_template('index.html', statusbox=status)
 
 @application.route('/login')
 def login():
