@@ -53,6 +53,7 @@ def file_upload():
 @application.route('/')
 def home():
     status = user.get_status()
+    print('a')
     return render_template('index.html', statusbox=status)
 
 @application.route('/login')
