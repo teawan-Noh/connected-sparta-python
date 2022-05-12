@@ -59,7 +59,7 @@ def home():
     if user_info is not None:
         return render_template('index.html', user_info=user_info, statusbox=status)
     else:
-        return render_template('index.html', user_info='a' ,statusbox=status)
+        return render_template('index.html', user_info='a', statusbox=status)
 
 @application.route('/login')
 def login():
