@@ -3,17 +3,23 @@ import jwt
 from pymongo import MongoClient
 
 SECRET_KEY = 'SPARTA'
-
-client = MongoClient('54.180.31.220', 27017, username="test", password="test")
+# AWS 버전
+# client = MongoClient('54.180.31.220', 27017, username="test", password="test")
+#local 버전
+client = MongoClient("mongodb://localhost:27017/")
 db = client.cnt_project2
 
 def getUserInfoByToken():
+
     token_kakao = request.cookies.get('kakao')
     token_receive = request.cookies.get('mytoken')
     user_info = ''
+    # print(token_receive)
+
     if token_receive is not None:
         try:
             payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+            # print(payload["id"])
             user_info = db.users.find_one({"userid": payload["id"]})
             # print('실행', user_info)
         except jwt.ExpiredSignatureError:
