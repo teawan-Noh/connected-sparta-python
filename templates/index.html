@@ -13,7 +13,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
     <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
     <!-- Font Awesome CSS -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/8a3e72a4c8.js" crossorigin="anonymous"></script>
+{#    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">#}
     <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
@@ -25,6 +26,8 @@
     <!-- kakao login/logout -->
     <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
     <script src="{{ url_for('static', filename='login.js') }}"></script>
+    <script src="{{ url_for('static', filename='myjs.js') }}"></script>
+
 
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
@@ -63,6 +66,9 @@
         .card {
             width: 380px;
             margin: 24px;
+        }
+        #title{
+            padding-bottom: 40px;
         }
     </style>
     <script>

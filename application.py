@@ -20,7 +20,10 @@ application.config["TEMPLATES_AUTO_RELOAD"] = True
 application.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
 SECRET_KEY = 'SPARTA'
-client = MongoClient('54.180.31.220', 27017, username="test", password="test")
+# AWS 버전
+# client = MongoClient('54.180.31.220', 27017, username="test", password="test")
+# client = MongoClient('mongodb://test:test@localhost', 27017)
+client = MongoClient("mongodb://localhost:27017/")
 db = client.cnt_project2
 
 global filename1
@@ -36,10 +39,10 @@ def file_upload():
     global filename1
     filename1 = f'{filenamefront}.{extension}'
     # print(str(filename1))
-
-    s3 = boto3.client('s3',
-                      aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
-                      aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
+    #로컬 사용시 본인의 계정 연동할 경우 aws access key 주석 처리해야 함.
+    s3 = boto3.client('s3'
+                      # aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+                      # aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
                       )
     s3.put_object(
         ACL="public-read",
@@ -56,7 +59,6 @@ def home():
     user_info = user.getUserInfoByToken()
 
     status = user.get_status()
-    print(user_info)
     if user_info is not None:
         return render_template('index.html', user_info=user_info, statusbox=status)
     else:
@@ -84,7 +86,7 @@ def sign_in():
     role_receive = request.form['role_give']
     userid_receive = request.form['userid_give']
     password_receive = request.form['password_give']
-    # print(userid_receive, password_receive)
+    # print(userid_receive, password_receive, role_receive)
 
     pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
     result = db.users.find_one({'role': role_receive, 'userid': userid_receive, 'password': pw_hash})
@@ -94,6 +96,9 @@ def sign_in():
          'id': userid_receive,
          'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)  # 로그인 24시간 유지
         }
+        # aws 버전
+        # token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf-8')
+        # local 버전
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
         return jsonify({'result': 'success', 'token': token})
@@ -186,29 +191,39 @@ def go_posting():
 
 @application.route('/posting', methods=['POST'])
 def posting():
-    print(filename1, '여기')
+    # print(filename1, '여기')
     token_receive = request.cookies.get('mytoken')
     try:
         # 토큰 해독 후 username이 토큰의 id값인 녀석을 찾아 user_info라고 한다.
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({"userid": payload["id"]})
-        # 코멘트에 적힌 글과 현재 날짜를 불러온다.
-        # today = datetime.now()
+
         title_receive = request.form["title_give"]
-        file = filename1
         content_receive = request.form["content_give"]
         date_receive = request.form["date_give"]
         calender_receive = request.form["calender_give"]
         price_receive = request.form["price_give"]
         x_receive = request.form["x_give"]
         y_receive = request.form["y_give"]
+        # AWS 버전 file
+        # file = filename1
+        # Local 버전 file
+        file = request.files["file_give"]
+        # print(file)
+        # print('파일 네임:', file.filename.split('.')[0])
+        # 현재 날짜를 불러온다.
+        # today = datetime.now()
         # today_receive = today.strftime('%Y-%m-%d-%H-%M-%S')
-        # filename = f'file-{today_receive}'
-        # # 파일 형식을 따오는 코드
+
+        # # extention 하고 출력 값이 같은데 왜 이렇게 처리한거지 (강의 코드 따온 부분 : 아래 extension 값 가져오는 부분까지)
+        # filename = secure_filename(file.filename)
+        # print(filename, '여기')
+        # # # 파일 형식을 따오는 코드
         # extension = file.filename.split('.')[-1]
-        # # 따온 파일 이름과 형식을 저장해주는 코드
-        # save_to = f'static/{filename}.{extension}'
-        # file.save(save_to)
+        # # # 따온 파일 이름과 형식을 저장해주는 코드
+        # save_to = f'static/profile_pics/{filename}.{extension}'
+        save_to = f'static/profile_pics/{file.filename}'
+        file.save(save_to)
         product_count = db.products.estimated_document_count()
         if product_count == 0:
             max_value = 1
@@ -220,7 +235,7 @@ def posting():
             "profile_name": user_info["profile_name"],
             "profile_pic_real": user_info["profile_pic_real"],
             "title": title_receive,
-            "file": file,
+            "file": file.filename,
             "content": content_receive,
             "x":x_receive,
             "y":y_receive,
@@ -589,7 +604,7 @@ def myInfo():
 # 개인정보 수정
 @application.route('/userInfoUpdate', methods=['POST'])
 def userInfoUpdate():
-    email = request.form['email1']
+    # email = request.form['email1']
     profile_name = request.form['nickname']
     userid = request.args.get('user')
     print(userid)
