@@ -6,6 +6,7 @@ function kakaoLogin() {
         scope: 'profile_nickname, account_email, gender', //동의항목 페이지에 있는 개인정보 보호 테이블의 활성화된 ID값을 넣습니다.
         success: function (response) {
             console.log(response) // 로그인 성공하면 받아오는 데이터
+            alert(response)
             console.log(response.access_token);
             window.Kakao.API.request({ // 사용자 정보 가져오기
                 url: '/v2/user/me',
