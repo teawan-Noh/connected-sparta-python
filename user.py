@@ -18,9 +18,12 @@ def getUserInfoByToken():
     if token_receive is not None:
         try:
             payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-            # print(payload["id"])
+            print(payload)
+            print("========")
+            print(payload["id"])
+
             user_info = db.users.find_one({"userid": payload["id"]})
-            # print('실행', user_info)
+
         except jwt.ExpiredSignatureError:
             return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
         except jwt.exceptions.DecodeError:

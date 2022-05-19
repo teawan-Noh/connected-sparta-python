@@ -86,11 +86,10 @@ def sign_in():
     role_receive = request.form['role_give']
     userid_receive = request.form['userid_give']
     password_receive = request.form['password_give']
-    # print(userid_receive, password_receive, role_receive)
 
     pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
     result = db.users.find_one({'role': role_receive, 'userid': userid_receive, 'password': pw_hash})
-    # print(result)
+
     if result is not None:
         payload = {
          'id': userid_receive,

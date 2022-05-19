@@ -99,7 +99,7 @@
                     if (response['result'] == 'success') {
                         $.cookie('mytoken', response['token'], {path: '/'});
                         {#window.location.replace("/")#}
-                        window.location.href='/'
+                        window.location.href = '/'
                     } else {
                         alert(response['msg'])
                     }
@@ -120,11 +120,11 @@
     </script>
 </head>
 <body>
-    <header>
-        <section class="header">
-            <a class="title" href="/">connected</a>
-        </section>
-    </header>
+<header>
+    <section class="header">
+        <a class="title" href="/">connected</a>
+    </section>
+</header>
 <section class="section">
     <div class="container">
         <div class="box" style="max-width: 480px;margin:auto">
@@ -133,7 +133,8 @@
                     <div class="content">
                         <div id="div-sign-in-or-up" class="has-text-centered">
                             <nav class="level is-mobile">
-                                <label class="role_obj"><input type="radio" id="traveler" name="role" value="traveler"><span>여행자</span></label>
+                                <label class="role_obj"><input type="radio" id="traveler" name="role"
+                                                               value="traveler"><span>여행자</span></label>
                                 <label class="role_obj"><input type="radio" id="guide" name="role" value="guide"><span>가이드</span></label>
                             </nav>
                         </div>
@@ -153,14 +154,16 @@
                                     <i class="fa fa-lock"></i>
                                 </span>
                             </div>
-                            <p id="help-password" class="help is-hidden">영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. 특수문자(!@#$%^&*)도 사용 가능합니다.</p>
+                            <p id="help-password" class="help is-hidden">영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. 특수문자(!@#$%^&*)도
+                                사용 가능합니다.</p>
                         </div>
                     </div>
                     <div id="div-sign-in-or-up" class="has-text-centered">
                         <nav class="level is-mobile">
                             <button class="level-item button" onclick="sign_in()">로그인</button>
                         </nav>
-                        <a href="javascript:kakaoLogin();"><img src="./static/kakao_login_medium_wide.png" alt="카카오계정 로그인" style="height: 50px;width: auto"/></a>
+                        <a href="javascript:kakaoLogin();"><img src="./static/kakao_login_medium_wide.png"
+                                                                alt="카카오계정 로그인" style="height: 50px;width: auto"/></a>
                         <hr>
                         <h4 class="mb-3">아직 회원이 아니라면</h4>
                         <nav class="level is-mobile">
